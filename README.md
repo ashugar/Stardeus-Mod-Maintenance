@@ -40,15 +40,3 @@ $Enable_AndroidsExpanded = $true
 This script modifies Workshop mod files directly. It was written against the current Workshop versions available at the time of release. Future mod updates may make some fixes unnecessary or incorrect.
 
 Use at your own risk. Back up saves and modified files first.
-
-## CHANGELOG
-```markdown
-## v1.0.0
-
-- Initial public release
-- Added modular mod enable flags
-- Added Androids Expanded repairs
-- Added Molecular Assembler repairs
-- Added MetalHusks / Ironhusk / Chromanite fixes
-- Added validation checks for research IDs and Flammable keys
-```
