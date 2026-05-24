@@ -28,21 +28,21 @@ Edit these paths near the top of the script:
 ```powershell
 $coreRoot = "..."
 $workshopRoot = "..."
-
+```
 Then enable only the mods you use:
 
+```powershell
 $Enable_AndroidsExpanded = $true
-Warning
+```
+
+## Warning
 
 This script modifies Workshop mod files directly. It was written against the current Workshop versions available at the time of release. Future mod updates may make some fixes unnecessary or incorrect.
 
 Use at your own risk. Back up saves and modified files first.
 
-## CHANGELOG starter
-
+## CHANGELOG
 ```markdown
-# Changelog
-
 ## v1.0.0
 
 - Initial public release
@@ -51,3 +51,4 @@ Use at your own risk. Back up saves and modified files first.
 - Added Molecular Assembler repairs
 - Added MetalHusks / Ironhusk / Chromanite fixes
 - Added validation checks for research IDs and Flammable keys
+```
