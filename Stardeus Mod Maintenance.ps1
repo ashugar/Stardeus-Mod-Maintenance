@@ -12,24 +12,51 @@
 #   - Fixes zero ToiletRate value on AfterBurner-style intestine parts.
 #   - Removes invalid market item files for IgnoreMarket parts.
 #   - Fixes missing default right lung/right kidney in manufactured Androids.
+#   - Changed PowerHand minimum safe charge timing.
 #   - Removes unfinished orphan body part configs that have no matching object definitions.
 # - Molecular Assembler Fixed:
 #   - Adds IgnoreMarket: true to MolecularAssemblable recipes to avoid economy validation errors.
 # - MetalHusksRevisited:
 #   - Repairs repeated PlanterImprovedImproved strings.
 #   - Updates Planter -> PlanterImproved research prerequisites.
+#   - Removed ObjNoFlash deprecated calls.
 # - IRONHUSK:
 #   - Updates Planter -> PlanterImproved research prerequisites.
 #   - Fixes IsTemperatureResistent -> IsTemperatureResistant typo.
 # - Chromanite Material:
 #   - Fixes IsTemperatureResistent -> IsTemperatureResistant typo.
+#   - Removed ObjNoFlash deprecated calls.
 # - Fast IRONHUSK:
 #   - Removes deprecated Flammable keys no longer found in Core.
+#   - Removed ObjNoFlash deprecated calls.
 #
 # Validation coverage:
 # - Verifies known mods do not reference missing Research IDs.
 # - Scans all installed Workshop mods for Flammable keys not found in Core.
 # - Separates known deprecated Flammable keys from unknown keys needing review.
+#
+# Research validation warnings are intentionally ignored.
+#
+# Stardeus is currently in Early Access and Core research progression
+# may change between releases. Research balance warnings do not
+# necessarily indicate broken functionality and are therefore excluded
+# from automatic repair.
+#
+# Re-evaluate Research Validation warnings after Stardeus reaches
+# Version 1.0.
+#
+# MolecularAssemblable output validation warnings are intentionally ignored.
+#
+# These recipes use zero-stack placeholder ingredients so the MultiCrafter UI can
+# expose selectable energy-to-material recipes. Adding real ingredients would
+# break the purpose of the Molecular Assembler by requiring the material before
+# it can be produced.
+#
+# Ability ID Work warnings are intentionally ignored.
+#
+# These appear to originate from Core job/ability handling rather than stale
+# Workshop mod configuration. Since Stardeus is still in Early Access, this
+# will be revisited after Version 1.0 only if the warnings persist.
 #
 # Safe to run multiple times.
 
@@ -966,6 +993,16 @@ if ($Enable_AndroidsExpanded)
     -Find '{ "Slot" : "Kidney_R", "Empty" : true }' `
     -Replace '{ "Slot" : "Kidney_R", "Part" : "Kidney/MakeshiftKidney" }'
 
+  Write-Section "Patch Androids PowerHand minimum safe charge timing"
+
+  Patch-RelativeFiles `
+    -ModRoot $mods.AndroidsExpanded `
+    -RelativePaths @(
+      "Config\Body\Parts\Hand\PowerHand.json"
+    ) `
+    -Find '{ "Key" : "ChargeSec", "Float" : 1.0 }' `
+    -Replace '{ "Key" : "ChargeSec", "Float" : 1.5 }'
+
   Write-Section "Remove Androids UNFINISHED orphan body part configs - REMOVE THIS SECTION IF IMPLEMENTED LATER"
 
   # These body part configs have no matching Definitions\Obj\Parts, craftable files, or market files.
@@ -1198,6 +1235,15 @@ if ($Enable_MetalHusksRevisited)
         -Replace '"Research/LifeSupport/PlanterImproved"'
   }
 
+  Write-Section "Remove MetalHusksRevisited deprecated ObjNoFlash SpriteOrder"
+
+  Get-ModJsonFiles -ModRoot $mods.MetalHusksRevisited |
+    ForEach-Object {
+      Remove-LinesContainingText `
+        -Path $_.FullName `
+        -Needles @("ObjNoFlash") `
+        -BackupSuffix ".bak.objnoflash"
+    }
 }
 else
 {
@@ -1245,6 +1291,16 @@ if ($Enable_Chromanite)
     ) `
     -Find "IsTemperatureResistent" `
     -Replace "IsTemperatureResistant"
+
+  Write-Section "Remove Chromanite deprecated ObjNoFlash SpriteOrder"
+
+  Get-ModJsonFiles -ModRoot $mods.Chromanite |
+    ForEach-Object {
+      Remove-LinesContainingText `
+        -Path $_.FullName `
+        -Needles @("ObjNoFlash") `
+        -BackupSuffix ".bak.objnoflash"
+    }
 }
 else
 {
@@ -1260,6 +1316,16 @@ if ($Enable_FastIronhusk)
   Remove-LinesContainingText `
     -Path $fastIronhuskFile `
     -Needles $knownDeprecatedFlammableKeys
+
+  Write-Section "Remove Fast IRONHUSK deprecated ObjNoFlash SpriteOrder"
+
+  Get-ModJsonFiles -ModRoot $mods.FastIronhusk |
+    ForEach-Object {
+      Remove-LinesContainingText `
+        -Path $_.FullName `
+        -Needles @("ObjNoFlash") `
+        -BackupSuffix ".bak.objnoflash"
+    }
 }
 else
 {
