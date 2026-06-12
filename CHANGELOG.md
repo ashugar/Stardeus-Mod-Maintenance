@@ -2,17 +2,69 @@
 
 ### Current Status
 
-Player.log warnings caused by stale mod configurations have been addressed for all currently supported mod versions.
+All known load-blocking compatibility issues have been resolved for currently supported mods.
 
-Remaining warnings fall into one of three categories:
+Remaining log entries are primarily:
 
-- Stardeus Early Access research validation warnings.
-- MolecularAssembler energy-to-material conversion validation warnings.
-- Stardeus Core "Ability ID Work" warnings.
+- Stardeus Early Access / Core validation warnings.
+- Runtime warnings requiring gameplay testing.
+- Mod-specific balance or economic validation warnings.
+- Experimental branch issues under active development.
 
-These are currently documented but intentionally not modified by the script.
+These are documented and reviewed individually before being added to the repair process.
 
-## v1.1.0
+### Milestone
+
+All currently supported mods now load successfully under
+Stardeus v0.15 private branch testing.
+
+Future updates will focus primarily on:
+
+- Runtime testing
+- Gameplay validation
+- New schema changes introduced during v0.15 development
+- Reduction of remaining non-critical warnings
+
+## v2.0.0 Stardeus v0.15 Private/Beta
+
+### Better Storage
+- Repairs stale StorageCold research references.
+- Removes blocked full Core definition overrides.
+
+### Orbotron
+- Removes deprecated Species.Type field.
+- Removes deprecated SpawnRequirements.Check field.
+
+### MetalHusksRevisited
+- Repairs stale Planter research references.
+
+### Molecular Assembler
+- Removes deprecated Craftable.Level fields.
+- Adds IgnoreEnergyOutput validation flag.
+- Adds IgnoreMarket validation flag.
+
+### Chromanite
+- Removes deprecated MatType.NameKey fields.
+- Removes deprecated Craftable.Level fields.
+- Renames IgnoreStockMarket to IgnoreMarket.
+- Removes deprecated EnergyOutputComment fields.
+- Removes deprecated FavGroupId fields.
+- Removes deprecated ProductOf array fields.
+- Repairs IsTemperatureResistent -> IsTemperatureResistant typo.
+
+### Androids Expanded
+- Replaces deprecated Looks wrapper with direct SpeciesLooksDef format.
+- Removes full ObeyChip Core override blocked by v0.15.
+- Removes deprecated StasisWakeUpChance field.
+- Restores Gearss -> Gears typo fix.
+- Repairs MakeshiftJaw -> MakeShiftJaw casing mismatch.
+- Removes deprecated Species.Type field safely.
+- Removes deprecated NamePartsComment field.
+- Removes deprecated Comment fields.
+- Removes deprecated gender/attraction blocks.
+- Temporarily removes deprecated AdjustsSkills fields pending investigation of the v0.15 replacement for body-part skill bonuses.
+
+## v1.1.0 Stardeus v0.14 Public
 
 ### Androids Expanded
 - Added Quantum Nexus support for Mind Transfer and Machine Learning.
