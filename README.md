@@ -25,6 +25,7 @@ continues development.
 - MetalHusksRevisited
 - Better Storage
 - Chromanite Material
+- Orbotron / More Orbotrons
 
 ## What It Does
 
