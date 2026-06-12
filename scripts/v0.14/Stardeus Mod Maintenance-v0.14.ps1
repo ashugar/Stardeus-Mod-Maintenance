@@ -1,3 +1,7 @@
+# Deprecated
+# Last maintained for Stardeus v0.14.
+# Retained for historical reference.
+# Use the v0.15 script for current development.
 # Repairs known stale/broken Stardeus Workshop mod references after reinstall.
 #
 # Current repair coverage:
