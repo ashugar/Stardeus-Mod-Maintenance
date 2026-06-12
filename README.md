@@ -2,13 +2,28 @@
 
 PowerShell maintenance and compatibility repair script for selected Stardeus Workshop mods.
 
+## Project Status
+
+This repository contains maintenance and compatibility scripts
+for Stardeus Workshop mods.
+
+### Available Versions
+
+| Script | Target Version | Status |
+|----------|----------|----------|
+| v0.14 | Stardeus 0.14 | Archived |
+| v0.15 | Stardeus 0.15 Private/Beta | Active Development |
+
+The v0.15 script is currently focused on restoring compatibility
+for abandoned or outdated Workshop mods while Stardeus v0.15
+continues development.
+
 ## Supported Mods
 
 - Prosthetics & Androids Expanded
 - Molecular Assembler Fixed
 - MetalHusksRevisited
-- IRONHUSK
-- Fast IRONHUSK
+- Better Storage
 - Chromanite Material
 
 ## What It Does
