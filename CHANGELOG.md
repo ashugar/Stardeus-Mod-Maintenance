@@ -26,8 +26,8 @@ Future updates will focus primarily on:
 - Reduction of remaining non-critical warnings
 
 ## v2.0.2 Stardeus v0.15 Private/Beta
-- Repairs missing default right lunch and kidney assignments.
-- Add Surgical UI compatibility with Looks file (bodypartslots added).
+- Repairs missing default right lung and kidney assignments.
+- Adds surgical UI compatibility to the Looks file by adding BodyPartSlotViewOffsets and BodyPartSlotLines.
   
 ## v2.0.1 Stardeus v0.15 Private/Beta
 
