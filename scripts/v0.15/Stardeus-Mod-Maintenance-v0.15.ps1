@@ -43,18 +43,16 @@
 # - Removes deprecated Comment fields.
 # - Removes deprecated gender/attraction blocks.
 # - Temporarily removes deprecated AdjustsSkills fields.
-# - Add Surgical UI compatibility with Looks file (bodypartslots added).
+# - Adds Surgical UI compatibility with Looks file (bodypartslots added).
+# - Adds ObeyChip behind Research wall once more so it can be crafted.
 #
 # TODO:
 # - Investigate the v0.15 replacement for Androids AdjustsSkills body-part bonuses.
-# - Investigate Androids BodyPartSlotViewOffsets warning.
-# - Investigate Androids BodyPartSlotLines warning.
 # - Investigate Androids market definition warnings:
 #     Obj/Parts/Jaw/BionicsLimbs
 #     Obj/Parts/Jaw/MakeshiftLimbs
 # - Determine whether remaining Chromanite economic validation warnings
 #   can be resolved or intentionally suppressed.
-# - Convert intended ObeyChip prerequisite change to v0.15 JSON patch format if needed.
 # - Runtime-test Android production, surgery, implants, and body-part rendering.
 #
 # Validation coverage:
@@ -779,6 +777,55 @@ function Ensure-JsonTopLevelPropertyAfter {
   Write-Host "  Added $PropertyName : $PropertyValue" -ForegroundColor Gray
 }
 
+function Ensure-ModPatchesFolder {
+  param(
+    [Parameter(Mandatory)]
+    [string]$ModRoot
+  )
+
+  $patchesPath = Join-Path $ModRoot "Patches"
+
+  if (!(Test-Path $patchesPath)) {
+    New-Item -Path $patchesPath -ItemType Directory -Force | Out-Null
+    Write-Host "Created Patches folder: $patchesPath" -ForegroundColor Green
+  }
+  else {
+    Write-Host "Patches folder exists: $patchesPath" -ForegroundColor DarkYellow
+  }
+
+  return $patchesPath
+}
+
+function Write-StardeusJsonPatch {
+  param(
+    [Parameter(Mandatory)]
+    [string]$ModRoot,
+
+    [Parameter(Mandatory)]
+    [string]$PatchFileName,
+
+    [Parameter(Mandatory)]
+    [string]$Target,
+
+    [Parameter(Mandatory)]
+    [array]$Operations
+  )
+
+  $patchesPath = Ensure-ModPatchesFolder -ModRoot $ModRoot
+  $patchPath = Join-Path $patchesPath $PatchFileName
+
+  $patch = [ordered]@{
+    target = $Target
+    operations = $Operations
+  }
+
+  $json = $patch | ConvertTo-Json -Depth 20
+
+  Set-Content -Path $patchPath -Value $json -Encoding UTF8
+
+  Write-Host "Wrote JSON patch: $patchPath" -ForegroundColor Green
+}
+
 # =============================================================================
 # Repair process
 # =============================================================================
@@ -1348,6 +1395,39 @@ if($Enable_AndroidsExpanded){
       Write-Host "  Added BodyPartSlotViewOffsets and BodyPartSlotLines" -ForegroundColor Gray
     }
   }
+
+  Write-Section "Create/Verify Androids JSON patches folder"
+
+  Ensure-ModPatchesFolder -ModRoot $mods.AndroidsExpanded | Out-Null
+
+  Write-Section "Create ObeyChip research patch"
+
+  $patchesPath = Ensure-ModPatchesFolder -ModRoot $mods.AndroidsExpanded
+
+  $obeyChipPatch = @'
+{
+  "target": "Definitions/Obj/Parts/Implant/ObeyChip.json",
+  "operations": [
+    {
+      "op": "replace",
+      "path": "/Researchable/Prerequisites",
+      "value": [
+        "Research/Robotics/QuantumNexus"
+      ]
+    }
+  ]
+}
+'@
+
+  $patchFile = Join-Path $patchesPath "ObeyChipResearch.json"
+
+  Set-Content `
+    -Path $patchFile `
+    -Value $obeyChipPatch `
+    -Encoding UTF8
+
+  Write-Host "Patched: $patchFile" -ForegroundColor Green
+  Write-Host "  Obey Chip now unlocks from Quantum Nexus research" -ForegroundColor Gray
 
 }
 else{
