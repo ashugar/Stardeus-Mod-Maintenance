@@ -25,6 +25,13 @@ Future updates will focus primarily on:
 - New schema changes introduced during v0.15 development
 - Reduction of remaining non-critical warnings
 
+## v2.0.3 Stardeus v0.15 Private/Beta
+
+### Androids Expanded
+- Restores ObeyChip unlock progression using v0.15 JSON patching.
+- Replaces deprecated Core override with supported patch-based research injection.
+- ObeyChip now unlocks through Quantum Nexus research as originally intended.
+
 ## v2.0.2 Stardeus v0.15 Private/Beta
 - Repairs missing default right lung and kidney assignments.
 - Adds surgical UI compatibility to the Looks file by adding BodyPartSlotViewOffsets and BodyPartSlotLines.
