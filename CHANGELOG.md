@@ -25,6 +25,11 @@ Future updates will focus primarily on:
 - New schema changes introduced during v0.15 development
 - Reduction of remaining non-critical warnings
 
+## v2.0.1 Stardeus v0.15 Private/Beta
+
+### Chromanite
+- Adds missing GroupId fields to material definitions to restore inventory categorization.
+
 ## v2.0.0 Stardeus v0.15 Private/Beta
 
 ### Better Storage
