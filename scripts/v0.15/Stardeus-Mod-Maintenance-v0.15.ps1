@@ -37,11 +37,13 @@
 # - Removes deprecated StasisWakeUpChance field.
 # - Restores Gearss -> Gears typo fix.
 # - Repairs MakeshiftJaw -> MakeShiftJaw casing mismatch.
+# - Repairs missing default right lung and kidney assignments.
 # - Removes deprecated Species.Type field safely.
 # - Removes deprecated NamePartsComment field.
 # - Removes deprecated Comment fields.
 # - Removes deprecated gender/attraction blocks.
 # - Temporarily removes deprecated AdjustsSkills fields.
+# - Add Surgical UI compatibility with Looks file (bodypartslots added).
 #
 # TODO:
 # - Investigate the v0.15 replacement for Androids AdjustsSkills body-part bonuses.
@@ -1235,6 +1237,115 @@ if($Enable_AndroidsExpanded){
   } | 
     Select-Object FullName |
     Format-Table -AutoSize
+
+  Write-Section "Patch Androids default missing right lung and kidney"
+
+  # Manufactured Androids were missing Lung_R and Kidney_R by default.
+  Patch-RelativeFiles `
+    -ModRoot $mods.AndroidsExpanded `
+    -RelativePaths @(
+      "Config\Body\Configurations\Androids_Default.json"
+    ) `
+    -Find '{ "Slot" : "Lung_R", "Empty" : true }' `
+    -Replace '{ "Slot" : "Lung_R", "Part" : "Lung/MakeshiftLung" }'
+
+  Patch-RelativeFiles `
+    -ModRoot $mods.AndroidsExpanded `
+    -RelativePaths @(
+      "Config\Body\Configurations\Androids_Default.json"
+    ) `
+    -Find '{ "Slot" : "Kidney_R", "Empty" : true }' `
+    -Replace '{ "Slot" : "Kidney_R", "Part" : "Kidney/MakeshiftKidney" }'
+
+  Write-Section "Patch Androids body-part slot display layout"
+
+  $androidLooksPath = Join-Path $mods.AndroidsExpanded "Config\Species\Looks\Androids.json"
+
+  $androidSlotLayout = @'
+,
+  "BodyPartSlotViewOffsets": {
+    "Head": { "x": 0, "y": 280 },
+    "Brain": { "x": -230, "y": 190 },
+    "Implant": { "x": 230, "y": 190 },
+    "Ear_L": { "x": 300, "y": 50 },
+    "Ear_R": { "x": -300, "y": 50 },
+    "Eye_L": { "x": 310, "y": -115 },
+    "Eye_R": { "x": -310, "y": -115 },
+    "Jaw": { "x": 0, "y": -294 },
+    "Body": { "x": 0, "y": -310 },
+    "Shoulder_L": { "x": 190, "y": 280 },
+    "Shoulder_R": { "x": -190, "y": 280 },
+    "Arm_L": { "x": 250, "y": 175 },
+    "Arm_R": { "x": -250, "y": 175 },
+    "Hand_L": { "x": 310, "y": 65 },
+    "Hand_R": { "x": -310, "y": 65 },
+    "Hip_L": { "x": 310, "y": -50 },
+    "Hip_R": { "x": -310, "y": -50 },
+    "Leg_L": { "x": 250, "y": -170 },
+    "Leg_R": { "x": -250, "y": -170 },
+    "Foot_L": { "x": 200, "y": -280 },
+    "Foot_R": { "x": -200, "y": -280 },
+    "Heart": { "x": 290, "y": 0 },
+    "Lung_L": { "x": 240, "y": 140 },
+    "Lung_R": { "x": -240, "y": 140 },
+    "Kidney_L": { "x": 240, "y": -140 },
+    "Kidney_R": { "x": -240, "y": -140 },
+    "Stomach": { "x": 125, "y": -280 },
+    "Liver": { "x": -290, "y": 0 },
+    "Intestines": { "x": -125, "y": -280 }
+  },
+  "BodyPartSlotLines": {
+    "Head": [{ "x": 0, "y": 260 }, { "x": 0, "y": 88 }],
+    "Brain": [{ "x": -190, "y": 190 }, { "x": -120, "y": 190 }, { "x": 0, "y": 50 }],
+    "Implant": [{ "x": 190, "y": 190 }, { "x": 120, "y": 190 }, { "x": 43, "y": 66 }],
+    "Eye_L": [{ "x": 265, "y": -115 }, { "x": 200, "y": -115 }, { "x": 36, "y": -64 }],
+    "Eye_R": [{ "x": -265, "y": -115 }, { "x": -200, "y": -115 }, { "x": -36, "y": -64 }],
+    "Ear_L": [{ "x": 250, "y": 50 }, { "x": 170, "y": 50 }, { "x": 91, "y": 1 }],
+    "Ear_R": [{ "x": -250, "y": 50 }, { "x": -170, "y": 50 }, { "x": -91, "y": 1 }],
+    "Jaw": [{ "x": 0, "y": -265 }, { "x": 0, "y": -145 }],
+    "Body": [{ "x": 0, "y": -290 }, { "x": 0, "y": -86 }],
+    "Shoulder_R": [{ "x": -145, "y": 270 }, { "x": -145, "y": 183 }, { "x": -80, "y": 33 }],
+    "Shoulder_L": [{ "x": 145, "y": 270 }, { "x": 145, "y": 183 }, { "x": 80, "y": 33 }],
+    "Arm_R": [{ "x": -200, "y": 165 }, { "x": -200, "y": 105 }, { "x": -80, "y": -17 }],
+    "Arm_L": [{ "x": 200, "y": 165 }, { "x": 200, "y": 105 }, { "x": 80, "y": -17 }],
+    "Hand_R": [{ "x": -270, "y": 60 }, { "x": -206, "y": 60 }, { "x": -69, "y": -67 }],
+    "Hand_L": [{ "x": 270, "y": 60 }, { "x": 206, "y": 60 }, { "x": 69, "y": -67 }],
+    "Foot_L": [{ "x": 150, "y": -250 }, { "x": 150, "y": -220 }, { "x": 48, "y": -176 }],
+    "Leg_L": [{ "x": 200, "y": -170 }, { "x": 140, "y": -170 }, { "x": 54, "y": -148 }],
+    "Hip_L": [{ "x": 250, "y": -50 }, { "x": 190, "y": -50 }, { "x": 59, "y": -119 }],
+    "Hip_R": [{ "x": -250, "y": -50 }, { "x": -190, "y": -50 }, { "x": -59, "y": -119 }],
+    "Leg_R": [{ "x": -200, "y": -170 }, { "x": -140, "y": -170 }, { "x": -54, "y": -148 }],
+    "Foot_R": [{ "x": -150, "y": -250 }, { "x": -150, "y": -220 }, { "x": -48, "y": -176 }],
+    "Heart": [{ "x": 250, "y": 0 }, { "x": 160, "y": 0 }, { "x": 32, "y": -51 }],
+    "Lung_L": [{ "x": 190, "y": 140 }, { "x": 130, "y": 140 }, { "x": 42, "y": -21 }],
+    "Lung_R": [{ "x": -190, "y": 140 }, { "x": -130, "y": 140 }, { "x": -42, "y": -21 }],
+    "Kidney_L": [{ "x": 180, "y": -140 }, { "x": 135, "y": -140 }, { "x": 48, "y": -98 }],
+    "Kidney_R": [{ "x": -180, "y": -140 }, { "x": -135, "y": -140 }, { "x": -48, "y": -98 }],
+    "Stomach": [{ "x": 125, "y": -270 }, { "x": 125, "y": -215 }, { "x": 15, "y": -95 }],
+    "Liver": [{ "x": -250, "y": 0 }, { "x": -170, "y": 0 }, { "x": -21, "y": -86 }],
+    "Intestines": [{ "x": -125, "y": -270 }, { "x": -125, "y": -215 }, { "x": -2, "y": -138 }]
+  }
+'@
+
+  $raw = Get-Content $androidLooksPath -Raw
+
+  if ($raw -match '"BodyPartSlotViewOffsets"\s*:') {
+    Write-Host "No change needed: $androidLooksPath" -ForegroundColor DarkYellow
+  }
+  else {
+    $fixed = $raw -replace '(\s*"RebuildForConditions"\s*:\s*\[\s*"Sleeping"\s*\])', "`$1$androidSlotLayout"
+
+    if ($raw -eq $fixed) {
+      Write-Warning "Could not add Android body-part slot display layout."
+    }
+    else {
+      Copy-Item $androidLooksPath "$androidLooksPath.bak" -Force
+      Set-Content -Path $androidLooksPath -Value $fixed -Encoding UTF8
+      Write-Host "Note: This file is updated every run due to a previous patch based on Fresh Mod install schema." -ForegroundColor Green
+      Write-Host "Patched: $androidLooksPath" -ForegroundColor Green
+      Write-Host "  Added BodyPartSlotViewOffsets and BodyPartSlotLines" -ForegroundColor Gray
+    }
+  }
 
 }
 else{
