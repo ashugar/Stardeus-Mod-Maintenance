@@ -29,6 +29,7 @@
 # - Removes deprecated FavGroupId fields.
 # - Removes deprecated ProductOf array fields.
 # - Repairs IsTemperatureResistent -> IsTemperatureResistant typo.
+# - Adds missing GroupId values to material definitions.
 #
 # Androids Expanded
 # - Replaces deprecated Looks wrapper with direct SpeciesLooksDef format.
@@ -729,6 +730,51 @@ function Backup-And-RemoveRegex {
   }
 }
 
+function Ensure-JsonTopLevelPropertyAfter {
+  param(
+    [Parameter(Mandatory)]
+    [string]$Path,
+
+    [Parameter(Mandatory)]
+    [string]$AfterProperty,
+
+    [Parameter(Mandatory)]
+    [string]$PropertyName,
+
+    [Parameter(Mandatory)]
+    [string]$PropertyValue,
+
+    [string]$BackupSuffix = ".bak"
+  )
+
+  if (!(Test-Path $Path)) {
+    Write-Warning "Missing file: $Path"
+    return
+  }
+
+  $raw = Get-Content $Path -Raw
+
+  if ($raw -match "`"$([regex]::Escape($PropertyName))`"\s*:") {
+    Write-Host "No change needed: $Path" -ForegroundColor DarkYellow
+    return
+  }
+
+  $pattern = "(`"$([regex]::Escape($AfterProperty))`"\s*:\s*`"[^`"]+`")"
+  $replacement = "`$1,`r`n    `"$PropertyName`" : `"$PropertyValue`""
+  $fixed = $raw -replace $pattern, $replacement
+
+  if ($raw -eq $fixed) {
+    Write-Warning "Could not add $PropertyName to: $Path"
+    return
+  }
+
+  Copy-Item $Path "$Path$BackupSuffix" -Force
+  Set-Content -Path $Path -Value $fixed -Encoding UTF8
+
+  Write-Host "Patched: $Path" -ForegroundColor Green
+  Write-Host "  Added $PropertyName : $PropertyValue" -ForegroundColor Gray
+}
+
 # =============================================================================
 # Repair process
 # =============================================================================
@@ -940,6 +986,35 @@ if ($Enable_Chromanite) {
         -Path $_.FullName `
         -Pattern '(?m)^\s*"ProductOf"\s*:\s*\[[^\]]*\]\s*,?\r?\n?'
     }
+
+  Write-Section "Patch Chromanite Material GroupId fields"
+
+  $chromaniteGroupIds = @(
+    @{
+      RelativePath = "Config\Materials\Building\ChromanitePlate.json"
+      GroupId      = "Plates"
+    }
+    @{
+      RelativePath = "Config\Materials\Ore\ChromaniteSand.json"
+      GroupId      = "Ore"
+    }
+    @{
+      RelativePath = "Config\Materials\Organic\ChromanitePulp.json"
+      GroupId      = "Components"
+    }
+    @{
+      RelativePath = "Config\Materials\Organic\ChromaniteWood.json"
+      GroupId      = "Plants"
+    }
+  )
+
+  foreach ($entry in $chromaniteGroupIds) {
+    Ensure-JsonTopLevelPropertyAfter `
+      -Path (Join-Path $mods.Chromanite $entry.RelativePath) `
+      -AfterProperty "Id" `
+      -PropertyName "GroupId" `
+      -PropertyValue $entry.GroupId
+  }
 
   Write-Section "Patch Chromanite Flammable temperature resistance typo"
 
