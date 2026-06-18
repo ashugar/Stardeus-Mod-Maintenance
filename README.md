@@ -4,15 +4,14 @@ PowerShell maintenance and compatibility repair script for selected Stardeus Wor
 
 ## Project Status
 
-This repository contains maintenance and compatibility scripts
-for Stardeus Workshop mods.
+Discontinued. I've moved to the point where it's much more stable and convenient to simply maintain updated mods.
 
 ### Available Versions
 
 | Script | Target Version | Status |
 |----------|----------|----------|
 | v0.14 | Stardeus 0.14 | Archived |
-| v0.15 | Stardeus 0.15 Private/Beta | Active Development |
+| v0.15 | Stardeus 0.15 Private/Beta | Archived |
 
 The v0.15 script is currently focused on restoring compatibility
 for abandoned or outdated Workshop mods while Stardeus v0.15
@@ -20,7 +19,7 @@ continues development.
 
 ## Supported Mods
 
-- Prosthetics & Androids Expanded
+- Prosthetics & Androids Expanded (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3746773189)
 - Molecular Assembler Fixed
 - MetalHusksRevisited
 - Better Storage
