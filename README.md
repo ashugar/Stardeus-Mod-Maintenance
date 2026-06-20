@@ -22,7 +22,7 @@ continues development.
 - Prosthetics & Androids Expanded (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3746773189)
 - Molecular Assembler Fixed
 - MetalHusksRevisited
-- Better Storage
+- Better Storage (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3748324441)
 - Chromanite Material
 - Orbotron / More Orbotrons
 
