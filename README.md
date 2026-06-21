@@ -20,7 +20,7 @@ continues development.
 ## Supported Mods
 
 - Prosthetics & Androids Expanded (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3746773189)
-- Molecular Assembler Fixed
+- Molecular Assembler Fixed (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3748810380)
 - MetalHusksRevisited
 - Better Storage (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3748324441)
 - Chromanite Material
