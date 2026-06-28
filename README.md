@@ -21,10 +21,10 @@ continues development.
 
 - Prosthetics & Androids Expanded (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3746773189)
 - Molecular Assembler Fixed (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3748810380)
-- MetalHusksRevisited
+- MetalHusksRevisited (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3749399478)
 - Better Storage (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3748324441)
-- Chromanite Material
-- Orbotron / More Orbotrons
+- Chromanite Material (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3748921886)
+- Orbotron / More Orbotrons (Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3748954299)
 
 ## What It Does
 
