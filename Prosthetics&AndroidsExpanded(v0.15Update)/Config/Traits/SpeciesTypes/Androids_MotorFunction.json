@@ -1,0 +1,9 @@
+{
+    "SpeciesType" : "Androids",
+    "TraitTypeId" : "MotorFunction",
+    "Rarity" : 1.0,
+    // QuantumNexusTraitsSys owns Android trait generation. Keeping this
+    // registered but always skipped prevents Core generation from adding a
+    // separate, unweighted motor trait before the Nexus personality is built.
+    "SkipChance" : 1.0
+}

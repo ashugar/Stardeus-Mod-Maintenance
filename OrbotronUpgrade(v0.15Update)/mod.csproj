@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion><GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute><GenerateAssemblyInfo>false</GenerateAssemblyInfo><EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <OutputType>Library</OutputType><TargetFramework>net481</TargetFramework><TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion><PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>OrbotronUpgrade</RootNamespace><AssemblyName>OrbotronUpgrade</AssemblyName><VersionPrefix>2.1.0</VersionPrefix>
+    <OutputPath>Libraries</OutputPath><AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath><DebugType>embedded</DebugType><DebugSymbols>false</DebugSymbols>
+    <GenerateDependencyFile>false</GenerateDependencyFile><PreserveCompilationContext>false</PreserveCompilationContext><PreserveCompilationReferences>false</PreserveCompilationReferences><ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences><NoConfig>true</NoConfig><NoStdLib>true</NoStdLib><AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences><ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades><ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
+    <PathMap>$(MSBuildProjectDirectory)=/_/OrbotronUpgrade</PathMap>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Code/**/*.cs" />
+    <Reference Include="Game" HintPath="$(StardeusManagedPath)/Game.dll" Private="False" />
+    <Reference Include="Game.CodeGen" HintPath="$(StardeusManagedPath)/Game.CodeGen.dll" Private="False" />
+    <Reference Include="Game.Constants" HintPath="$(StardeusManagedPath)/Game.Constants.dll" Private="False" />
+    <Reference Include="Game.Utils" HintPath="$(StardeusManagedPath)/Game.Utils.dll" Private="False" />
+    <Reference Include="KLUnityUtils" HintPath="$(StardeusManagedPath)/KLUnityUtils.dll" Private="False" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(StardeusManagedPath)/UnityEngine.CoreModule.dll" Private="False" />
+    <Reference Include="UnityEngine.UI" HintPath="$(StardeusManagedPath)/UnityEngine.UI.dll" Private="False" />
+    <Reference Include="UnityEngine.UIModule" HintPath="$(StardeusManagedPath)/UnityEngine.UIModule.dll" Private="False" />
+    <Reference Include="mscorlib" HintPath="$(StardeusManagedPath)/mscorlib.dll" Private="False" />
+    <Reference Include="netstandard" HintPath="$(StardeusManagedPath)/netstandard.dll" Private="False" />
+    <Reference Include="System" HintPath="$(StardeusManagedPath)/System.dll" Private="False" />
+    <Reference Include="System.Core" HintPath="$(StardeusManagedPath)/System.Core.dll" Private="False" />
+  </ItemGroup>
+</Project>

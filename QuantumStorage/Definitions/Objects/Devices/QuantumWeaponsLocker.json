@@ -1,0 +1,119 @@
+{
+  "ToolPath" : "Furniture",
+  "Layer" : "Objects",
+  "ParentId" : "Objects/Devices/BaseDevice",
+  "UseParentTexts" : false,
+  "NameKey" : "objects.devices.quantumweaponslocker",
+  "Researchable" : {
+    "Prerequisites" : [
+      "Research/Computing/QuantumStorage"
+    ]
+  },
+  "Spawnable" : {
+    "Category" : "Storage",
+    "Chance" : 0.25,
+    "ChanceLocked" : 0.1
+  },
+  "Components" : [
+    {
+      "Component" : "TileTransform",
+      "Properties" : [
+        { "Key" : "Width", "Int" : 1 },
+        { "Key" : "Height", "Int" : 1 },
+        { "Key" : "IsRotatable", "Bool" : true },
+        { "Key" : "OutPort", "Vector2" : { "x" : 0, "y" : -1 } },
+        { "Key" : "InPort", "Vector2" : { "x" : 0, "y" : -1 } }
+      ]
+    },
+    {
+      "Component" : "TileGraphics",
+      "Properties" : [
+        { "Key" : "Type", "String" : "Object" },
+        { "Key" : "Graphic", "String" : "Objects/Devices/QuantumWeaponsLocker" },
+        { "Key" : "HasHeight", "Bool" : true }
+      ]
+    },
+    {
+      "Component" : "ElectricNode",
+      "Properties" : [
+        { "Key" : "IsConsumer", "Bool" : true }
+      ]
+    },
+    {
+      "Component" : "PoweredStorage",
+      "Properties" : [
+        { "Key" : "EnergyCostBase", "Float" : 25.0 },
+        { "Key" : "EnergyCostPerItem", "Float" : 0.0 }
+      ]
+    },
+    {
+      "Component" : "WithFuse",
+      "Properties" : [
+        { "Key" : "MalfunctionWeight", "Float" : 0.1 }
+      ]
+    },
+    {
+      "Component" : "ObjHaulTarget",
+      "Properties" : [
+        { "Key" : "AutoHaul", "Bool" : true },
+        { "Key" : "Priority", "Int" : 3 },
+        { "Key" : "Mode", "String" : "AllowAll" },
+        { "Key" : "NeedsElectricity", "Bool" : true }
+      ]
+    },
+    {
+      "Component" : "ObjStorage",
+      "Properties" : [
+        { "Key" : "Groups", "StringSet" : [ "Weapon" ] },
+        { "Key" : "MaxCapacity", "Int" : 25 }
+      ]
+    },
+    {
+      "Component" : "QuantumStorageNode",
+      "Properties" : [
+        { "Key" : "NetworkId", "String" : "Weapons" },
+        { "Key" : "BaseCapacity", "Int" : 25 },
+        { "Key" : "CapacityMultiplier", "Int" : 2 },
+        { "Key" : "MaxNetworkCapacity", "Int" : 2000000000 },
+        { "Key" : "FireFeedbackChance", "Float" : 0.02 },
+        { "Key" : "ExplosionFeedbackChance", "Float" : 0.05 },
+        { "Key" : "FeedbackDamageFraction", "Float" : 0.2 }
+      ]
+    },
+    {
+      "Component" : "Flammable",
+      "Properties" : [
+        { "Key" : "IgnitionTemperatureCelsius", "Int" : 300 },
+        { "Key" : "FireChance", "Float" : 0.6 },
+        { "Key" : "BaseExplosionLevel", "Int" : 0 },
+        { "Key" : "ExplosivenessCurve", "String" : "DeviceLow" }
+      ]
+    },
+    {
+      "Component" : "Passability",
+      "Properties" : [
+        { "Key" : "IsPassable", "Bool" : false },
+        { "Key" : "IsWalkable", "Bool" : false },
+        { "Key" : "Difficulty", "Float" : 1.0 }
+      ]
+    },
+    {
+      "Component" : "Constructable",
+      "Properties" : [
+        { "Key" : "Placement", "String" : "OnFloor" },
+        { "Key" : "WorkAmount", "Int" : 900 },
+        { "Key" : "CanDragRow", "Bool" : true },
+        {
+          "Key" : "Contents",
+          "RawMaterials" : [
+            { "TypeId" : "TitaniumPlate", "StackSize" : 4 },
+            { "TypeId" : "Microchip3", "StackSize" : 3 },
+            { "TypeId" : "GoldWire", "StackSize" : 3 },
+            { "TypeId" : "OpticalFiber", "StackSize" : 4 },
+            { "TypeId" : "Nanobots", "StackSize" : 2 }
+          ]
+        }
+      ]
+    }
+  ]
+}

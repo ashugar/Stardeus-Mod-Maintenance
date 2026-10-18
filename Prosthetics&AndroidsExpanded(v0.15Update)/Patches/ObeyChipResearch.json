@@ -1,0 +1,12 @@
+﻿{
+  "target": "Definitions/Obj/Parts/Implant/ObeyChip.json",
+  "operations": [
+    {
+      "op": "replace",
+      "path": "/Researchable/Prerequisites",
+      "value": [
+        "Research/Robotics/QuantumNexus"
+      ]
+    }
+  ]
+}

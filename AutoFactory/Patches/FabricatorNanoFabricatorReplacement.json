@@ -1,0 +1,13 @@
+{
+    "target": "Definitions/Objects/Devices/Fabricator.json",
+    "operations": [
+        {
+            "op": "add",
+            "path": "/Components[Component=Constructable]/Properties/-",
+            "value": {
+                "Key": "CanReplaceGroup",
+                "String": "AutoFactory.NanoFabricator"
+            }
+        }
+    ]
+}

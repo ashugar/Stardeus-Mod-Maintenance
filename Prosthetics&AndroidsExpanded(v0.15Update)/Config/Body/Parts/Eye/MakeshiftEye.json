@@ -1,0 +1,22 @@
+{
+    "SlotTypeId" : "Eye",
+    "Compatibility" : "Any",
+	"AddsNeeds" : [
+        "Light"
+    ],
+    "Tier" : 1,
+    "ResistanceBase" : 1.0,
+	"Resistances" : [
+        { "DamageType" : "Blunt", "Resistance" : 6.0 }
+    ],
+    "ProvidesStats" : [
+        {
+            "Component" : "Sight",
+            "Properties" : [
+                { "Key" : "CompoundLimit", "Float" : 0.6 },
+                { "Key" : "Amount", "Float" : 0.3 },
+                { "Key" : "StateMul", "Float" : 1.0 }
+            ]
+        }
+    ]
+}

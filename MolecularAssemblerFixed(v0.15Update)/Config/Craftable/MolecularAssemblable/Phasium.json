@@ -1,0 +1,15 @@
+﻿{
+    "Type": "MolecularAssemblable",
+    "Ingredients": [
+        { "TypeId": "Phasium", "StackSize": 0 }
+    ],
+    "ProductDefId": "Obj/Materials/Phasium",
+    "ProductionTimeHours": 2.0,
+    "OutputMultiplier": 5,
+    "EnergyCost": 4.0,
+    "IgnoreEnergyOutput" : true,
+    "IgnoreMarket" : true
+}
+
+
+

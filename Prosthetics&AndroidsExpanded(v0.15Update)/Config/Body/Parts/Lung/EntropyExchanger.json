@@ -1,0 +1,56 @@
+{
+    "SlotTypeId" : "Lung",
+    "Compatibility" : "Any",
+    "Tier" : 4,
+    "ResistanceBase" : 14.0,
+    "ProvidesStats" : [
+        {
+            "Component" : "LungEfficiency",
+            "Properties" : [
+                { "Key" : "CompoundLimit", "Float" : 3.0 },
+                { "Key" : "Amount", "Float" : 1.5 },
+                { "Key" : "StateMul", "Float" : 1.0 }
+            ]
+        },
+        {
+            "Component" : "LungCapacity",
+            "Properties" : [
+                { "Key" : "CompoundLimit", "Float" : 4.0 },
+                { "Key" : "Amount", "Float" : 2.0 },
+                { "Key" : "StateMul", "Float" : 1.0 }
+            ]
+        }
+    ],
+    "AddsStatModifiers" : [
+        {
+            "Component" : "O2Min",
+            "Properties" : [
+                { "Key" : "Value", "Float" : 0.0 },
+                { "Key" : "Type", "String" : "Sets" }
+            ]
+        },
+        {
+            "Component" : "O2",
+            "Properties" : [
+                { "Key" : "Value", "Float" : 0.21 },
+                { "Key" : "Type", "String" : "Sets" }
+            ]
+        }
+    ],
+    "AddsAttackMethods" : [
+        {
+            "Component" : "Exhaust",
+            "Properties" : [
+                { "Key" : "AttackAction", "String" : "Melee" },
+                { "Key" : "DPS", "Float" : 3 },
+                { "Key" : "AttackType", "String" : "Energy" },
+                { "Key" : "ChargeSec", "Float" : 1.5 },
+                { "Key" : "CooldownSec", "Float" : 0.5 },
+                { "Key" : "MoveSpeedMul", "Float" : 0.0 },
+                { "Key" : "StunChanceBio", "Float" : 0.1 },
+                { "Key" : "StunChanceRobo", "Float" : 0.1 },
+                { "Key" : "AccuracyMax", "Float" : 1.0 }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,2 @@
+# Preserve imported mod files byte-for-byte, including existing line endings.
+* -text

@@ -1,0 +1,22 @@
+{
+    "Layer" : "FreeEntities",
+    "ParentId" : "Obj/Parts/BasePartRobotic",
+    "NameKey" : "bodypart.Ear.SideRadiator",
+    "Researchable" : {
+        "Prerequisites" : [ "Research/Robotics/FusionOrgans" ]
+    },
+    "Components" : [
+        {
+            "Component" : "ObjGraphics",
+            "Properties" : [
+                { "Key" : "Graphic", "String": "Obj/BodyParts/Robotic3" }
+            ]
+        },
+        {
+            "Component" : "BodyPart",
+            "Properties" : [
+                { "Key" : "BodyPartDefId", "String" : "Ear/SideRadiator" }
+            ]
+        }
+    ]
+}

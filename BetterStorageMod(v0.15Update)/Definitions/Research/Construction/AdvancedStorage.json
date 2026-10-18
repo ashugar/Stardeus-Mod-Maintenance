@@ -1,0 +1,18 @@
+{
+    "Id": "Research/Construction/AdvancedStorage",
+    "Tier": 2,
+    "IsAbstract": true,
+    "PreviewIcon": "Icons/Color/Cog",
+    "Researchable": {
+        "IsTreeNode": true,
+        "Prerequisites": [
+            "Research/Construction/Storage"
+        ],
+        "DatoidCosts": [
+            {
+                "TypeId": "DatoidBasic",
+                "StackSize": 10
+            }
+        ]
+    }
+}

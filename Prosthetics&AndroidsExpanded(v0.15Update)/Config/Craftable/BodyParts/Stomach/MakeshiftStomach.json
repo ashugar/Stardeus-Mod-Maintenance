@@ -1,0 +1,13 @@
+{
+    "Type" : "Robotics1",
+    "ProductDefId" : "Obj/Parts/Stomach/MakeshiftStomach",
+    "ProductionTimeHours" : 3,
+    "EnergyCost" : 15,
+    "IgnoreMarket" : true,
+    "Ingredients" : [
+        { "TypeId" : "TitaniumPlate", "StackSize" : 1 },
+        { "TypeId" : "CopperWire", "StackSize" : 1 },
+        { "TypeId" : "Transistor", "StackSize" : 2 },
+        { "TypeId" : "BatteryCell", "StackSize" : 5 }
+    ]
+}

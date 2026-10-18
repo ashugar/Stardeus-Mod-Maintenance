@@ -1,0 +1,15 @@
+{
+    "Type" : "Robotics3",
+    "ProductDefId" : "Obj/Parts/Stomach/DegeneracyReactor",
+    "ProductionTimeHours" : 12,
+    "EnergyCost" : 60,
+    "IgnoreMarket" : true,
+    "Ingredients" : [
+        { "TypeId" : "TitaniumPlate", "StackSize" : 1 },
+        { "TypeId" : "CopperWire", "StackSize" : 1 },
+        { "TypeId" : "Microchip", "StackSize" : 3 },
+        { "TypeId" : "SteelPlate", "StackSize" : 1 },
+        { "TypeId" : "PlatinumIngot", "StackSize" : 2 },
+        { "TypeId" : "Phasium", "StackSize" : 2 }
+    ]
+}

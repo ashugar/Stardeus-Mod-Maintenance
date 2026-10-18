@@ -1,0 +1,32 @@
+﻿{
+    "Layer" : "FreeEntities",
+    "ParentId" : "Beings/BaseBeing",
+    "PreviewIcon" : "Icons/Color/PreviewAndroids01",
+    "Researchable" : {
+        "Prerequisites" : [ "Research/Robotics/QuantumNexus" ]
+    },
+    "Components" : [
+        {
+            "Component" : "LightSource",
+            "Properties" : [
+                { "Key" : "Radius", "Float" : 1 },
+                { "Key" : "Color", "IntSet" : [ 221, 34, 34, 80 ] },
+                { "Key" : "NeedsEnergy", "Bool" : false }
+            ]
+        },
+        {
+            "Component" : "BeingNameText" ,
+            "Properties" : [
+                { "Key" : "Offset", "Vector2" : { "x" : 0, "y" : -0.5 } },
+                { "Key" : "SpeechOffset", "Float" : 0.5 }
+            ]
+        },
+        { "Component" : "BedUser" },
+        {
+            "Component" : "Disposable",
+            "Properties" : [
+                { "Key" : "IsBiological", "Bool" : true }
+            ]
+        }
+    ]
+}

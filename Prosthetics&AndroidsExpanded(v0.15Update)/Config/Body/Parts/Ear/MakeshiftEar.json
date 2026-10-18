@@ -1,0 +1,9 @@
+{
+    "SlotTypeId" : "Ear",
+    "Compatibility" : "Any",
+    "Tier" : 1,
+    "ResistanceBase" : 3.0,
+    "AddsAbilities" : [
+        "Hear"
+    ]
+}

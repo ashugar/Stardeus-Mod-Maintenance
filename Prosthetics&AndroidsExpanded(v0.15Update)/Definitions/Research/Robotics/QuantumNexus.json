@@ -1,0 +1,27 @@
+{
+    "Id" : "Research/Robotics/QuantumNexus",
+    "Tier" : 6,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Obj/BodyParts/Robotic",
+    "NameKey" : "beings.androids01",
+    "Researchable" : {
+        "IsTreeNode" : true,
+        "Prerequisites" : [
+            "Research/Robotics/Orbotron"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidQuantum",
+                "StackSize" : 20
+            },
+            {
+                "TypeId" : "DatoidAlien",
+                "StackSize" : 20
+            },
+            {
+                "TypeId" : "DatoidNuclear",
+                "StackSize" : 20
+            }		
+        ]
+    }
+}

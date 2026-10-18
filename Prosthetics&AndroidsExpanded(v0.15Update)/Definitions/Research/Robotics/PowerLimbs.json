@@ -1,0 +1,26 @@
+{
+    "Id" : "Research/Robotics/PowerLimbs",
+    "Tier" : 4,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Obj/BodyParts/Robotic",
+    "Researchable" : {
+        "IsTreeNode" : true,
+        "Prerequisites" : [
+            "Research/Robotics/PartsAdvanced"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidQuantum",
+                "StackSize" : 12
+            },
+            {
+                "TypeId" : "DatoidAlien",
+                "StackSize" : 12
+            },
+            {
+                "TypeId" : "DatoidNuclear",
+                "StackSize" : 12
+            }			
+        ]
+    }
+}

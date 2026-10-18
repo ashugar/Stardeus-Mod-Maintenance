@@ -1,0 +1,19 @@
+{
+    "SlotTypeId" : "Leg",
+    "Compatibility" : "Any",
+    "Tier" : 1,
+    "ResistanceBase" : 3.0,
+    "AddsAbilities" : [
+        "Move"
+    ],
+    "ProvidesStats" : [
+        {
+            "Component" : "MoveSpeed",
+            "Properties" : [
+                { "Key" : "CompoundLimit", "Float" : 0.3 },
+                { "Key" : "AmountPerMinute", "Float" : 0.1 },
+                { "Key" : "StateMul", "Float" : 1.0 }
+            ]
+        }
+    ]
+}

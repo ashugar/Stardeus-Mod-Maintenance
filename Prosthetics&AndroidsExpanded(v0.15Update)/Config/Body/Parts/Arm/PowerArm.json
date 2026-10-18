@@ -1,0 +1,18 @@
+{
+    "SlotTypeId" : "Arm",
+    "Compatibility" : "Any",
+    "Tier" : 4,
+    "ResistanceBase" : 16.0,
+    "AddsAbilities" : [
+    ],
+    "ProvidesStats" : [
+        {
+            "Component" : "Dexterity",
+            "Properties" : [
+                { "Key" : "Amount", "Float" : 0.5 },
+                { "Key" : "CompoundLimit", "Float" : 2.0 },
+                { "Key" : "StateMul", "Float" : 0.6 }
+            ]
+        }
+    ]
+}
