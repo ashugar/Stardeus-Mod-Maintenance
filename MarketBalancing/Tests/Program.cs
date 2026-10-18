@@ -182,7 +182,7 @@ internal static class Program {
         MarketBalance.Restore(); Check(byId.All(x => x.Value.Value == before[x.Key]), "Core snapshot restored");
         MarketBalance.Apply(); Check(byId.All(x => x.Value.Value == after[x.Key]), "Core snapshot repeated load stable");
         var report = new { Scope = "Static Core JSON snapshot and adapter stand-ins; before native Core price validation, not gameplay or loaded mod definitions.",
-            Core = core, CoreMarketItems = byId.Count, CoreRecipes = Craftable.All.Count, EligibleRecipes = eligible,
+            Core = "<StardeusCoreRoot>", CoreMarketItems = byId.Count, CoreRecipes = Craftable.All.Count, EligibleRecipes = eligible,
             IncreasedItems = changed.Length, Changes = changed };
         if (reportPath != null) { File.WriteAllText(reportPath, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true })); }
         Console.WriteLine($"CORE_SNAPSHOT: {byId.Count} market items, {Craftable.All.Count} recipes, {eligible} eligible, {changed.Length} increases");
