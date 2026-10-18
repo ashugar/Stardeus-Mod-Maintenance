@@ -1,0 +1,14 @@
+{
+    "Type" : "Robotics2",
+    "ProductDefId" : "Obj/Parts/Ear/BionicsEar",
+    "ProductionTimeHours" : 8,
+    "EnergyCost" : 30,
+    "IgnoreMarket" : true,
+    "Ingredients" : [
+        { "TypeId" : "TitaniumPlate", "StackSize" : 1 },
+        { "TypeId" : "Rubber", "StackSize" : 1 },
+        { "TypeId" : "Microchip", "StackSize" : 2 },
+        { "TypeId" : "BatteryCell", "StackSize" : 1 },
+        { "TypeId" : "Transistor", "StackSize" : 6 }
+    ]
+}

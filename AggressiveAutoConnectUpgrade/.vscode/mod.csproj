@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net481</TargetFramework>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>AggressiveAutoConnectUpgrade</RootNamespace>
+    <AssemblyName>AggressiveAutoConnectUpgrade</AssemblyName>
+    <OutputPath>../Libraries</OutputPath>
+    <VersionPrefix>1.2.2.0</VersionPrefix>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+    <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
+    <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoUtilitiesModFramework">
+      <HintPath>../../AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/*.dll">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

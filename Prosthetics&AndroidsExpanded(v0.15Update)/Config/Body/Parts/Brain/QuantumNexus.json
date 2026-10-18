@@ -1,0 +1,13 @@
+{
+    "SlotTypeId" : "Brain",
+    "Compatibility" : "Robotic",
+    "TargetSpecies" : [ "Androids" ],
+    "PartFlags" : [ "HoldsMind", "SupportsMindTransfer", "SupportsMLBooth" ],
+	"AddsAbilities" : [
+        "DumbLabor",
+        "SkilledLabor",
+        "Intelligence"
+    ],
+    "ResistanceBase" : 6.0,
+    "Tier" : 5
+}

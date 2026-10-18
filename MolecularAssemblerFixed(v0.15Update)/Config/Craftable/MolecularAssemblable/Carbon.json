@@ -1,0 +1,15 @@
+﻿{
+    "Type": "MolecularAssemblable",
+    "Ingredients" : [
+        { "TypeId" : "Carbon", "StackSize" : 0 }
+    ],
+
+    "ProductDefId": "Obj/Materials/Carbon",
+    "ProductionTimeHours": 1.0,
+	"OutputMultiplier" : 10,
+    "EnergyCost": 2.0,
+    "IgnoreEnergyOutput": true,
+	"IgnoreMarket": true
+}
+
+

@@ -1,0 +1,105 @@
+{
+    "ToolPath" : "Energy",
+    "Layer" : "Objects",
+    "ParentId" : "Objects/Devices/SolarPanel",
+    "Researchable" : {
+        "Prerequisites" : [ "Research/ChromaticEnergy" ]
+    },
+    "TranslationVars" : [ "4" ],
+    "Spawnable" : {
+        "Chance" : 1.0,
+        "ChanceLocked" : 0.5,
+        "Quantity" : {
+            "Component" : "Curve",
+            "Properties" : [
+                { "Key" : "Keys",  "FloatSet" : [0.0, 0.8, 0.95, 1.0 ] },
+                { "Key" : "Values", "IntSet" :  [5,   10,  12,   15  ] }
+            ]
+        }
+    },
+    "Components" : [
+        {
+            "Component" : "TileTransform",
+            "Properties" : [
+                { "Key" : "IsRotatable", "Bool" : false },
+                { "Key" : "CoverPercent", "Int" : 0 },
+				{ "Key" : "Width", "Int" : 1 },
+                { "Key" : "Height", "Int" : 1 }
+            ]
+        },
+        {
+            "Component" : "SolarPanel",
+            "Properties" : [
+                { "Key" : "PowerOutput", "Float": 4 },
+                { "Key" : "DustAccumulation", "Float": 0.01 }
+            ]
+        },
+        { "Component" : "ExtraInfo" },
+        {
+            "Component" : "Cleanable",
+            "Properties" : [
+                { "Key" : "DirtCapacity", "Int" : 100 },
+                { "Key" : "Byproduct", "String" : "Soil" },
+                { "Key" : "SpawnByproductForEverySubPos", "Bool" : true },
+                { "Key" : "AutoHaulByproduct", "Bool" : false },
+                { "Key" : "DirtToMaterialRate", "Float" : 0.01 },
+                { "Key" : "AutocleanAmount", "Float" : 0.33 },
+                { "Key" : "HasBar", "Bool" : false },
+                { "Key" : "CleanPriority", "Int" : 3 },
+                { "Key" : "AdFlyingOnly", "Bool" : true },
+                { "Key" : "TextKey", "String" : "dust.accumulation" },
+                { "Key" : "GoalKey", "String" : "clean.dust" },
+                { "Key" : "DirtyKey", "String" : "info.solar.panel.dusty" },
+                { "Key" : "AmountKey", "String" : "dust.amount" },
+                { "Key" : "BarKey", "String" : "dust.amount.bar" },
+                { "Key" : "WarningKey", "String" : "solar.panel.dust.warn" }
+            ]
+        },
+        {
+            "Component" : "ElectricNode",
+            "Properties" : [
+			    { "Key" : "IsProducer", "Bool" : true },
+                { "Key" : "ParticlesEmitChance", "Float" : 0.2 }
+            ]
+        },
+        {
+            "Component" : "TileGraphics",
+            "Properties" : [
+                { "Key" : "Type", "String": "Object" },
+                { "Key" : "Graphic", "String": "Objects/Devices/GlitterPanel" }
+            ]
+        },
+        {
+            "Component" : "LightSource",
+            "Properties" : [
+                { "Key" : "Radius", "Float" : 4 },
+                { "Key" : "Color", "IntSet" : [ 102, 143, 204, 128 ] }
+            ]
+        },
+        {
+            "Component" : "Passability",
+            "Properties" : [
+                { "Key" : "IsPassable", "Bool" : true },
+                { "Key" : "IsWalkable", "Bool" : false },
+                { "Key" : "Difficulty", "Float" : 0 }
+            ]
+        },
+        {
+            "Component" : "Constructable",
+            "Properties" : [
+                { "Key" : "Placement", "String" : "InSpaceAttachedChained" },
+                { "Key" : "PlacementGroup", "String" : "SolarPanel" },
+                { "Key" : "WorkAmount", "Int" : 1000 },
+                {
+                    "Key" : "Contents",
+                    "RawMaterials" : [
+                        { "TypeId" : "TitaniumPlate", "StackSize" : 1 },
+                        { "TypeId" : "CopperWire", "StackSize" : 1 },
+                        { "TypeId" : "Glass", "StackSize" : 1 },
+						{ "TypeId" : "ChromanitePlate", "StackSize" : 1 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

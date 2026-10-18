@@ -1,0 +1,178 @@
+{
+  "ToolPath": "Facilities",
+  "Layer": "Objects",
+  "ParentId": "Objects/Devices/PartStorage",
+  "UseParentTexts": false,
+  "NameKey": "objects.devices.partstoragerelay",
+  "Researchable": {
+    "Prerequisites": [
+      "Research/Production/QuasiQuantumStorage"
+    ]
+  },
+  "Spawnable": {
+    "Category": "Storage",
+    "Chance": 0,
+    "ChanceLocked": 0
+  },
+  "Components": [
+    {
+      "Component": "TileTransform",
+      "Properties": [
+        {
+          "Key": "Width",
+          "Int": 1
+        },
+        {
+          "Key": "Height",
+          "Int": 1
+        },
+        {
+          "Key": "IsRotatable",
+          "Bool": true
+        },
+        {
+          "Key": "OutPort",
+          "Vector2": {
+            "x": 0,
+            "y": -1
+          }
+        },
+        {
+          "Key": "InPort",
+          "Vector2": {
+            "x": 0,
+            "y": -1
+          }
+        }
+      ]
+    },
+    {
+      "Component": "TileGraphics",
+      "Properties": [
+        {
+          "Key": "Type",
+          "String": "Object"
+        },
+        {
+          "Key": "Graphic",
+          "String": "Objects/Devices/PartStorageRelay"
+        },
+        {
+          "Key": "HasHeight",
+          "Bool": true
+        },
+        {
+          "Key": "AliasLR",
+          "Bool": false
+        },
+        {
+          "Key": "AliasUD",
+          "Bool": false
+        }
+      ]
+    },
+    {
+      "Component": "ElectricNode",
+      "Properties": [
+        {
+          "Key": "IsConsumer",
+          "Bool": true
+        }
+      ]
+    },
+    {
+      "Component": "PoweredStorage",
+      "Properties": [
+        {
+          "Key": "EnergyCostBase",
+          "Float": 10
+        },
+        {
+          "Key": "EnergyCostPerItem",
+          "Float": 0
+        }
+      ]
+    },
+    {
+      "Component": "ObjStorage",
+      "Properties": [
+        {
+          "Key": "MaxCapacity",
+          "Int": 150
+        }
+      ]
+    },
+    {
+      "Component": "ObjHaulTarget",
+      "Properties": [
+        {
+          "Key": "AutoHaul",
+          "Bool": true
+        },
+        {
+          "Key": "Priority",
+          "Int": 3
+        },
+        {
+          "Key": "Mode",
+          "String": "AllowAll"
+        },
+        {
+          "Key": "NeedsElectricity",
+          "Bool": true
+        }
+      ]
+    },
+    {
+      "Component": "StorageRelayNode",
+      "Properties": [
+        {
+          "Key": "NetworkId",
+          "String": "RoboticParts"
+        },
+        {
+          "Key": "LocalCapacity",
+          "Int": 150
+        },
+        {
+          "Key": "LinkRange",
+          "Int": 12
+        }
+      ]
+    },
+    {
+      "Component": "Constructable",
+      "Properties": [
+        {
+          "Key": "Placement",
+          "String": "OnFloor"
+        },
+        {
+          "Key": "WorkAmount",
+          "Int": 900
+        },
+        {
+          "Key": "CanDragRow",
+          "Bool": true
+        },
+        {
+          "Key": "Contents",
+          "RawMaterials": [
+            {
+              "TypeId": "SteelPlate",
+              "StackSize": 3
+            },
+            {
+              "TypeId": "Gears",
+              "StackSize": 2
+            },
+            {
+              "TypeId": "Microchip2",
+              "StackSize": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

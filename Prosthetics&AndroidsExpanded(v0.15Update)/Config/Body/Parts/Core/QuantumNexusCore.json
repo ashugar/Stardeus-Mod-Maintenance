@@ -1,0 +1,20 @@
+﻿{
+  "SlotTypeId" : "Core",
+  "Compatibility" : "Robotic",
+  "TargetSpecies" : [
+    "CleaningBot",
+    "Drone",
+    "Orbotron",
+    "Robot",
+    "Sentry",
+    "Carrier"
+  ],
+  "PartFlags" : [ "HoldsMind", "SupportsMindTransfer", "SupportsMLBooth" ],
+  "AddsAbilities" : [
+      "DumbLabor",
+      "SkilledLabor",
+      "Intelligence"
+  ],
+  "ResistanceBase" : 6.0,
+  "Tier" : 5
+}

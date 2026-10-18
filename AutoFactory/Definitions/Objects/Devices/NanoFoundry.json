@@ -1,0 +1,84 @@
+{
+    "ToolPath": "Production",
+    "Layer": "Objects",
+    "ParentId": "Objects/Devices/Furnace",
+    "NameKey": "AutoFactory.NanoFoundry",
+    "Tier": 4,
+    "Researchable": {
+        "Prerequisites": [
+            "Research/Production/NanoSmelting"
+        ]
+    },
+    "Components": [
+        {
+            "Component": "TileGraphics",
+            "Properties": [
+                { "Key": "Type", "String": "Object" },
+                { "Key": "Graphic", "String": "Objects/Devices/NanoFoundry" },
+                { "Key": "HasHeight", "Bool": true }
+            ]
+        },
+        {
+            "Component": "TileAnimation",
+            "Properties": [
+                { "Key": "Offsets", "Vector2Set": [
+                    { "x": 0.0, "y": 0.5 },
+                    { "x": 0.0, "y": 0.5 },
+                    { "x": 0.0, "y": 0.5 },
+                    { "x": 0.0, "y": 0.5 }
+                ] },
+                { "Key": "Rotations", "StringSet": [ "D", "L", "U", "R" ] },
+                { "Key": "Direction", "Int": 1 },
+                { "Key": "BaseSprite", "String": "Objects/Devices/NanoFoundry" },
+                { "Key": "AnimSprite", "String": "Objects/DeviceAnims/NanoFoundry_Anim" },
+                { "Key": "CopyAnimSprite", "Bool": true },
+                { "Key": "Speed", "Float": 0.5 },
+                { "Key": "SpriteOrder", "String": "AboveAnyTile" },
+                { "Key": "FramePrefix", "String": "F" },
+                { "Key": "NumFrames", "Int": 3 },
+                { "Key": "NeedsEnergy", "Bool": true }
+            ]
+        },
+        {
+            "Component": "MultiCrafter",
+            "Properties": [
+                { "Key": "UIItemIcon", "String": "Icons/Color/Loading" },
+                { "Key": "CraftKey", "String": "verb.produce" },
+                { "Key": "ProgressBarKey", "String": "smelting.bar" },
+                { "Key": "DefaultPriority", "Int": 5 },
+                { "Key": "CompatibleTypes", "StringSet": [ "AutoFoundry" ] },
+                { "Key": "DisableExplosivenessProvider", "Bool": true }
+            ]
+        },
+        {
+            "Component": "RefillableStorage",
+            "Properties": [
+                { "Key": "DeviceType", "String": "nano.foundry" },
+                { "Key": "Purpose", "String": "fuel" },
+                { "Key": "BarColor", "String": "5390C6FF" },
+                { "Key": "LockedMaterial", "String": "Nanobots" },
+                { "Key": "Icon", "String": "Obj/Materials/Nanobots" },
+                { "Key": "MaterialCapacity", "Int": 100 },
+                { "Key": "DefaultPriority", "Int": 5 }
+            ]
+        },
+        {
+            "Component": "Constructable",
+            "Properties": [
+                { "Key": "WorkAmount", "Int": 1800 },
+                { "Key": "CanReplaceGroup", "String": "AutoFactory.NanoFoundry" },
+                { "Key": "CanDragRow", "Bool": true },
+                {
+                    "Key": "Contents",
+                    "RawMaterials": [
+                        { "TypeId": "SteelPlate", "StackSize": 16 },
+                        { "TypeId": "TitaniumPlate", "StackSize": 8 },
+                        { "TypeId": "Gears", "StackSize": 8 },
+                        { "TypeId": "Microchip", "StackSize": 6 },
+                        { "TypeId": "OpticalFiber", "StackSize": 8 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

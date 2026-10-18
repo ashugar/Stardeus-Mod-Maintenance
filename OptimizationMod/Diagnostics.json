@@ -1,0 +1,6 @@
+{
+  "DiagnosticsEnabled": false,
+  "CoreProfilerSuite": true,
+  "WholeFrameProfiler": false,
+  "ExternalNanobotProfiler": false
+}

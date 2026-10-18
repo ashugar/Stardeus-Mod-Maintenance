@@ -1,0 +1,13 @@
+{
+    "Type" : "Robotics1",
+    "ProductDefId" : "Obj/Parts/Ear/MakeshiftEar",
+    "ProductionTimeHours" : 3,
+    "EnergyCost" : 15,
+    "IgnoreMarket" : true,
+    "Ingredients" : [
+        { "TypeId" : "Plastic", "StackSize" : 1 },
+        { "TypeId" : "CopperWire", "StackSize" : 1 },
+        { "TypeId" : "BatteryCell", "StackSize" : 1 },
+        { "TypeId" : "Transistor", "StackSize" : 2 }
+    ]
+}

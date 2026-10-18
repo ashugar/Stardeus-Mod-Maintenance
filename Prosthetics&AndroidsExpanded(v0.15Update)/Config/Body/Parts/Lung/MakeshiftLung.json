@@ -1,0 +1,24 @@
+{
+    "SlotTypeId" : "Lung",
+    "Compatibility" : "Any",
+    "Tier" : 1,
+    "ResistanceBase" : 2.0,
+    "ProvidesStats" : [
+        {
+            "Component" : "LungEfficiency",
+            "Properties" : [
+                { "Key" : "CompoundLimit", "Float" : 0.6 },
+                { "Key" : "Amount", "Float" : 0.3 },
+                { "Key" : "StateMul", "Float" : 1.0 }
+            ]
+        },
+        {
+            "Component" : "LungCapacity",
+            "Properties" : [
+                { "Key" : "CompoundLimit", "Float" : 1.6 },
+                { "Key" : "Amount", "Float" : 0.8 },
+                { "Key" : "StateMul", "Float" : 1.0 }
+            ]
+        }
+    ]
+}

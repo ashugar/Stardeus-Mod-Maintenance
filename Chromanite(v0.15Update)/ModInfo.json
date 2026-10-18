@@ -1,0 +1,9 @@
+{
+    "Id" : "Chromanite(v0.15Update)",
+    "SteamWorkshop" : true,
+    "Name" : "Chromanite Material (v0.15 Update)",
+    "Description" : "Adds Chromanite, a durable rare material for advanced construction and manufacturing.\n\nThis is a Stardeus v0.15 compatibility update of the original Chromanite mod. The goal of this release is to preserve the original functionality and gameplay intent while restoring compatibility with current versions of Stardeus.\n\n[h2]Compatibility updates include:[/h2]\n• Stardeus v0.15 schema and definition updates\n• Updated deprecated definitions and properties to current Core standards\n• Added compatibility support for current game systems\n• Removed deprecated definitions and validation warnings where possible\n• General compatibility, stability, and maintenance improvements\n\n[h2]Additional language support:[/h2]\n• English\n• Chinese (Simplified)\n• German\n• Russian\n• French\n\n[h2]How to obtain Chromanite:[/h2]\n• Purchase it through the market\n• Or manufacture it yourself through the full production chain\n\n[h2]Production chain:[/h2]\nGrow Chromanite Trees using Large Planters\nRecycle harvested trees into Chromanite Pulp\nProcess the pulp in a Grinder to produce Chromanite Sand\nSmelt the sand into Chromanite Plates\nUse Chromanite Plates for advanced construction and manufacturing\n\n[h2]Original mod:[/h2]\nhttps://steamcommunity.com/sharedfiles/filedetails/?id=2946987731\n\nFull credit for the original mod belongs to the original author. This upload exists solely to provide continued compatibility with current versions of Stardeus after the original mod became outdated.\n\nIf the original author returns and publishes an official update, I will gladly defer to their version.\n\nGame Version: v0.15.x\nMod Version: 2.0.x",
+    "ModVersion" : "2.0.1",
+    "GameVersion" : "0.15.0",
+    "Dependencies" : [ "Core" ]
+}

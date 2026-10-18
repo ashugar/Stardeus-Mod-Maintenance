@@ -1,0 +1,27 @@
+{
+    "Id" : "Research/LifeSupport/PartRestoration",
+    "Tier" : 3,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Icons/Color/Health",
+    "Researchable" : {
+        "IsTreeNode" : true,
+        "Prerequisites" : [
+            "Research/LifeSupport/MedicalCare",
+            "Research/Robotics/Maintenance"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidBiotic",
+                "StackSize" : 10
+            },
+            {
+                "TypeId" : "DatoidSynthetic",
+                "StackSize" : 10
+            },
+            {
+                "TypeId" : "DatoidTechHigh",
+                "StackSize" : 6
+            }
+        ]
+    }
+}

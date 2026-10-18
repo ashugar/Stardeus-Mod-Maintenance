@@ -1,0 +1,15 @@
+﻿{
+    "Type": "MolecularAssemblable",
+    "Ingredients" : [
+        { "TypeId" : "Silicon", "StackSize" : 0 }
+    ],
+    "ProductDefId": "Obj/Materials/Silicon",
+    "ProductionTimeHours": 1.0,
+	"OutputMultiplier" : 10,
+    "EnergyCost": 2.0,
+    "IgnoreEnergyOutput": true,
+    "IgnoreMarket" : true
+}
+
+
+

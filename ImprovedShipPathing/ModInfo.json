@@ -1,0 +1,10 @@
+{
+  "Id": "ImprovedShipPathing",
+  "SteamWorkshop": false,
+  "Name": "Improved Ship Pathing",
+  "Description": "Improved Ship Pathing leads moving ships instead of continuously steering toward where they were. When Travel Here or Attack targets a moving ship, the mod predicts the earliest reachable standoff point using both ships' motion and acceleration. It follows Core orbital behavior around the full curve instead of mistaking each short orbit waypoint for a final stop. Attack uses a fly-through course so native braking does not delay contact; Travel Here retains a stopped rendezvous. Stardeus still owns engines, turning, arrival, combat, cancellation, and action eligibility. This is a local gameplay test candidate.",
+  "ModVersion": "0.1.1",
+  "GameVersion": "0.15.0",
+  "Dependencies": [ "AutoUtilitiesModFramework" ],
+  "DLLFiles": [ "ImprovedShipPathing.dll" ]
+}

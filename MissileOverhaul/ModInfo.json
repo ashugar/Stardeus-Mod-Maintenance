@@ -1,0 +1,10 @@
+{
+  "Id": "MissileOverhaul",
+  "SteamWorkshop": false,
+  "Name": "Missile Overhaul",
+  "Description": "Missile Overhaul gives Interceptor Turrets and Rocket Pods separate responsibilities on player, allied and hostile ships. Interceptors defend against incoming missiles, Hullpiercers and meteoroids. Rocket Pods engage the remaining eligible targets, including asteroids, ordinary breach capsules and enemy ships. Six or more simultaneous flying Storage Capsules trigger a suspected raid warning and become Rocket Pod targets until the group clears; destroyed capsules eject their native contents at the interception point. Available player buildings cover separate eligible space threats before supporting covered targets. Player buildings in Automatic mode and corresponding non-player ship weapons remain armed after normal startup and recharge. Shots retain their original target and use corrected intercept timing. A trajectory fully aligned by a Tractor Beam is a guaranteed hit. Native faction targeting, ammunition, flux and power requirements remain in effect. This is a local gameplay test candidate; validation is in progress.",
+  "ModVersion": "0.4.0",
+  "GameVersion": "0.15.0",
+  "Dependencies": [ "AutoUtilitiesModFramework" ],
+  "DLLFiles": [ "MissileOverhaul.dll" ]
+}

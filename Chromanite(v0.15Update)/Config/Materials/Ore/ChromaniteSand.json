@@ -1,0 +1,12 @@
+﻿{
+    "Id" : "ChromaniteSand",
+    "GroupId" : "Ore",
+    "IsComposite" : true,
+    "IconId" : "Obj/Materials/ChromaniteSand",
+    "ProcessableDefId" : "Obj/Materials/ChromaniteSand",
+    "EnergyOutput" : 5000.0,
+    "Rarity" : 5,
+    "InternalValue" : 22.0,
+    "MatRarity" : 0
+}
+

@@ -1,0 +1,8 @@
+{
+    "Id" : "MetalHusksRevisited(v0.15Update)",
+    "SteamWorkshop" : true,
+    "Name" : "Metal Husks Revisited (v0.15 Update)",
+    "Description" : "A fixed revision of the old iron, copper and titanium husk mods\n\nThis is a Stardeus v0.15 compatibility update of the original Metal Husks Revisited mod. The goal of this release is to preserve the original functionality and gameplay intent while restoring compatibility with current versions of Stardeus.\n\n[h2]Compatibility updates include:[/h2]\n• Stardeus v0.15 schema and definition updates\n• Updated deprecated Flammable component properties to current Core naming conventions\n• Removed deprecated ObjNoFlash properties no longer used by current game versions\n• Updated compatibility with current game systems and validation requirements\n• Removed deprecated definitions and validation warnings where possible\n• General compatibility, stability, and maintenance improvements\n\n[h2]Additional language support:[/h2]\n• English\n• Chinese (Simplified)\n• German\n• Russian\n• French\n\n[h2]Original mod:[/h2]\n https://steamcommunity.com/sharedfiles/filedetails/?id=3465483016 \n\nFull credit for the original mod belongs to the original author. This upload exists solely to provide continued compatibility with current versions of Stardeus after the original mod became outdated.\n\nIf the original author returns and publishes an official update, I will gladly defer to their version.\n\nGame Version: v0.15.x\nMod Version: 2.0.x",
+    "ModVersion" : "2.0.1",
+    "GameVersion" : "0.15.0"
+}

@@ -1,0 +1,26 @@
+{
+    "Id" : "Research/Robotics/FusionOrgans",
+    "Tier" : 5,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Obj/BodyParts/Robotic",
+    "Researchable" : {
+        "IsTreeNode" : true,
+        "Prerequisites" : [
+            "Research/Robotics/PowerLimbs"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidQuantum",
+                "StackSize" : 12
+            },
+            {
+                "TypeId" : "DatoidAlien",
+                "StackSize" : 12
+            },
+            {
+                "TypeId" : "DatoidNuclear",
+                "StackSize" : 24
+            }		
+        ]
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "Type" : "Robotics1",
+    "ProductDefId" : "Obj/Parts/Leg/MakeshiftLeg",
+    "ProductionTimeHours" : 3,
+    "EnergyCost" : 15,
+    "IgnoreMarket" : true,
+    "Ingredients" : [
+        { "TypeId" : "SteelPlate", "StackSize" : 1 },
+        { "TypeId" : "CopperWire", "StackSize" : 1 },
+        { "TypeId" : "Transistor", "StackSize" : 2 },
+        { "TypeId" : "Gears", "StackSize" : 5 }
+    ]
+}

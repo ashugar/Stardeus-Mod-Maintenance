@@ -1,0 +1,33 @@
+{
+  "target": "Config/Species/Types/Orbotron.json",
+  "operations": [
+    {
+      "op": "replace",
+      "path": "/SpawnRequirements",
+      "value": {
+        "Days": 120,
+        "Friendlies": 20
+      }
+    },
+    {
+      "op": "add",
+      "path": "/AddsAbilities/-",
+      "value": "Research"
+    },
+    {
+      "op": "add",
+      "path": "/AddsAbilities/-",
+      "value": "Craft"
+    },
+    {
+      "op": "add",
+      "path": "/AddsAbilities/-",
+      "value": "Pilot"
+    },
+    {
+      "op": "add",
+      "path": "/AddsAbilities/-",
+      "value": "Cook"
+    }
+  ]
+}

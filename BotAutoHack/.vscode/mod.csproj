@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net481</TargetFramework>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>Game.Systems.BotAutoHack</RootNamespace>
+    <AssemblyName>BotAutoHack</AssemblyName>
+    <OutputPath>../Libraries</OutputPath>
+    <VersionPrefix>1.0.7.0</VersionPrefix>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <PreserveCompilationContext>false</PreserveCompilationContext>
+    <PreserveCompilationReferences>false</PreserveCompilationReferences>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+    <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
+    <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
+    <AumfDll Condition="'$(AumfDll)' == ''">C:/Users/jleas/AppData/LocalLow/Kodo Linija/Stardeus/Mods/AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll</AumfDll>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Code/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/0Harmony.dll" Private="False" />
+    <Reference Include="AutoUtilitiesModFramework" HintPath="$(AumfDll)" Private="False" />
+    <Reference Include="Game" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/Game.dll" Private="False" />
+    <Reference Include="Game.Constants" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/Game.Constants.dll" Private="False" />
+    <Reference Include="Game.Utils" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/Game.Utils.dll" Private="False" />
+    <Reference Include="KLUnityUtils" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/KLUnityUtils.dll" Private="False" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/UnityEngine.CoreModule.dll" Private="False" />
+    <Reference Include="mscorlib" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/mscorlib.dll" Private="False" />
+    <Reference Include="netstandard" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/netstandard.dll" Private="False" />
+    <Reference Include="System" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/System.dll" Private="False" />
+    <Reference Include="System.Core" HintPath="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/System.Core.dll" Private="False" />
+  </ItemGroup>
+</Project>

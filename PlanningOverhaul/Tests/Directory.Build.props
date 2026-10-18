@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <!-- Keep test executables out of the live mod/Workshop package. -->
+    <BaseOutputPath>$(MSBuildThisFileDirectory)../../.build/PlanningOverhaulHardeningTests/bin/</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)../../.build/PlanningOverhaulHardeningTests/obj/</BaseIntermediateOutputPath>
+  </PropertyGroup>
+</Project>

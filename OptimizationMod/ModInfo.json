@@ -1,0 +1,8 @@
+{
+  "Id": "OptimizationMod",
+  "SteamWorkshop": false,
+  "Name": "Optimization Mod",
+  "Description": "Core performance patches with fail-open Nanobot and Trap Floor indexes, a Nanobot tooltip correction, and reusable default-off diagnostics for very large ships.",
+  "ModVersion": "0.1.34",
+  "GameVersion": "0.15.0"
+}

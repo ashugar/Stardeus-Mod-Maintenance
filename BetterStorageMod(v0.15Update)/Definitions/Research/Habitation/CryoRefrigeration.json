@@ -1,0 +1,26 @@
+{
+    "Id" : "Research/Habitation/CryoRefrigeration",
+    "Tier" : 3,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Icons/Color/Temperature3",
+    "Researchable" : {
+        "IsTreeNode" : true,
+        "Prerequisites" : [
+            "Research/Habitation/AdvancedCooling"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidBasic",
+                "StackSize" : 10
+            },
+            {
+                "TypeId": "DatoidTech",
+                "StackSize": 6
+            },
+            {
+                "TypeId" : "DatoidBiotic",
+                "StackSize" : 2
+            }
+        ]
+    }
+}
