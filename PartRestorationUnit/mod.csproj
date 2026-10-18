@@ -11,8 +11,6 @@
     <RootNamespace>Game.Systems.PartRestoration</RootNamespace>
     <AssemblyName>PartRestorationUnit</AssemblyName>
     <OutputPath>Libraries</OutputPath>
-    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == ''">D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed</StardeusManagedPath>
-    <AutoUtilitiesModFrameworkPath Condition="'$(AutoUtilitiesModFrameworkPath)' == ''">C:/Users/jleas/AppData/LocalLow/Kodo Linija/Stardeus/Mods/AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll</AutoUtilitiesModFrameworkPath>
     <VersionPrefix>1.1.2.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>

@@ -11,7 +11,6 @@
     <RootNamespace>ImprovedShipPathing</RootNamespace>
     <AssemblyName>ImprovedShipPathing</AssemblyName>
     <OutputPath>Libraries</OutputPath>
-    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == ''">D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed</StardeusManagedPath>
     <VersionPrefix>0.1.1.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>
@@ -29,7 +28,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Code/**/*.cs" />
-    <Reference Include="AutoUtilitiesModFramework" HintPath="../AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll" Private="False" />
+    <Reference Include="AutoUtilitiesModFramework" HintPath="$(AutoUtilitiesModFrameworkPath)" Private="False" />
     <Reference Include="0Harmony" HintPath="$(StardeusManagedPath)/0Harmony.dll" Private="False" />
     <Reference Include="Game" HintPath="$(StardeusManagedPath)/Game.dll" Private="False" />
     <Reference Include="Game.CodeGen" HintPath="$(StardeusManagedPath)/Game.CodeGen.dll" Private="False" />

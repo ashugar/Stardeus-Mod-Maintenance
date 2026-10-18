@@ -358,13 +358,13 @@ the original palette revision's broader non-demo scope check against its own bas
 
 The accepted pre-promotion package (47 files, all backup hashes verified) is
 retained outside the game Mods folder:
-`C:\Users\jleas\AppData\Local\Temp\aumf-release-1.4.0-20260905-135052\baseline`.
+`<local-temp>/aumf-release-1.4.0-20260905-135052\baseline`.
 The 1.4.0 build and build log are in that release folder's `build` directory
 and `release-build.log`, respectively. Workshop ID remains `3776751765`.
 
 The complete pre-button-color preview (47 files, all backup hashes verified) is
 retained outside the game Mods folder:
-`C:\Users\jleas\AppData\Local\Temp\aumf-unavailable-button-20260905-133604\baseline`.
+`<local-temp>/aumf-unavailable-button-20260905-133604\baseline`.
 Pre-button-color DLL SHA-256:
 `84D64D2E7DAAC45FBB3E006626AEC8B698E28AF065E5A22F3932CBABD4D922DC`.
 The new build and build log are in that revision folder's `build` directory
@@ -372,7 +372,7 @@ and `theme-build.log`, respectively.
 
 The complete pre-palette preview (45 files, all backup hashes verified) is retained
 outside the game Mods folder:
-`C:\Users\jleas\AppData\Local\Temp\aumf-theme-palette-20260905-131526\baseline`.
+`<local-temp>/aumf-theme-palette-20260905-131526\baseline`.
 Pre-palette DLL SHA-256:
 `88843940046F4DED95052545A3E383E0E7ED781CAAD9C3A8E7D13EAF3EAE3360`.
 The palette build and build log are in that revision folder's `build` directory
@@ -380,14 +380,14 @@ and `theme-build.log`, respectively.
 
 The earlier pre-strip/fill preview (45 files, all backup hashes verified) is retained
 outside the game Mods folder:
-`C:\Users\jleas\AppData\Local\Temp\aumf-theme-refinement-20260905-120658\baseline`.
+`<local-temp>/aumf-theme-refinement-20260905-120658\baseline`.
 Pre-strip/fill preview DLL SHA-256:
 `00243DEF8C329586EBAD7F98E3D90ED4A90F5F0794EC3D610DC61F24B45F9D0F`.
 The refined build and build log are in that revision folder's `build` directory
 and `theme-build.log`, respectively.
 
 The original pre-theme AUMF package remains backed up outside the game Mods folder:
-`C:\Users\jleas\AppData\Local\Temp\aumf-theme-testing-20260905-110658\baseline`.
+`<local-temp>/aumf-theme-testing-20260905-110658\baseline`.
 Baseline DLL SHA-256:
 `FDA1CA012FE37737E681FECFAA18A4700D32D216E213D23EF4B3810CDAF7432A`.
 The initial preview build is in the sibling `build` directory. Keep the backups
@@ -401,3 +401,5 @@ this release. This confirmation is separate from the build/package checks
 recorded above. Workshop upload is a separate user action. Consumer
 migrations, their declarations and their gameplay acceptance remain with their
 respective owners; the read-only audit above identifies relevant targets.
+
+Historical local evidence paths use the <local-temp> placeholder; exact host locations remain in private records.

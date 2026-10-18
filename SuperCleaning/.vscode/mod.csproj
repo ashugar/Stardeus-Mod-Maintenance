@@ -22,10 +22,6 @@
     <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
     <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
-    <InstalledAumfPath>C:/Users/jleas/AppData/LocalLow/Kodo Linija/Stardeus/Mods/AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll</InstalledAumfPath>
-    <GameManagedPath>D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed</GameManagedPath>
-    <AumfPath Condition="Exists('../../AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll')">../../AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll</AumfPath>
-    <AumfPath Condition="'$(AumfPath)' == ''">$(InstalledAumfPath)</AumfPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../Code/**/*.cs" />

@@ -119,7 +119,7 @@ member resolution, version metadata, and retained theme contracts at 1.4.0.
 ## Backup and build identity
 
 Complete pre-repair package backup (47 files, hashes verified):
-`C:\Users\jleas\AppData\Local\Temp\aumf-input-lifecycle-20260911-233056\baseline`.
+`<local-temp>/aumf-input-lifecycle-20260911-233056\baseline`.
 Build, test executables, and final build log are in sibling `build`, `tests`,
 and `build-final.log` paths. The pre-repair DLL SHA-256 is:
 `1A1664605F4BCBB69BAA588E81D1868C5815DBA70D1455B866549D74D51904BD`.
@@ -132,3 +132,5 @@ Core `Game.dll` inspected during this repair, SHA-256:
 
 Rollback, if required, must use the retained baseline with the game stopped.
 Workshop publication and a future version increment remain separate decisions.
+
+Historical local evidence paths use the <local-temp> placeholder; exact host locations remain in private records.

@@ -26,10 +26,10 @@
   <ItemGroup>
     <Compile Include="../Code/**/*.cs" />
     <Reference Include="AutoUtilitiesModFramework">
-      <HintPath>C:/Users/jleas/AppData/LocalLow/Kodo Linija/Stardeus/Mods/AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll</HintPath>
+      <HintPath>$(AutoUtilitiesModFrameworkPath)</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/*.dll">
+    <Reference Include="$(StardeusManagedPath)/*.dll">
       <Private>False</Private>
     </Reference>
   </ItemGroup>

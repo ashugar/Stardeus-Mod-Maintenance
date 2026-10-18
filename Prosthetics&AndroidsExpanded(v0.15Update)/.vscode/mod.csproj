@@ -26,35 +26,35 @@
   <ItemGroup>
     <Compile Include="../Code/**/*.cs" />
     <Reference Include="Game">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.dll</HintPath>
+      <HintPath>$(StardeusManagedPath)\Game.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Game.Constants">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.Constants.dll</HintPath>
+      <HintPath>$(StardeusManagedPath)\Game.Constants.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Game.Utils">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.Utils.dll</HintPath>
+      <HintPath>$(StardeusManagedPath)\Game.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KLUnityUtils">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\KLUnityUtils.dll</HintPath>
+      <HintPath>$(StardeusManagedPath)\KLUnityUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="0Harmony">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\0Harmony.dll</HintPath>
+      <HintPath>$(StardeusManagedPath)\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\mscorlib.dll</HintPath>
+      <HintPath>$(StardeusManagedPath)\mscorlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.dll</HintPath>
+      <HintPath>$(StardeusManagedPath)\System.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Core">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Core.dll</HintPath>
+      <HintPath>$(StardeusManagedPath)\System.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

@@ -48,7 +48,7 @@ Build and repeat the focused checks from the parent Mods directory:
 
 ```powershell
 dotnet build MarketBalancing/mod.csproj -c Release
-dotnet run --project MarketBalancing/Tests/MarketBalancing.Tests.csproj -c Release -- "D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/StreamingAssets/Mods/Core" MarketBalancing/Tests/CorePriceAudit.json
+dotnet run --project MarketBalancing/Tests/MarketBalancing.Tests.csproj -c Release -- "$env:STARDEUS_GAME_ROOT/Stardeus_Data/StreamingAssets/Mods/Core" MarketBalancing/Tests/CorePriceAudit.json
 & MarketBalancing/Tests/Test-Binary.ps1
 ```
 

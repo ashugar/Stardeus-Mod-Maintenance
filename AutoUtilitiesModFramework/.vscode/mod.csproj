@@ -25,7 +25,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../Code/**/*.cs" />
-    <Reference Include="D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed/*.dll">
+    <Reference Include="$(StardeusManagedPath)/*.dll">
       <Private>False</Private>
     </Reference>
   </ItemGroup>

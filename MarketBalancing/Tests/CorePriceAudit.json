@@ -1,6 +1,6 @@
 {
   "Scope": "Static Core JSON snapshot and adapter stand-ins; before native Core price validation, not gameplay or loaded mod definitions.",
-  "Core": "D:\\Program Files (x86)\\Steam\\steamapps\\common\\Stardeus\\Stardeus_Data\\StreamingAssets\\Mods\\Core",
+  "Core": "<StardeusCoreRoot>",
   "CoreMarketItems": 159,
   "CoreRecipes": 229,
   "EligibleRecipes": 141,

@@ -25,9 +25,6 @@
     <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
     <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
-    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == ''">D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed</StardeusManagedPath>
-    <AumfDll Condition="'$(AumfDll)' == ''">../../AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll</AumfDll>
-    <AumfDll Condition="!Exists('$(AumfDll)')">../../tacc-dependencies/AutoUtilitiesModFramework.dll</AumfDll>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources/BaselineTraits.json" LogicalName="TACC.BaselineTraits.json" />

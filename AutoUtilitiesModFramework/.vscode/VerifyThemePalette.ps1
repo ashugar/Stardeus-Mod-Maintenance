@@ -3,9 +3,11 @@ param(
     [Parameter(Mandatory)][string]$CandidateDll,
     [Parameter(Mandatory)][string]$CecilDll,
     [switch]$PaletteOnly,
-    [string]$CoreRoot = 'D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\StreamingAssets\Mods\Core'
+    [string]$CoreRoot
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot '../../build/LocalPaths.ps1')
+$CoreRoot = Resolve-StardeusCoreRoot -CoreRoot $CoreRoot
 Add-Type -LiteralPath $CecilDll
 $baseline = [Mono.Cecil.AssemblyDefinition]::ReadAssembly($BaselineDll)
 $candidate = [Mono.Cecil.AssemblyDefinition]::ReadAssembly($CandidateDll)

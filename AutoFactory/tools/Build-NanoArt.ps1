@@ -1,7 +1,14 @@
+param(
+    [Parameter(Mandatory)][string]$GeneratedRoot,
+    [string]$CoreDevices
+)
+$ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot '../../build/LocalPaths.ps1')
+if (-not (Test-Path -LiteralPath $GeneratedRoot -PathType Container)) { throw 'Provide the local source-art directory with -GeneratedRoot.' }
+if (-not $CoreDevices) { $CoreDevices = Join-Path (Resolve-StardeusCoreRoot) 'Graphics/Objects/Devices' }
+if (-not (Test-Path -LiteralPath $CoreDevices -PathType Container)) { throw 'CoreDevices must point to the installed Core device art.' }
 Add-Type -AssemblyName System.Drawing
 
-$generatedRoot = 'C:\Users\jleas\.codex\generated_images\019fc572-c6c7-7f23-9180-9a5d107af716'
-$coreDevices = 'D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\StreamingAssets\Mods\Core\Graphics\Objects\Devices'
 $modRoot = Split-Path -Parent $PSScriptRoot
 $deviceOut = Join-Path $modRoot 'Graphics\Objects\Devices'
 $animOut = Join-Path $modRoot 'Graphics\Objects\DeviceAnims'

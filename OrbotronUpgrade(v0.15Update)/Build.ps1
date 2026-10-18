@@ -1,7 +1,9 @@
 param(
-    [string]$ManagedPath = 'D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed'
+    [string]$ManagedPath = $env:STARDEUS_MANAGED_PATH
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot '../build/LocalPaths.ps1')
+$ManagedPath = Resolve-StardeusManagedPath -ManagedPath $ManagedPath
 if (@(Get-Process -Name 'Stardeus' -ErrorAction SilentlyContinue).Count -gt 0) {
     throw 'Close Stardeus before replacing the mod DLL. This helper never stops the game.'
 }

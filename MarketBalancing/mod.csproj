@@ -21,7 +21,6 @@
     <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
     <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
-    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == ''">D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed</StardeusManagedPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Code/**/*.cs" />

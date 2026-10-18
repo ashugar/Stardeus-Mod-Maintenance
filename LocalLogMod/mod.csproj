@@ -10,7 +10,6 @@
     <RootNamespace>LocalLogMod</RootNamespace>
     <AssemblyName>LocalLogMod</AssemblyName>
     <OutputPath>Libraries</OutputPath>
-    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == ''">D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed</StardeusManagedPath>
     <VersionPrefix>0.1.8.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>

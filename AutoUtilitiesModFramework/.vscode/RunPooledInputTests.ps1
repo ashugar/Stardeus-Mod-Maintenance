@@ -1,9 +1,13 @@
 param(
     [Parameter(Mandatory)][string]$OutputDirectory,
-    [string]$Compiler = 'C:/Program Files/dotnet/sdk/10.0.401/Roslyn/bincore/csc.dll',
-    [string]$ReferenceDirectory = 'C:/Users/jleas/.nuget/packages/microsoft.netframework.referenceassemblies.net481/1.0.3/build/.NETFramework/v4.8.1'
+    [string]$Compiler,
+    [string]$ReferenceDirectory
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot '../../build/LocalPaths.ps1')
+if (-not $Compiler) { $Compiler = Get-StardeusSdkCompiler }
+if (-not $ReferenceDirectory) { $ReferenceDirectory = Resolve-StardeusManagedPath }
+if (-not (Test-Path -LiteralPath (Join-Path $ReferenceDirectory 'mscorlib.dll') -PathType Leaf)) { throw 'ReferenceDirectory must contain the requested framework reference assemblies.' }
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 $assembly = Join-Path $OutputDirectory 'PooledInputCommitBindingTests.exe'
 $references = @('mscorlib.dll', 'System.dll', 'System.Core.dll') | ForEach-Object {

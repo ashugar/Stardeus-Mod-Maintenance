@@ -11,7 +11,6 @@
     <RootNamespace>Game.Systems.QuestRequestPreview</RootNamespace>
     <AssemblyName>QuestRequestPreview</AssemblyName>
     <OutputPath>Libraries</OutputPath>
-    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == ''">D:/Program Files (x86)/Steam/steamapps/common/Stardeus/Stardeus_Data/Managed</StardeusManagedPath>
     <VersionPrefix>1.0.2.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>

@@ -1,5 +1,7 @@
+param([string]$ManagedPath = $env:STARDEUS_MANAGED_PATH, [string]$GameRoot = $env:STARDEUS_GAME_ROOT)
 $ErrorActionPreference = 'Stop'
-$gameDll = 'D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.dll'
+. (Join-Path $PSScriptRoot '../../build/LocalPaths.ps1')
+$gameDll = Join-Path (Resolve-StardeusManagedPath -ManagedPath $ManagedPath -GameRoot $GameRoot) 'Game.dll'
 $auditRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'Work\CoreAudit'
 New-Item -ItemType Directory -Path $auditRoot -Force | Out-Null
 # ILSpy reads assembly metadata and IL without executing Unity code.

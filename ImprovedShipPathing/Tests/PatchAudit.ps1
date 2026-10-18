@@ -1,6 +1,8 @@
+param([string]$ManagedPath = $env:STARDEUS_MANAGED_PATH, [string]$GameRoot = $env:STARDEUS_GAME_ROOT)
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot '../../build/LocalPaths.ps1')
 
-$gameDll = 'D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.dll'
+$gameDll = Join-Path (Resolve-StardeusManagedPath -ManagedPath $ManagedPath -GameRoot $GameRoot) 'Game.dll'
 $shipSys = (& ilspycmd -t Game.Systems.ShipSys $gameDll) -join [Environment]::NewLine
 if ($LASTEXITCODE -ne 0) { throw 'ShipSys decompilation failed.' }
 

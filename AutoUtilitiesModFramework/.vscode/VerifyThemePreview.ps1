@@ -4,9 +4,11 @@ param(
     [Parameter(Mandatory)][string]$CecilDll,
     [ValidatePattern('^\d+\.\d+\.\d+$')][string]$ExpectedVersion = '1.4.0',
     [string]$ModsRoot = (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)),
-    [string]$CoreRoot = 'D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\StreamingAssets\Mods\Core'
+    [string]$CoreRoot
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot '../../build/LocalPaths.ps1')
+$CoreRoot = Resolve-StardeusCoreRoot -CoreRoot $CoreRoot
 Add-Type -LiteralPath $CecilDll
 
 function All-Types($Module) {

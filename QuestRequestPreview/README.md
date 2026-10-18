@@ -100,7 +100,7 @@ is installed elsewhere, supply the game's `Stardeus_Data/Managed` directory as
 an MSBuild property:
 
 ```powershell
-dotnet build .\QuestRequestPreview.sln -c Release -p:StardeusManagedPath="C:\path\to\Stardeus_Data\Managed"
+dotnet build .\QuestRequestPreview.sln -c Release -p:StardeusManagedPath="$env:STARDEUS_MANAGED_PATH"
 ```
 
 ## Runtime validation

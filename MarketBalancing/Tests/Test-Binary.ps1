@@ -1,9 +1,12 @@
 param(
-    [string]$Managed = 'D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed',
+    [string]$Managed = $env:STARDEUS_MANAGED_PATH,
     [string]$Assembly = (Join-Path $PSScriptRoot '..\Libraries\MarketBalancing.dll'),
-    [string]$Cecil = 'C:\Users\jleas\.dotnet\tools\.store\ilspycmd\11.0.0.9375\ilspycmd\11.0.0.9375\tools\net10.0\any\Mono.Cecil.dll'
+    [string]$Cecil = $env:STARDEUS_CECIL_DLL
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot '../../build/LocalPaths.ps1')
+$Managed = Resolve-StardeusManagedPath -ManagedPath $Managed
+$Cecil = Resolve-StardeusCecilPath -CecilPath $Cecil
 # Metadata only. This does not load or execute any game or mod code.
 Add-Type -Path $Cecil
 $resolver = [Mono.Cecil.DefaultAssemblyResolver]::new()
