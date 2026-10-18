@@ -48,9 +48,9 @@ The versions below describe the initial import on October 18, 2026. Each mod's `
 
 Keep this checkout separate from the live Stardeus `Mods` directory. The repository import leaves existing installations in place. Deploy selected mod folders deliberately; do not install the repository root as a single mod.
 
-Use the relevant mod's project and build instructions. Existing projects may contain machine-specific paths to the installed game and dependencies; configure those paths for your system before building. Auto Utilities Mod Framework remains a separate mod and dependency where required.
+Use the relevant mod's project and [shared build instructions](BUILDING.md). Configure game/dependency paths through local environment variables or explicit build properties; source filenames in new debug symbols are mapped to a neutral repository root. Auto Utilities Mod Framework remains a separate mod and dependency where required.
 
-This import preserves the selected files byte-for-byte. It does not rebuild the mods or establish compatibility with a new game version. Consult each mod's validation notes and test against your installed Stardeus build before distributing changes.
+The initial import preserved the selected files byte-for-byte. Repository privacy maintenance removes workstation paths from build inputs and diagnostic/image metadata while preserving runtime code and image pixels. These checks do not establish compatibility with a new game version. Consult each mod's validation notes and test against your installed Stardeus build before distributing changes.
 
 ## License and attribution
 
