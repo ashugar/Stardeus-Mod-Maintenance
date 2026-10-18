@@ -1,0 +1,24 @@
+﻿{
+    "Layer" : "FreeEntities",
+    "ParentId" : "Obj/Materials/BaseMaterial",
+    "Components" : [
+        {
+            "Component" : "ObjGraphics",
+            "Properties" : [
+                { "Key" : "Graphic", "String": "Obj/Materials/ChromaniteSand" }
+            ]
+        },
+        {
+            "Component" : "Flammable",
+            "Properties" : [
+                { "Key" : "IsTemperatureResistant", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "UnstoredMat",
+            "Properties" : [
+                { "Key" : "Type", "String" : "ChromaniteSand" }
+            ]
+        }
+    ]
+}

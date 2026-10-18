@@ -1,0 +1,72 @@
+{
+    "ToolPath" : "Energy",
+    "Layer" : "Objects",
+    "ParentId" : "Objects/Devices/GlitterPanel",
+    "Researchable" : {
+        "Prerequisites" : [ "Research/ApexChromaticEnergy" ]
+    },
+    "TranslationVars" : [ "70" ],
+    "Spawnable" : {
+        "Chance" : 1.0,
+        "ChanceLocked" : 0.5,
+        "Quantity" : {
+            "Component" : "Curve",
+            "Properties" : [
+                { "Key" : "Keys",  "FloatSet" : [0.0, 0.8, 0.95, 1.0 ] },
+                { "Key" : "Values", "IntSet" :  [2,   5,   7,    8  ] }
+            ]
+        }
+    },
+    "Components" : [
+        {
+            "Component" : "TileTransform",
+            "Properties" : [
+                { "Key" : "Width", "Int" : 3 },
+                { "Key" : "Height", "Int" : 3 }
+            ]
+        },
+        {
+            "Component" : "ElectricNode",
+            "Properties" : [
+				{ "Key" : "IsProducer", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "SolarPanel",
+            "Properties" : [
+                { "Key" : "PowerOutput", "Float": 70 }
+            ]
+        },
+        {
+            "Component" : "LightSource",
+            "Properties" : [
+                { "Key" : "Radius", "Float" : 9 }
+            ]
+        },
+        {
+            "Component" : "TileGraphics",
+            "Properties" : [
+                { "Key" : "Graphic", "String": "Objects/Devices/GlitterPanelArray2" }
+            ]
+        },
+        {
+            "Component" : "Constructable",
+            "Properties" : [
+                { "Key" : "Placement", "String" : "InSpaceAttachedChained" },
+                { "Key" : "PlacementGroup", "String" : "SolarPanel" },
+                { "Key" : "WorkAmount", "Int" : 3000 },
+                {
+                    "Key" : "Contents",
+                    "RawMaterials" : [
+                        { "TypeId" : "TitaniumPlate", "StackSize" : 5 },
+                        { "TypeId" : "CopperWire", "StackSize" : 3 },
+                        { "TypeId" : "Microchip", "StackSize" : 1 },
+                        { "TypeId" : "Plastic", "StackSize" : 1 },
+                        { "TypeId" : "Glass", "StackSize" : 9 },
+						{ "TypeId" : "ChromanitePlate", "StackSize" : 4 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

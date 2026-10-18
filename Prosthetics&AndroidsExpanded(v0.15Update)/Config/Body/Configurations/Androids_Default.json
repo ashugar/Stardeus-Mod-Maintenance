@@ -1,0 +1,37 @@
+﻿{
+    "SpeciesType" : "Androids",
+    "IsDefault" : true,
+    "Parts" : [
+        { "Slot" : "Body", "Part" : "Body/AndroidsFrame" },
+        { "Slot" : "Head", "Part" : "Head/AndroidsHead" },
+        { "Slot" : "Implant", "Empty" : true },
+        { "Slot" : "Jaw", "Part" : "Jaw/MakeShiftJaw" },
+        { "Slot" : "Brain", "Part" : "Brain/QuantumNexus" },
+        { "Slot" : "Lung_L", "Part" : "Lung/MakeshiftLung" },
+        { "Slot" : "Lung_R", "Part" : "Lung/MakeshiftLung" },
+        { "Slot" : "Heart", "Part" : "Heart/PowerNexus" },
+        { "Slot" : "Stomach", "Part" : "Stomach/MakeshiftStomach" },
+        { "Slot" : "Liver", "Part" : "Liver/MuonInjector" },
+        { "Slot" : "Kidney_L", "Part" : "Kidney/MakeshiftKidney" },
+        { "Slot" : "Kidney_R", "Part" : "Kidney/MakeshiftKidney" },
+        { "Slot" : "Intestines", "Part" : "Intestines/MakeshiftIntestines" },
+        { "Slot" : "Eye_L", "Part" : "Eye/MakeshiftEye" },
+        { "Slot" : "Eye_R", "Part" : "Eye/MakeshiftEye" },
+        { "Slot" : "Ear_L", "Part" : "Ear/MakeshiftEar" },
+        { "Slot" : "Ear_R", "Part" : "Ear/MakeshiftEar" },
+        { "Slot" : "Shoulder_L", "Part" : "Shoulder/ArmSocket" },
+        { "Slot" : "Shoulder_R", "Part" : "Shoulder/ArmSocket" },
+        { "Slot" : "Arm_L", "Part" : "Arm/ServoArm" },
+        { "Slot" : "Arm_R", "Part" : "Arm/ServoArm" },
+        { "Slot" : "Hand_L", "Part" : "Hand/Manipulator" },
+        { "Slot" : "Hand_R", "Part" : "Hand/Manipulator" },
+        { "Slot" : "Hip_L", "Part" : "Hip/BionicsHip" },
+        { "Slot" : "Hip_R", "Part" : "Hip/BionicsHip" },
+        { "Slot" : "Leg_L", "Part" : "Leg/BionicsLeg" },
+        { "Slot" : "Leg_R", "Part" : "Leg/BionicsLeg" },
+        { "Slot" : "Foot_L", "Part" : "Foot/BionicsFoot" },
+        { "Slot" : "Foot_R", "Part" : "Foot/BionicsFoot" }
+    ]
+}
+
+

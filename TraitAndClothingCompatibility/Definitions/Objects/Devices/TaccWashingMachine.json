@@ -1,0 +1,98 @@
+{
+    "ToolPath" : "Facilities",
+    "Layer" : "Objects",
+    "ParentId" : "Objects/Devices/BaseDevice",
+    "Researchable" : {
+        "Prerequisites" : [
+            "Research/Habitation/Storage"
+        ]
+    },
+    "Spawnable" : {
+        "Category" : "Comfort",
+        "Chance" : 0.8,
+        "ChanceLocked" : 0.35
+    },
+    "Components" : [
+        {
+            "Component" : "TileTransform",
+            "Properties" : [
+                { "Key" : "Width", "Int" : 2 },
+                { "Key" : "Height", "Int" : 2 },
+                { "Key" : "IsRotatable", "Bool" : true },
+                { "Key" : "CoverPercent", "Int" : 50 },
+                { "Key" : "OutPort", "Vector2" : { "x" : 0, "y" : -1 } },
+                { "Key" : "InPort", "Vector2" : { "x" : 0, "y" : -1 } }
+            ]
+        },
+        {
+            "Component" : "TileGraphics",
+            "Properties" : [
+                { "Key" : "Type", "String" : "Object" },
+                { "Key" : "Graphic", "String" : "Objects/Devices/TaccWashingMachine" },
+                { "Key" : "HasHeight", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "IndustrialEquipment",
+            "Properties" : [
+                { "Key" : "IsNoisy", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "Flammable",
+            "Properties" : [
+                { "Key" : "IgnitionTemperatureCelsius", "Int" : 400 },
+                { "Key" : "FireChance", "Float" : 0.5 },
+                { "Key" : "BaseExplosionLevel", "Int" : 1 },
+                { "Key" : "FlammabilityCurve", "String" : "Device" },
+                { "Key" : "ExplosivenessCurve", "String" : "DeviceLow" }
+            ]
+        },
+        {
+            "Component" : "ElectricNode",
+            "Properties" : [
+                { "Key" : "IsConsumer", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "WithFuse",
+            "Properties" : [
+                { "Key" : "MalfunctionWeight", "Float" : 0.1 }
+            ]
+        },
+        { "Component" : "SafetyCheck" },
+        {
+            "Component" : "TaccWashingMachine",
+            "Properties" : [
+                { "Key" : "EnergyCost", "Float" : 5.0 },
+                { "Key" : "WashDuration", "Float" : 60.0 },
+                { "Key" : "GoalPriority", "Int" : 4 }
+            ]
+        },
+        { "Component" : "ExtraInfo" },
+        {
+            "Component" : "Passability",
+            "Properties" : [
+                { "Key" : "IsPassable", "Bool" : false },
+                { "Key" : "IsWalkable", "Bool" : false },
+                { "Key" : "Difficulty", "Float" : 1 }
+            ]
+        },
+        {
+            "Component" : "Constructable",
+            "Properties" : [
+                { "Key" : "WorkAmount", "Int" : 700 },
+                {
+                    "Key" : "Contents",
+                    "RawMaterials" : [
+                        { "TypeId" : "TitaniumPlate", "StackSize" : 4 },
+                        { "TypeId" : "Plastic", "StackSize" : 1 },
+                        { "TypeId" : "Glass", "StackSize" : 1 },
+                        { "TypeId" : "Transistor", "StackSize" : 1 },
+                        { "TypeId" : "CopperWire", "StackSize" : 3 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

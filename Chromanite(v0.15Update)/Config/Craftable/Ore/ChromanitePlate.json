@@ -1,0 +1,11 @@
+﻿{
+    "Type" : "Ore",
+    "Ingredients" : [
+        { "TypeId" : "ChromaniteSand", "StackSize" : 1 }
+    ],
+	"IgnoreEnergyOutput" : true,
+    "OutputMultiplier" : 2,
+    "ProductDefId" : "Obj/Materials/ChromanitePlate",
+    "ProductionTimeHours" : 1,
+    "EnergyCost" : 20
+}

@@ -1,0 +1,13 @@
+{
+    "Type" : "Robotics1",
+    "ProductDefId" : "Obj/Parts/Eye/MakeshiftEye",
+    "ProductionTimeHours" : 3,
+    "EnergyCost" : 15,
+    "IgnoreMarket" : true,
+    "Ingredients" : [
+        { "TypeId" : "Glass", "StackSize" : 1 },
+        { "TypeId" : "CopperWire", "StackSize" : 1 },
+        { "TypeId" : "BatteryCell", "StackSize" : 1 },
+        { "TypeId" : "Transistor", "StackSize" : 2 }
+    ]
+}

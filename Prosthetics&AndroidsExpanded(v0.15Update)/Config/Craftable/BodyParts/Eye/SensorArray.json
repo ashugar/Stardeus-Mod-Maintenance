@@ -1,0 +1,15 @@
+{
+    "Type" : "Robotics3",
+    "ProductDefId" : "Obj/Parts/Eye/SensorArray",
+    "ProductionTimeHours" : 12,
+    "EnergyCost" : 60,
+    "IgnoreMarket" : true,
+    "Ingredients" : [
+        { "TypeId" : "GoldIngot", "StackSize" : 2 },
+        { "TypeId" : "Microchip", "StackSize" : 6 },
+        { "TypeId" : "OpticalFiber", "StackSize" : 5 },        
+        { "TypeId" : "PlatinumIngot", "StackSize" : 2 },
+        { "TypeId" : "Plastic", "StackSize" : 2 },
+        { "TypeId" : "NuclearCell", "StackSize" : 1 }
+    ]
+}

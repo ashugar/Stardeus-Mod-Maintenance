@@ -1,0 +1,22 @@
+{
+    "Layer" : "FreeEntities",
+    "ParentId" : "Obj/Parts/BasePartRobotic",
+    "NameKey" : "bodypart.Lung.MakeshiftLung",
+    "Researchable" : {
+        "Prerequisites" : [ "Research/Robotics/MakeshiftOrgans" ]
+    },
+    "Components" : [
+        {
+            "Component" : "ObjGraphics",
+            "Properties" : [
+                { "Key" : "Graphic", "String": "Obj/BodyParts/Robotic1" }
+            ]
+        },
+        {
+            "Component" : "BodyPart",
+            "Properties" : [
+                { "Key" : "BodyPartDefId", "String" : "Lung/MakeshiftLung" }
+            ]
+        }
+    ]
+}

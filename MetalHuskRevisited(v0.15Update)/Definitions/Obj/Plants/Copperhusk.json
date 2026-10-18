@@ -1,0 +1,33 @@
+{
+    "Layer" : "FreeEntities",
+    "ParentId" : "Obj/Plants/BasePlant",
+    "Researchable" : {
+        "Prerequisites" : [ 
+            "Research/LifeSupport/PlanterImproved" 
+        ]
+    },
+    "Components" : [
+        {
+            "Component" : "ObjGraphics",
+            "Properties" : [
+                { "Key" : "Graphic", "String": "Obj/Plants/Copperhusk/Copperhusk" }
+            ]
+        },
+        {
+            "Component" : "Plant",
+            "Properties" : [
+                { "Key" : "Size", "String" : "Medium" },
+                {
+                    "Key" : "HarvestOutput",
+                    "RawMaterials" : [
+                        { "TypeId" : "Copper", "StackSize" : 10 },
+                        { "TypeId" : "PlantFiber", "StackSize" : 1 }
+                    ]
+                },
+                { "Key" : "WaterUsePerDay", "Float" : 0.05 },
+                { "Key" : "GrowthRate", "Float" : 5.0 },
+                { "Key" : "GrowthAfterHarvest", "Float" : 0.51 }
+            ]
+        }
+    ]
+}

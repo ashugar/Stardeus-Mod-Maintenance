@@ -1,0 +1,8 @@
+{
+  "Id": "QuestRequestPreview",
+  "SteamWorkshop": true,
+  "Name": "Quest Request Preview",
+  "Description": "[h2]Quest Request Preview[/h2]\n\nEver opened a quest or mission request just to see what someone wanted, only to discover the available answers were Accept and Reject? This mod adds a neutral way out.\n\n[h2]Features[/h2]\n- Adds a Close button to supported incoming quest-request previews\n- Makes Escape and the popup close control leave supported requests undecided\n- Adds a Close button beside the actions for available quests and Quest Hub offers\n- Keeps explicit Accept and Reject behavior intact\n- Preserves undecided Signal offers across save/load\n- Does not add Close to one-shot personal favors that Core cannot reopen\n- Does not change quest generation, objectives, rewards, or deadlines\n\n[h2]Important Behavior[/h2]\n\nClose affects only the interface. It does not accept the quest, reject it, or change its current state. Undecided Signal offers use Core's existing quest save data so the same offer can survive a reload. One-shot personal favors from ship Beings retain Core's original preview because their story event ends immediately and provides no later way to reopen an unanswered request. Any world conditions that normally affect an undecided request still continue normally.\n\n[h2]In Short[/h2]\n\nLook before you leap—and close the preview without saying no.",
+  "ModVersion": "1.0.2",
+  "GameVersion": "0.15.0"
+}

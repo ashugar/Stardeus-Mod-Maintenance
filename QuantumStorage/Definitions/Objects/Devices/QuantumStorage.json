@@ -1,0 +1,103 @@
+{
+  "ToolPath" : "Facilities",
+  "Layer" : "Objects",
+  "ParentId" : "Objects/Devices/StorageMini",
+  "UseParentTexts" : false,
+  "NameKey" : "objects.devices.quantumstorage",
+  "Researchable" : {
+    "Prerequisites" : [
+      "Research/Computing/QuantumStorage"
+    ]
+  },
+  "Spawnable" : {
+    "Category" : "Storage",
+    "Chance" : 0.35,
+    "ChanceLocked" : 0.1
+  },
+  "Components" : [
+    {
+      "Component" : "TileTransform",
+      "Properties" : [
+        { "Key" : "Width", "Int" : 1 },
+        { "Key" : "Height", "Int" : 1 },
+        { "Key" : "IsRotatable", "Bool" : true },
+        { "Key" : "OutPort", "Vector2" : { "x" : 0, "y" : -1 } },
+        { "Key" : "InPort", "Vector2" : { "x" : 0, "y" : -1 } }
+      ]
+    },
+    {
+      "Component" : "TileGraphics",
+      "Properties" : [
+        { "Key" : "Type", "String" : "Object" },
+        { "Key" : "Graphic", "String" : "Objects/Devices/QuantumStorage" },
+        { "Key" : "HasHeight", "Bool" : true }
+      ]
+    },
+    {
+      "Component" : "ElectricNode",
+      "Properties" : [
+        { "Key" : "IsConsumer", "Bool" : true }
+      ]
+    },
+    {
+      "Component" : "PoweredStorage",
+      "Properties" : [
+        { "Key" : "EnergyCostBase", "Float" : 25.0 },
+        { "Key" : "EnergyCostPerItem", "Float" : 0.0 }
+      ]
+    },
+    {
+      "Component" : "WithFuse",
+      "Properties" : [
+        { "Key" : "MalfunctionWeight", "Float" : 0.1 }
+      ]
+    },
+    {
+      "Component" : "MatStorage",
+      "Properties" : [
+        { "Key" : "MaxCapacity", "Int" : 500 },
+        { "Key" : "IsPublic", "Bool" : true },
+        { "Key" : "ShowFulnessBar", "Bool" : true }
+      ]
+    },
+    {
+      "Component" : "MatHaulTarget",
+      "Properties" : [
+        { "Key" : "AutoHaul", "Bool" : true },
+        { "Key" : "Priority", "Int" : 3 },
+        { "Key" : "Mode", "String" : "AllowAll" },
+        { "Key" : "NeedsElectricity", "Bool" : true }
+      ]
+    },
+    {
+      "Component" : "QuantumStorageNode",
+      "Properties" : [
+        { "Key" : "NetworkId", "String" : "RawMaterials" },
+        { "Key" : "BaseCapacity", "Int" : 500 },
+        { "Key" : "CapacityMultiplier", "Int" : 2 },
+        { "Key" : "MaxNetworkCapacity", "Int" : 2000000000 },
+        { "Key" : "FireFeedbackChance", "Float" : 0.02 },
+        { "Key" : "ExplosionFeedbackChance", "Float" : 0.05 },
+        { "Key" : "FeedbackDamageFraction", "Float" : 0.2 }
+      ]
+    },
+    {
+      "Component" : "Constructable",
+      "Properties" : [
+        { "Key" : "Placement", "String" : "OnFloor" },
+        { "Key" : "WorkAmount", "Int" : 900 },
+        { "Key" : "CanDragRow", "Bool" : true },
+        {
+          "Key" : "Contents",
+          "RawMaterials" : [
+            { "TypeId" : "TitaniumPlate", "StackSize" : 4 },
+            { "TypeId" : "Microchip3", "StackSize" : 3 },
+            { "TypeId" : "GoldWire", "StackSize" : 3 },
+            { "TypeId" : "OpticalFiber", "StackSize" : 4 },
+            { "TypeId" : "Nanobots", "StackSize" : 2 }
+          ]
+        }
+      ]
+    }
+  ]
+}

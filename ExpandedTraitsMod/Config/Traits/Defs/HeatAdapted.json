@@ -1,0 +1,26 @@
+{
+  "Id": "HeatAdapted",
+  "IconId": "Icons/Color/Sparkles",
+  "TypeId": "BiologicalFunction",
+  "CompatibleSpecies": [ "Human" ],
+  "TraitFlagIds": [ "BodyBound" ],
+  "IncompatibleTraitIds": [ "ColdAdapted" ],
+  "AddsStatModifiers": [
+    {
+      "Component": "TempMin",
+      "Properties": [
+        { "Key": "Value", "Float": 5.0 },
+        { "Key": "Type", "String": "Adds" }
+      ]
+    },
+    {
+      "Component": "TempMax",
+      "Properties": [
+        { "Key": "Value", "Float": 5.0 },
+        { "Key": "Type", "String": "Adds" }
+      ]
+    }
+  ],
+  "Rarity": 0.2
+}
+

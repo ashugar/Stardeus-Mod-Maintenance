@@ -1,0 +1,11 @@
+{
+    "SlotTypeId" : "Head",
+    "Compatibility" : "TargetSpecies",
+    "TargetSpecies" : [ "Androids" ],
+    "PartFlags" : [ "Indestructible" ],
+    "ResistanceBase" : 18.0,
+    "AddsAbilities" : [
+    ],
+    "AddsNeeds" : [
+    ]
+}

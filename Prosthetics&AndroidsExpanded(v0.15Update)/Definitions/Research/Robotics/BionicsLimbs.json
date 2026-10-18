@@ -1,0 +1,26 @@
+{
+    "Id" : "Research/Robotics/BionicsLimbs",
+    "Tier" : 3,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Obj/BodyParts/Robotic",
+    "Researchable" : {
+        "IsTreeNode" : true,
+        "Prerequisites" : [
+            "Research/Robotics/PartsImproved"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidSynthetic",
+                "StackSize" : 8
+            },
+            {
+                "TypeId" : "DatoidEnergy",
+                "StackSize" : 8
+            },
+            {
+                "TypeId" : "DatoidTechHigh",
+                "StackSize" : 4
+            }			
+        ]
+    }
+}

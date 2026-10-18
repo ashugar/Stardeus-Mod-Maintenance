@@ -1,0 +1,26 @@
+{
+    "Id" : "Research/ChromaticEnergy",
+    "Tier" : 3,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Icons/Color/Energy",
+    "Researchable" : {
+        "IsTreeNode" : true,
+		"Prerequisites" : [
+         "Research/Energy/Solar"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidBasic",
+                "StackSize" : 35
+            },
+            {
+                "TypeId" : "DatoidTech",
+                "StackSize" : 9
+            },
+            {
+                "TypeId" : "DatoidEnergy",
+                "StackSize" : 6
+            }
+        ]
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "Id" : "ChromaniteWalls(v0.15Update)",
+    "SteamWorkshop" : true,
+    "Name" : "Chromanite Walls (v0.15 Update)",
+    "Description" : "Walls fabricated with Chromanite plates for extreme durability.\n\n[h2]Requires the Chromanite Material mod:[/h2]\n https://steamcommunity.com/sharedfiles/filedetails/?id=3748921886 \n\nThis is a Stardeus v0.15 compatibility update of the original Chromanite mod. The goal of this release is to preserve the original functionality and gameplay intent while restoring compatibility with current versions of Stardeus.\n\n[h2]Compatibility updates include:[/h2]\n• Removal of Chromanite Material mod requirement so that mod will load properly.\n\nIf the mod fails to load, be sure you have the mod linked above in order to run this mod. I'm not going through the trouble of linking these mods.\n\nOriginal mod: https://steamcommunity.com/sharedfiles/filedetails/?id=2950188301 \n\nFull credit for the original mod belongs to the original author. This upload exists solely to provide continued compatibility with current versions of Stardeus after the original mod became outdated.\n\nIf the original author returns and publishes an official update, I will gladly defer to their version.\n\nGame Version: v0.15.x\nMod Version: 2.0.x",
+    "ModVersion" : "2.0.1",
+    "GameVersion" : "0.15.0",
+    "Dependencies" : [ "Core" ]
+}

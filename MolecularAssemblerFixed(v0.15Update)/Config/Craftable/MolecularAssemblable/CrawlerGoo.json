@@ -1,0 +1,15 @@
+﻿{
+    "Type": "MolecularAssemblable",
+    "Ingredients" : [
+        { "TypeId" : "Iron", "StackSize" : 0 }
+    ],
+    "ProductDefId": "Obj/Materials/CrawlerGoo",
+    "ProductionTimeHours": 1.0,
+	"OutputMultiplier" : 10,
+    "EnergyCost": 5.0,
+    "IgnoreEnergyOutput" : true,
+    "IgnoreMarket" : true
+}
+
+
+

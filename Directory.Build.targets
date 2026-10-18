@@ -1,0 +1,14 @@
+<Project>
+  <Target Name="ValidateStardeusBuildPaths" BeforeTargets="ResolveAssemblyReferences"
+          Condition="'$(MSBuildProjectName)' == 'mod' or '$(MSBuildProjectName)' == 'Investor.Tests'">
+    <Error Condition="'$(StardeusManagedPath)' == ''"
+           Text="Configure STARDEUS_GAME_ROOT or STARDEUS_MANAGED_PATH, or pass -p:StardeusManagedPath. See BUILDING.md." />
+    <Error Condition="!Exists('$(StardeusManagedPath)/Game.dll')"
+           Text="The configured Stardeus managed directory must contain Game.dll. No live or Workshop fallback is used." />
+    <ItemGroup>
+      <_StardeusAumfReference Include="@(Reference)" Condition="'%(Reference.Identity)' == 'AutoUtilitiesModFramework'" />
+    </ItemGroup>
+    <Error Condition="'@(_StardeusAumfReference)' != '' and !Exists('%(_StardeusAumfReference.HintPath)')"
+           Text="The configured Auto Utilities Mod Framework DLL is missing. Use the repository Libraries DLL or an explicit AUMF override; no live or Workshop fallback is used." />
+  </Target>
+</Project>

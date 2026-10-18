@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net481</TargetFramework>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>TractorBeamOverhaul</RootNamespace>
+    <AssemblyName>TractorBeamOverhaul</AssemblyName>
+    <OutputPath>../Libraries</OutputPath>
+    <VersionPrefix>1.1.1.0</VersionPrefix>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+    <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
+    <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Code/**/*.cs" />
+    <Reference Include="AutoUtilitiesModFramework">
+      <HintPath>$(AutoUtilitiesModFrameworkPath)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(StardeusManagedPath)/*.dll">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

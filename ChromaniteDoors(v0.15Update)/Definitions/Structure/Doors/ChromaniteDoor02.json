@@ -1,0 +1,43 @@
+{
+    "Layer" : "Walls",
+    "ParentId" : "Structure/Doors/BaseDoor",
+    "Components" : [
+        {
+            "Component" : "TileGraphics",
+            "Properties" : [
+                { "Key" : "Graphic", "String" : "Structure/Doors/ChromaniteDoor02/ChromaniteDoor02" }
+            ]
+        },
+        {
+            "Component" : "Flammable",
+            "Properties" : [
+                { "Key" : "FireDamageResistance", "Float" : 0.9 }
+            ]
+        },
+        {
+            "Component" : "Damageable",
+            "Properties" : [
+                { "Key" : "Max", "Int" : 1000 }
+            ]
+        },
+        {
+            "Component" : "Constructable",
+            "Properties" : [
+                { "Key" : "Placement", "String" : "OnFloor" },
+                { "Key" : "CanReplaceSameLayer", "Bool": true },
+                { "Key" : "CanDragRow", "Bool": false },
+                { "Key" : "WorkAmount", "Int" : 800 },
+                {
+                    "Key" : "Contents",
+                    "RawMaterials" : [
+                        { "TypeId" : "ChromanitePlate", "StackSize" : 2 },
+                        { "TypeId" : "TitaniumPlate", "StackSize" : 3 },
+                        { "TypeId" : "Gears", "StackSize" : 2 },
+                        { "TypeId" : "Transistor", "StackSize" : 1 },
+                        { "TypeId" : "CopperWire", "StackSize" : 1 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net481</TargetFramework>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>Game.Systems.AutoHauling</RootNamespace>
+    <AssemblyName>AutoHauling</AssemblyName>
+    <OutputPath>../Libraries</OutputPath>
+    <VersionPrefix>1.1.5.0</VersionPrefix>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <PreserveCompilationContext>false</PreserveCompilationContext>
+    <PreserveCompilationReferences>false</PreserveCompilationReferences>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+    <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
+    <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoUtilitiesModFramework" HintPath="$(AumfDll)" Private="False" />
+    <Reference Include="Game" HintPath="$(StardeusManagedPath)/Game.dll" Private="False" />
+    <Reference Include="Game.Constants" HintPath="$(StardeusManagedPath)/Game.Constants.dll" Private="False" />
+    <Reference Include="Game.Utils" HintPath="$(StardeusManagedPath)/Game.Utils.dll" Private="False" />
+    <Reference Include="KLUnityUtils" HintPath="$(StardeusManagedPath)/KLUnityUtils.dll" Private="False" />
+    <Reference Include="Unity.TextMeshPro" HintPath="$(StardeusManagedPath)/Unity.TextMeshPro.dll" Private="False" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(StardeusManagedPath)/UnityEngine.CoreModule.dll" Private="False" />
+    <Reference Include="UnityEngine.UI" HintPath="$(StardeusManagedPath)/UnityEngine.UI.dll" Private="False" />
+    <Reference Include="UnityEngine.UIModule" HintPath="$(StardeusManagedPath)/UnityEngine.UIModule.dll" Private="False" />
+    <Reference Include="mscorlib" HintPath="$(StardeusManagedPath)/mscorlib.dll" Private="False" />
+    <Reference Include="netstandard" HintPath="$(StardeusManagedPath)/netstandard.dll" Private="False" />
+    <Reference Include="System" HintPath="$(StardeusManagedPath)/System.dll" Private="False" />
+    <Reference Include="System.Core" HintPath="$(StardeusManagedPath)/System.Core.dll" Private="False" />
+  </ItemGroup>
+</Project>

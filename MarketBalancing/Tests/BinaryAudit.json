@@ -1,0 +1,16 @@
+{
+  "Scope": "Metadata references, fixed Harmony signatures and Core caller order; not patch installation or gameplay.",
+  "AssemblyVersion": "0.1.0.0",
+  "FileVersion": "0.1.0.0",
+  "ProductVersion": "0.1.0",
+  "ModuleId": "d6ecfe52-41a6-499e-bd23-308ec3e25ba5",
+  "ModSha256": "D09B695CD6C72D4CAC7F927A297B9900422A74BE2AD8D4980C53AC2702EBC9E3",
+  "GameModuleId": "5161cf38-43a8-4945-b5bd-9d6fc4084b4c",
+  "GameSha256": "1793C761F0F8B338C0030B47B170F06E3D9A363F4F072841407D04262C36C587",
+  "ResolvedGameHarmonyReferences": 31,
+  "PatchTargets": [
+    "InitializeMarket",
+    "ApplyMarketItems"
+  ],
+  "CallerOrder": "ValidateMarketItems -> ApplyMarketItems -> UpdateNetWorth"
+}

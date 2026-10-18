@@ -1,0 +1,14 @@
+﻿{
+    "Type": "Grindable",
+    "IgnoreMarket" : true,
+	"IgnoreEnergyOutput" : true,
+    "Ingredients": [
+        { "TypeId" : "ChromaniteWood", "StackSize" : 1 }
+    ],
+    "OutputMultiplier" : 3,
+    "ProductDefId": "Obj/Materials/ChromanitePulp",
+    "ProductionTimeHours": 1,
+    "EnergyCost": 10.0
+}
+
+

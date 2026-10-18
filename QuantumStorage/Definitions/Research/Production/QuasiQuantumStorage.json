@@ -1,0 +1,14 @@
+{
+  "Id": "Research/Production/QuasiQuantumStorage",
+  "Tier": 3,
+  "IsAbstract": true,
+  "PreviewIcon": "Icons/Color/Store",
+  "Researchable": {
+    "IsTreeNode": true,
+    "Prerequisites": [ "Research/Production/AssemblyImproved" ],
+    "DatoidCosts": [
+      { "TypeId": "DatoidSynthetic", "StackSize": 6 },
+      { "TypeId": "DatoidTechHigh", "StackSize": 11 }
+    ]
+  }
+}

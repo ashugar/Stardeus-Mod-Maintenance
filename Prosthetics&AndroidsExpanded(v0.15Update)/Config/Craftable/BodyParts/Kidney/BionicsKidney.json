@@ -1,0 +1,14 @@
+{
+    "Type" : "Robotics2",
+    "ProductDefId" : "Obj/Parts/Kidney/BionicsKidney",
+    "ProductionTimeHours" : 8,
+    "EnergyCost" : 30,
+    "IgnoreMarket" : true,
+    "Ingredients" : [
+        { "TypeId" : "TitaniumPlate", "StackSize" : 1 },
+        { "TypeId" : "Plastic", "StackSize" : 2 },
+        { "TypeId" : "Microchip", "StackSize" : 2 },
+        { "TypeId" : "NuclearCell", "StackSize" : 1 },
+        { "TypeId" : "Rubber", "StackSize" : 2 }
+    ]
+}

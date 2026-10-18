@@ -1,0 +1,10 @@
+{
+    "Id" : "Obj/Parts/Ear/SideRadiator",
+    "Type" : "CFD",
+    "Groups" : [ "BodyPart", "Robotics" ],
+    "Value" : 8000.0,
+    "Rarity" : 0.1,
+    "MinSectorDifficulty" : 0.75,
+    "TraderQuantity" : 1.0,
+    "Volatility" : 0.00164
+}

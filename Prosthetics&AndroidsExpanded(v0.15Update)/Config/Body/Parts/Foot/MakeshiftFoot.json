@@ -1,0 +1,17 @@
+{
+    "SlotTypeId" : "Foot",
+    "Compatibility" : "Any",
+    "Tier" : 1,
+    "ResistanceBase" : 2.0,
+    "ProvidesStats" : [
+        {
+            "Component" : "MoveSpeed",
+            "Properties" : [
+                // 2 legs + 2 feet add up to 0.5
+                { "Key" : "CompoundLimit", "Float" : 0.3 },
+                { "Key" : "AmountPerMinute", "Float" : 0.05 },
+                { "Key" : "StateMul", "Float" : 1.0 }
+            ]
+        }
+    ]
+}
