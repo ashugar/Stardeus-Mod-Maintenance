@@ -27,3 +27,8 @@
 *.tmp
 *.log
 /AutoHauling/.vscode/Backups/
+
+# Repository-only development tool and harness outputs.
+/.build/
+/build/**/bin/
+/build/**/obj/
