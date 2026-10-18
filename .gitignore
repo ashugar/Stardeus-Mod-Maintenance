@@ -1,0 +1,29 @@
+# Generated build and editor state. Keep .vscode source/project files.
+/*/bin/
+/*/obj/
+/*/.vscode/bin/
+/*/.vscode/obj/
+/*/Tests/bin/
+/*/Tests/obj/
+**/.vs/
+**/__pycache__/
+*.user
+*.suo
+*.pdb
+*.pyc
+*.pyo
+*.deps.json
+
+# Backups, temporary files, and generated diagnostics.
+**/.release*/
+*.bak
+*.bak.*
+*.backup
+*.backup.*
+*.old
+*.old.*
+*.orig
+*.orig.*
+*.tmp
+*.log
+/AutoHauling/.vscode/Backups/

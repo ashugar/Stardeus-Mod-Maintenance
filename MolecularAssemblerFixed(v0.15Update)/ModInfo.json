@@ -1,0 +1,9 @@
+{
+    "Id" : "MolecularAssemblerFixed(v0.15Update)",
+    "SteamWorkshop" : true,
+	"Cheat" : false,
+    "Name" : "MolecularAssembler Fixed (v0.15 Update)",
+    "Description" : "Adds new building Molecular Assembler to produce raw resources.\n\nThis is a Stardeus v0.15 compatibility update of the original Molecular Assembler Fixed mod. The goal of this release is to preserve the original functionality and gameplay intent while restoring compatibility with current versions of Stardeus.\n\nCompatibility updates include:\n• Stardeus v0.15 schema and definition updates\n• Added missing InPort and OutPort definitions required by current game versions\n• Updated deprecated Flammable component properties to current Core naming conventions\n• Removed deprecated definitions and validation warnings\n• General compatibility, stability, and maintenance improvements.\n\nAdditional language support:\n• English\n• Chinese (Simplified)\n• German\n• Russian\n• French\n\nNote: I view this mod as a cheat and have labeled it as such. If you've previously used this mod and want to keep your save as Achievements Enabled, please disable the mod before starting the save. Once the save is loaded with this mod enabled, Achievements will be disabled.\n\nOriginal mod:\nhttps://steamcommunity.com/sharedfiles/filedetails/?id=3306928875\n\nFull credit for the original mod belongs to the original author. This upload exists solely to provide continued compatibility with current versions of Stardeus after the original mod became outdated.\n\nIf the original author returns and publishes an official update, I will gladly defer to their version.\n\nGame Version: v0.15.x\nMod Version: 2.0.x",
+    "ModVersion" : "2.0.1",
+    "GameVersion": "0.15.0"
+}

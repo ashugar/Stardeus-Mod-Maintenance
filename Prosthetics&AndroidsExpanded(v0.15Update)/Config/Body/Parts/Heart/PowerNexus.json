@@ -1,0 +1,16 @@
+﻿{
+    "SlotTypeId" : "Heart",
+    "Compatibility" : "Any",
+    "Tier" : 4,
+    "ResistanceBase" : 14.0,
+	"AddsStatModifiers" : [
+		{
+            "Component" : "MoveSpeed",
+            "Properties" : [
+                { "Key" : "StateMul", "Float" : 1.0 },
+                { "Key" : "Value", "Float" : 3.0 },
+                { "Key" : "Type", "String" : "Adds" }
+            ]
+        }
+    ]
+}

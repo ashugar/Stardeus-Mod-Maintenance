@@ -1,0 +1,44 @@
+{
+    "Layer" : "Walls",
+    "ParentId" : "Structure/Walls/BaseWall",
+    "Researchable" : {
+        "Prerequisites" : [
+            "Research/ConstructionChromanite"
+        ]
+    },
+    "Components" : [
+        {
+            "Component" : "TileGraphics",
+            "Properties" : [
+                { "Key" : "Graphic", "String" : "Structure/Walls/ChromaniteWall" }
+            ]
+        },
+        {
+            "Component" : "Damageable",
+            "Properties" : [
+                { "Key" : "Max", "Int" : 600 }
+            ]
+        },
+        {
+            "Component" : "Flammable",
+            "Properties" : [
+                { "Key" : "FireChance", "Float" : 0.01 },
+                { "Key" : "IgnitionTemperatureCelsius", "Int" : 1200 }
+            ]
+        },
+        {
+            "Component" : "Constructable",
+            "Properties" : [
+                { "Key" : "WorkAmount", "Int" : 150 },
+                {
+                    "Key" : "Contents",
+                    "RawMaterials" : [
+                        { "TypeId" : "SteelPlate", "StackSize" : 1 },
+                        { "TypeId" : "TitaniumPlate", "StackSize" : 1 },
+                        { "TypeId" : "ChromanitePlate", "StackSize" : 1 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

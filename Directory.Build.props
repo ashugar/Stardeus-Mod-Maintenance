@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <!-- Explicit -p values take precedence. Keep local paths in the process environment. -->
+    <StardeusRepositoryRoot>$(MSBuildThisFileDirectory)</StardeusRepositoryRoot>
+    <StardeusGameRoot Condition="'$(StardeusGameRoot)' == ''">$(STARDEUS_GAME_ROOT)</StardeusGameRoot>
+    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == '' and '$(GameManagedPath)' != ''">$(GameManagedPath)</StardeusManagedPath>
+    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == ''">$(STARDEUS_MANAGED_PATH)</StardeusManagedPath>
+    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == '' and '$(StardeusGameRoot)' != ''">$(StardeusGameRoot)/Stardeus_Data/Managed</StardeusManagedPath>
+    <GameManagedPath Condition="'$(GameManagedPath)' == ''">$(StardeusManagedPath)</GameManagedPath>
+
+    <!-- Preserve existing override names; never fall back from an explicitly missing DLL. -->
+    <AutoUtilitiesModFrameworkPath Condition="'$(AutoUtilitiesModFrameworkPath)' == '' and '$(AumfDll)' != ''">$(AumfDll)</AutoUtilitiesModFrameworkPath>
+    <AutoUtilitiesModFrameworkPath Condition="'$(AutoUtilitiesModFrameworkPath)' == '' and '$(AumfPath)' != ''">$(AumfPath)</AutoUtilitiesModFrameworkPath>
+    <AutoUtilitiesModFrameworkPath Condition="'$(AutoUtilitiesModFrameworkPath)' == '' and '$(InstalledAumfPath)' != ''">$(InstalledAumfPath)</AutoUtilitiesModFrameworkPath>
+    <AutoUtilitiesModFrameworkPath Condition="'$(AutoUtilitiesModFrameworkPath)' == ''">$(STARDEUS_AUMF_DLL)</AutoUtilitiesModFrameworkPath>
+    <AutoUtilitiesModFrameworkPath Condition="'$(AutoUtilitiesModFrameworkPath)' == ''">$(StardeusRepositoryRoot)AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll</AutoUtilitiesModFrameworkPath>
+    <AumfDll Condition="'$(AumfDll)' == ''">$(AutoUtilitiesModFrameworkPath)</AumfDll>
+    <AumfPath Condition="'$(AumfPath)' == ''">$(AutoUtilitiesModFrameworkPath)</AumfPath>
+    <InstalledAumfPath Condition="'$(InstalledAumfPath)' == ''">$(AutoUtilitiesModFrameworkPath)</InstalledAumfPath>
+
+    <!-- Map the whole repository: .vscode projects also compile source in sibling Code folders. -->
+    <PathMap Condition="'$(PathMap)' == ''">$(StardeusRepositoryRoot)=/_/Stardeus-Mod-Maintenance/</PathMap>
+  </PropertyGroup>
+</Project>

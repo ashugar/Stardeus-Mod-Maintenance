@@ -1,0 +1,15 @@
+{
+    "Type" : "Robotics3",
+    "ProductDefId" : "Obj/Parts/Jaw/MolecularSensor",
+    "ProductionTimeHours" : 12,
+    "EnergyCost" : 60,
+    "IgnoreMarket" : true,
+    "Ingredients" : [
+        { "TypeId" : "GoldIngot", "StackSize" : 2 },
+        { "TypeId" : "Microchip", "StackSize" : 6 },
+        { "TypeId" : "Transistor", "StackSize" : 8 },        
+        { "TypeId" : "PlatinumIngot", "StackSize" : 2 },
+        { "TypeId" : "Plastic", "StackSize" : 2 },
+        { "TypeId" : "Rubber", "StackSize" : 2 }
+    ]
+}

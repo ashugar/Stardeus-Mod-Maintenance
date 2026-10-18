@@ -1,0 +1,24 @@
+{
+    "SlotTypeId" : "Liver",
+    "Compatibility" : "Any",
+    "Tier" : 4,
+    "ResistanceBase" : 14.0,
+    "AddsStatModifiers" : [
+		{
+            "Component" : "SleepRate",
+            "Properties" : [
+                { "Key" : "StateMul", "Float" : 1.0 },
+                { "Key" : "Value", "Float" : 0.4 },
+                { "Key" : "Type", "String" : "Adds" }
+            ]
+        },
+        {
+            "Component" : "SleepPressureRate",
+            "Properties" : [
+                { "Key" : "StateMul", "Float" : 1.0 },
+                { "Key" : "Value", "Float" : -0.02 },
+                { "Key" : "Type", "String" : "Adds" }
+            ]
+        }
+    ]
+}

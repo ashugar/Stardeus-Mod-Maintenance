@@ -1,0 +1,30 @@
+{
+  "target": "Config/Species/Jobs/Orbotron.json",
+  "operations": [
+    {
+      "op": "add",
+      "path": "/StartingJobs/-",
+      "value": { "Job": "Cleaning" }
+    },
+    {
+      "op": "add",
+      "path": "/StartingJobs/-",
+      "value": { "Job": "Cooking" }
+    },
+    {
+      "op": "add",
+      "path": "/StartingJobs/-",
+      "value": { "Job": "Crafting" }
+    },
+    {
+      "op": "add",
+      "path": "/StartingJobs/-",
+      "value": { "Job": "Piloting" }
+    },
+    {
+      "op": "add",
+      "path": "/StartingJobs/-",
+      "value": { "Job": "Plants" }
+    }
+  ]
+}

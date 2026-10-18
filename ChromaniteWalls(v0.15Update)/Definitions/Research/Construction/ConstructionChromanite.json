@@ -1,0 +1,22 @@
+{
+    "Id" : "Research/ConstructionChromanite",
+    "Tier" : 3,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Icons/Color/Construct",
+    "Researchable" : {
+        "IsTreeNode" : true,
+        "Prerequisites" : [
+            "Research/Construction/Structure"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidBasic",
+                "StackSize" : 40
+            },
+            {
+                "TypeId" : "DatoidTech",
+                "StackSize" : 40
+            }
+        ]
+    }
+}

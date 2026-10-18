@@ -1,0 +1,18 @@
+﻿{
+    "SlotTypeId" : "Jaw",
+    "Compatibility" : "Any",
+    "Tier" : 4,
+    "ResistanceBase" : 16.0,
+    "AddsAbilities" : [
+        "Chew",
+        "Vocalize"
+    ],
+    "ProvidesStats" : [
+        {
+            "Component" : "HungerSatisfyRate",
+            "Properties" : [
+                { "Key" : "StateMul", "Float" : 0.0 },
+                { "Key" : "AmountPerHour", "Float" : 2.0 }
+            ]
+        }
+    ],}

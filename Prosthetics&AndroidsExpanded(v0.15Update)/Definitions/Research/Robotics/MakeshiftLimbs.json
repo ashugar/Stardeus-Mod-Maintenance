@@ -1,0 +1,22 @@
+{
+    "Id" : "Research/Robotics/MakeshiftLimbs",
+    "Tier" : 2,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Obj/BodyParts/Robotic",
+    "Researchable" : {
+        "IsTreeNode" : true,
+        "Prerequisites" : [
+            "Research/Robotics/PartsBasic"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidTech",
+                "StackSize" : 10
+            },
+            {
+                "TypeId" : "DatoidEnergy",
+                "StackSize" : 5
+            }			
+        ]
+    }
+}

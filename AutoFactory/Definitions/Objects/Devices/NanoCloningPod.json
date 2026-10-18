@@ -1,0 +1,88 @@
+{
+    "ToolPath": "Production",
+    "Layer": "Objects",
+    "ParentId": "Objects/Devices/CloningPod",
+    "NameKey": "AutoFactory.NanoCloningPod",
+    "Tier": 5,
+    "Researchable": {
+        "Prerequisites": [
+            "Research/LifeSupport/NanoCloning"
+        ]
+    },
+    "Components": [
+        {
+            "Component": "TileGraphics",
+            "Properties": [
+                { "Key": "Type", "String": "Object" },
+                { "Key": "Graphic", "String": "Objects/Devices/NanoCloningPod" },
+                { "Key": "HasHeight", "Bool": true }
+            ]
+        },
+        {
+            "Component": "TileAnimation",
+            "Properties": [
+                { "Key": "Offsets", "Vector2Set": [
+                    { "x": 0.0, "y": 0.68 },
+                    { "x": 0.0, "y": 0.68 },
+                    { "x": 0.0, "y": 0.68 },
+                    { "x": 0.0, "y": 0.68 }
+                ] },
+                { "Key": "Size", "Vector2": { "x": 1.47, "y": 1.47 } },
+                { "Key": "Rotations", "StringSet": [ "D", "L", "U", "R" ] },
+                { "Key": "Direction", "Int": 1 },
+                { "Key": "BaseSprite", "String": "Objects/Devices/NanoCloningPod" },
+                { "Key": "AnimSprite", "String": "Objects/DeviceAnims/NanoCloningPod_Anim" },
+                { "Key": "CopyAnimSprite", "Bool": true },
+                { "Key": "Speed", "Float": 0.5 },
+                { "Key": "SpriteOrder", "String": "AboveAnyTile" },
+                { "Key": "FramePrefix", "String": "F" },
+                { "Key": "NumFrames", "Int": 3 },
+                { "Key": "NeedsEnergy", "Bool": true }
+            ]
+        },
+        {
+            "Component": "MultiCrafter",
+            "Properties": [
+                { "Key": "UIItemIcon", "String": "Icons/Color/Cloning" },
+                { "Key": "CraftKey", "String": "clone" },
+                { "Key": "MaxBatchSize", "Int": 1 },
+                { "Key": "ProgressBarKey", "String": "cloning.bar" },
+                { "Key": "DefaultPriority", "Int": 5 },
+                { "Key": "CompatibleTypes", "StringSet": [ "AutoCloning" ] },
+                { "Key": "DisableExplosivenessProvider", "Bool": true }
+            ]
+        },
+        {
+            "Component": "RefillableStorage",
+            "Properties": [
+                { "Key": "DeviceType", "String": "nano.cloning.pod" },
+                { "Key": "Purpose", "String": "fuel" },
+                { "Key": "BarColor", "String": "5390C6FF" },
+                { "Key": "LockedMaterial", "String": "Nanobots" },
+                { "Key": "Icon", "String": "Obj/Materials/Nanobots" },
+                { "Key": "MaterialCapacity", "Int": 100 },
+                { "Key": "DefaultPriority", "Int": 5 }
+            ]
+        },
+        {
+            "Component": "Constructable",
+            "Properties": [
+                { "Key": "WorkAmount", "Int": 2600 },
+                { "Key": "CanReplaceGroup", "String": "AutoFactory.NanoCloningPod" },
+                { "Key": "CanDragRow", "Bool": true },
+                {
+                    "Key": "Contents",
+                    "RawMaterials": [
+                        { "TypeId": "TitaniumPlate", "StackSize": 20 },
+                        { "TypeId": "Glass", "StackSize": 20 },
+                        { "TypeId": "Rubber", "StackSize": 10 },
+                        { "TypeId": "Plastic", "StackSize": 15 },
+                        { "TypeId": "OpticalFiber", "StackSize": 12 },
+                        { "TypeId": "Microchip2", "StackSize": 8 },
+                        { "TypeId": "GoldWire", "StackSize": 12 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

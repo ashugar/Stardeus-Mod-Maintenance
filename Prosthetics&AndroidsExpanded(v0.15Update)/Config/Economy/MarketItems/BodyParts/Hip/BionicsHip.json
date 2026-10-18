@@ -1,0 +1,9 @@
+{
+    "Id" : "Obj/Parts/Hip/BionicsHip",
+    "Type" : "CFD",
+    "Groups" : [ "BodyPart", "Robotics" ],
+    "Value" : 2000.0,
+    "Rarity" : 0.1,
+    "MinSectorDifficulty" : 0.6,
+    "Volatility" : 0.00164
+}

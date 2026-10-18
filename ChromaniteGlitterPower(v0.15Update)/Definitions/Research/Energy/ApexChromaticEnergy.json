@@ -1,0 +1,31 @@
+{
+    "Id" : "Research/ApexChromaticEnergy",
+    "Tier" : 7,
+    "IsAbstract" : true,
+    "PreviewIcon" : "Icons/Color/Energy",
+    "Researchable" : {
+        "IsTreeNode" : true,
+        "Prerequisites" : [
+            "Research/Energy/SolarEfficient",
+			"Research/AdvancedChromaticEnergy"
+        ],
+        "DatoidCosts" : [
+            {
+                "TypeId" : "DatoidBiotic",
+                "StackSize" : 55
+            },
+            {
+                "TypeId" : "DatoidSynthetic",
+                "StackSize" : 32
+            },
+            {
+                "TypeId" : "DatoidEnergy",
+                "StackSize" : 42
+            },
+            {
+                "TypeId" : "DatoidAlien",
+                "StackSize" : 8
+            }
+        ]
+    }
+}
