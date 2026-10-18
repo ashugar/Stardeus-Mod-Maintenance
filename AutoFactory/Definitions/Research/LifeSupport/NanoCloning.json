@@ -1,0 +1,19 @@
+{
+    "Id": "Research/LifeSupport/NanoCloning",
+    "Tier": 5,
+    "IsAbstract": true,
+    "NameKey": "AutoFactory.NanoCloning",
+    "PreviewIcon": "Icons/Color/Cloning",
+    "Researchable": {
+        "IsTreeNode": true,
+        "Prerequisites": [
+            "Research/LifeSupport/GeneticEngineering",
+            "Research/Robotics/Nanobots"
+        ],
+        "DatoidCosts": [
+            { "TypeId": "DatoidBiotic", "StackSize": 20 },
+            { "TypeId": "DatoidSynthetic", "StackSize": 18 },
+            { "TypeId": "DatoidTechHigh", "StackSize": 12 }
+        ]
+    }
+}

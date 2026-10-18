@@ -1,0 +1,11 @@
+﻿{
+    "Id" : "ChromanitePulp",
+    "GroupId" : "Components",
+    "IsComposite" : true,
+    "IconId" : "Obj/Materials/ChromanitePulp",
+    "ProcessableDefId" : "Obj/Materials/ChromanitePulp",
+    "EnergyOutput" : 2000.0,
+    "InternalValue" : 22.0,
+    "Rarity" : 5
+}
+

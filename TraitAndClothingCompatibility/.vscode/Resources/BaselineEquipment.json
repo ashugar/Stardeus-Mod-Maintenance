@@ -1,0 +1,14 @@
+{
+  "WornItemMood.MaxExtraItems": "2",
+  "Tunables.TatteredQualityThreshold": "0.4",
+  "Tunables.WornGearMoodSecondHand": "-4",
+  "Tunables.WornGearMoodSecondHandThrifty": "3",
+  "Tunables.WornGearMoodSecondHandFastidious": "-8",
+  "Tunables.WornGearMoodDeadMans": "-6",
+  "Tunables.WornGearMoodDeadMansThrifty": "-3",
+  "Tunables.WornGearMoodDeadMansFastidious": "-10",
+  "Tunables.WornGearMoodTattered": "-3",
+  "Tunables.WornGearMoodTatteredFastidious": "-6",
+  "Tunables.TradeSecondHandPriceMul": "0.5",
+  "Tunables.TradeDeadMansPriceMul": "0.25"
+}

@@ -1,0 +1,8 @@
+{
+  "Id": "AutoUtilitiesModFramework",
+  "SteamWorkshop": true,
+  "Name": "Auto Utilities Mod Framework",
+  "Description": "Shared UI and utility infrastructure for compatible Stardeus mods. Provides cooperative top-bar widgets, managed resizable panels, native control builders, collapsible sections, responsive layouts, theme-aware tabs, scrolling, custom control colors and state cards, tooltips, input helpers, and guarded persistent shortcuts.",
+  "ModVersion": "1.4.0",
+  "GameVersion": "0.15.0"
+}

@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.meta
+
+Artwork/*.blend1
+Artwork/*.blend2
+Artwork/*.blend3
+Artwork/*.blend4
+Artwork/*.blend5
+Libraries/*.json
+
+.vscode/obj/
+obj/

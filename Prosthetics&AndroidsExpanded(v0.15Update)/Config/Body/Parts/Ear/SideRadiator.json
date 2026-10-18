@@ -1,0 +1,27 @@
+{
+    "SlotTypeId" : "Ear",
+    "Compatibility" : "Any",
+    "Tier" : 4,
+    "ResistanceBase" : 10.0,
+	"AddsAbilities" : [
+        "Hear"
+    ],
+    "ProvidesStats" : [
+        {
+            "Component" : "Hearing",
+            "Properties" : [
+                { "Key" : "CompoundLimit", "Float" : 2.0 },
+                { "Key" : "Amount", "Float" : 1.0 },
+                { "Key" : "StateMul", "Float" : 1.0 }
+            ]
+        },
+        {
+            "Component" : "TempMax",
+            "Properties" : [
+                { "Key" : "StateMul", "Float" : 1.0 },
+                { "Key" : "AmountPerDay", "Float" : 200.0 },
+                { "Key" : "Type", "String" : "Adds" }
+            ]
+        }
+    ]
+}

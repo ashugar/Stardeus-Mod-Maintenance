@@ -1,0 +1,198 @@
+{
+  "ToolPath": "Food",
+  "Layer": "Objects",
+  "ParentId": "Objects/Devices/Freezer",
+  "UseParentTexts": false,
+  "NameKey": "objects.devices.freezerrelay",
+  "Researchable": {
+    "Prerequisites": [
+      "Research/Production/QuasiQuantumStorage"
+    ]
+  },
+  "Spawnable": {
+    "Category": "Food",
+    "Chance": 0,
+    "ChanceLocked": 0
+  },
+  "Components": [
+    {
+      "Component": "TileTransform",
+      "Properties": [
+        {
+          "Key": "Width",
+          "Int": 1
+        },
+        {
+          "Key": "Height",
+          "Int": 1
+        },
+        {
+          "Key": "IsRotatable",
+          "Bool": true
+        },
+        {
+          "Key": "OutPort",
+          "Vector2": {
+            "x": 0,
+            "y": -1
+          }
+        },
+        {
+          "Key": "InPort",
+          "Vector2": {
+            "x": 0,
+            "y": -1
+          }
+        }
+      ]
+    },
+    {
+      "Component": "TileGraphics",
+      "Properties": [
+        {
+          "Key": "Type",
+          "String": "Object"
+        },
+        {
+          "Key": "Graphic",
+          "String": "Objects/Devices/FreezerRelay"
+        },
+        {
+          "Key": "HasHeight",
+          "Bool": true
+        },
+        {
+          "Key": "AliasLR",
+          "Bool": false
+        },
+        {
+          "Key": "AliasUD",
+          "Bool": false
+        }
+      ]
+    },
+    {
+      "Component": "ElectricNode",
+      "Properties": [
+        {
+          "Key": "IsConsumer",
+          "Bool": true
+        }
+      ]
+    },
+    {
+      "Component": "PoweredStorage",
+      "Properties": [
+        {
+          "Key": "EnergyCostBase",
+          "Float": 10
+        },
+        {
+          "Key": "EnergyCostPerItem",
+          "Float": 0
+        }
+      ]
+    },
+    {
+      "Component": "MatStorage",
+      "Properties": [
+        {
+          "Key": "MaxCapacity",
+          "Int": 275
+        },
+        {
+          "Key": "IsPublic",
+          "Bool": true
+        },
+        {
+          "Key": "ShowFulnessBar",
+          "Bool": true
+        }
+      ]
+    },
+    {
+      "Component": "MatHaulTarget",
+      "Properties": [
+        {
+          "Key": "AutoHaul",
+          "Bool": true
+        },
+        {
+          "Key": "Priority",
+          "Int": 3
+        },
+        {
+          "Key": "Mode",
+          "String": "AllowAll"
+        },
+        {
+          "Key": "NeedsElectricity",
+          "Bool": true
+        }
+      ]
+    },
+    {
+      "Component": "StorageRelayNode",
+      "Properties": [
+        {
+          "Key": "NetworkId",
+          "String": "Freezer"
+        },
+        {
+          "Key": "LocalCapacity",
+          "Int": 275
+        },
+        {
+          "Key": "LinkRange",
+          "Int": 12
+        }
+      ]
+    },
+    {
+      "Component": "Constructable",
+      "Properties": [
+        {
+          "Key": "Placement",
+          "String": "OnFloor"
+        },
+        {
+          "Key": "WorkAmount",
+          "Int": 900
+        },
+        {
+          "Key": "CanDragRow",
+          "Bool": true
+        },
+        {
+          "Key": "Contents",
+          "RawMaterials": [
+            {
+              "TypeId": "TitaniumPlate",
+              "StackSize": 4
+            },
+            {
+              "TypeId": "Plastic",
+              "StackSize": 1
+            },
+            {
+              "TypeId": "Glass",
+              "StackSize": 1
+            },
+            {
+              "TypeId": "Transistor",
+              "StackSize": 1
+            },
+            {
+              "TypeId": "CopperWire",
+              "StackSize": 3
+            },
+            {
+              "TypeId": "Microchip2",
+              "StackSize": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "Research": true,
+  "Manufacturing": true,
+  "Power": false,
+  "Tasks": true,
+  "Beings": true,
+  "CrewUI": true,
+  "UIEvents": true,
+  "Audio": true,
+  "ShipCombat": true,
+  "Inventory": true,
+  "Lifecycle": true,
+  "StoryEvents": true,
+  "Fire": true,
+  "Timings": true,
+  "TimingWarningMs": 8
+}

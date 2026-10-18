@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <!-- Linked game models have fields populated by Core, outside this harness. -->
+    <NoWarn>$(NoWarn);CS0649</NoWarn>
+    <DefineConstants Condition="'$(BaselineDirectory)' != ''">$(DefineConstants);BASELINE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="*.cs" />
+    <Compile Include="../Code/PlanModels.cs" />
+    <Compile Include="../Code/PlanningOverhaulBlueprintCodec.cs" />
+    <Compile Include="../Code/PlanningOverhaulPlanIndex.cs" />
+    <Compile Include="../Code/PlanningOverhaulEquipmentState.cs" />
+    <Compile Include="../Code/PlanningOverhaulRelocationCandidates.cs" />
+    <Compile Include="../Code/PlanningOverhaulStagingPolicy.cs" />
+    <Compile Include="../Code/PlanningOverhaulLog.cs" />
+    <Compile Include="$(BaselineDirectory)/*.cs" Condition="'$(BaselineDirectory)' != ''" />
+  </ItemGroup>
+</Project>

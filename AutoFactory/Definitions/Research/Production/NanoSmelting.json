@@ -1,0 +1,19 @@
+{
+    "Id": "Research/Production/NanoSmelting",
+    "Tier": 4,
+    "IsAbstract": true,
+    "NameKey": "AutoFactory.NanoSmelting",
+    "PreviewIcon": "Icons/Color/Loading",
+    "Researchable": {
+        "IsTreeNode": true,
+        "Prerequisites": [
+            "Research/Production/Smelting",
+            "Research/Robotics/Nanobots"
+        ],
+        "DatoidCosts": [
+            { "TypeId": "DatoidSynthetic", "StackSize": 12 },
+            { "TypeId": "DatoidEnergy", "StackSize": 10 },
+            { "TypeId": "DatoidTechHigh", "StackSize": 14 }
+        ]
+    }
+}

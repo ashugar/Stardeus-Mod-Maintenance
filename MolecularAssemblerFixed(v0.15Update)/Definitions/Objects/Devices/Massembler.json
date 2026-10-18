@@ -1,0 +1,248 @@
+{
+    "ToolPath": "Production",
+    "Layer": "Objects",
+    "ParentId": "Objects/Devices/BaseDevice",
+    "Researchable": {
+        "Prerequisites": [
+            "Research/Production/AssemblyImproved"
+        ]
+    },
+    "Components": [
+        {
+            "Component": "TileTransform",
+            "Properties": [
+                {
+                    "Key": "IsRotatable",
+                    "Bool": true
+                },
+                {
+                    "Key": "WorkSpot",
+                    "Vector2": {
+                        "x": 0,
+                        "y": -1
+                    }
+                },
+                {
+                    "Key": "Height",
+                    "Int": 2
+                },
+                {
+                    "Key": "Width",
+                    "Int": 2
+                },
+                { "Key" : "InPort", "Vector2" : { "x" : 0, "y" : -1 } },
+                { "Key" : "OutPort", "Vector2" : { "x" : 0, "y" : -1 } }
+            ]
+        },
+        {
+            "Component": "TileGraphics",
+            "Properties": [
+                {
+                    "Key": "Type",
+                    "String": "Object"
+                },
+                {
+                    "Key": "HasHeight",
+                    "Bool": true
+                },
+                {
+                    "Key": "Graphic",
+                    "String": "Objects/Devices/MolecularAssembler"
+                }
+            ]
+        },
+        {
+            "Component": "ElectricNode",
+            "Properties": [
+                {
+                    "Key": "IsConsumer",
+                    "Bool": true
+                },
+                {
+                    "Key": "Particles_D",
+                    "String": "AssemblerFX"
+                },
+                {
+                    "Key": "Particles_U",
+                    "String": "AssemblerFX"
+                },
+                {
+                    "Key": "IsConsumerLowPriority",
+                    "Bool": true
+                }
+            ]
+        },
+        {
+            "Component": "LightSource",
+            "Properties": [
+                {
+                    "Key": "Radius",
+                    "Float": 7
+                },
+                {
+                    "Key": "Color",
+                    "IntSet": [
+                        123,
+                        191,
+                        64,
+                        128
+                    ]
+                },
+                {
+                    "Key": "PulsateColor",
+                    "IntSet": [
+                        123,
+                        191,
+                        64,
+                        192
+                    ]
+                },
+                {
+                    "Key": "FrequencyRange",
+                    "Vector2": {
+                        "x": 2,
+                        "y": 3
+                    }
+                }
+            ]
+        },
+        {
+            "Component": "Passability",
+            "Properties": [
+                {
+                    "Key": "IsPassable",
+                    "Bool": false
+                },
+                {
+                    "Key": "IsWalkable",
+                    "Bool": false
+                },
+                {
+                    "Key": "Difficulty",
+                    "Float": 1
+                }
+            ]
+        },
+        {
+            "Component": "Constructable",
+            "Properties": [
+                {
+                    "Key": "WorkAmount",
+                    "Int": 750
+                },
+                {
+                    "Key": "CanDragRow",
+                    "Bool": true
+                },
+                {
+                    "Key": "Contents",
+                    "RawMaterials": [
+                        {
+                            "TypeId": "TitaniumPlate",
+                            "StackSize": 3
+                        },
+                        {
+                            "TypeId": "Gears",
+                            "StackSize": 5
+                        },
+                        {
+                            "TypeId": "OpticalFiber",
+                            "StackSize": 1
+                        },
+                        {
+                            "TypeId": "Microchip",
+                            "StackSize": 1
+                        },
+                        {
+                            "TypeId": "GoldWire",
+                            "StackSize": 5
+                        }
+                    ]
+                }
+            ]
+        },
+        { "Component" : "ExtraInfo" },
+        {
+            "Component": "MultiCrafter",
+            "Properties": [
+                {
+                    "Key": "UIItemIcon",
+                    "String": "Icons/Color/Cog"
+                },
+                {
+                    "Key": "CraftKey",
+                    "String": "assemble"
+                },
+                {
+                    "Key": "DefaultPriority",
+                    "Int": 3
+                },
+                {
+                    "Key": "ProgressBarKey",
+                    "String": "assembling.now"
+                },
+                {
+                    "Key": "SpeedMultiplier",
+                    "Float": 1.0
+                },
+                {
+                    "Key": "CompatibleTypes",
+                    "StringSet": [
+                        "MolecularAssemblable"
+                    ]
+                }
+            ]
+        },
+        {
+            "Component": "Flammable",
+            "Properties": [
+                {
+                    "Key": "IgnitionTemperatureCelsius",
+                    "Int": 350
+                },
+                {
+                    "Key": "FireChance",
+                    "Float": 0.6
+                },
+				{ "Key" : "BaseExplosionLevel", "Int" : 3 },
+                {
+                    "Key": "FlammabilityCurve",
+                    "String": "Device"
+                },
+                {
+                    "Key": "ExplosivenessCurve",
+                    "String": "DeviceLow"
+                }
+            ]
+        },
+        {
+            "Component": "WithFuse",
+            "Properties": [
+                {
+                    "Key": "MalfunctionWeight",
+                    "Float": 0.05
+                }
+            ]
+        },
+        {
+            "Component": "AudioSource",
+            "Properties": [
+                {
+                    "Key": "AmbienceClip",
+                    "String": "Devices/AssemblerSFX"
+                },
+                {
+                    "Key": "IsLinkedToEnergy",
+                    "Bool": true
+                },
+                {
+                    "Key": "Rolloff",
+                    "Vector2": {
+                        "x": 3,
+                        "y": 15
+                    }
+                }
+            ]
+        }
+    ]
+}

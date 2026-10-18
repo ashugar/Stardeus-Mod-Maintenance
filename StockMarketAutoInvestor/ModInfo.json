@@ -1,0 +1,10 @@
+{
+  "Id": "StockMarketAutoInvestor",
+  "Name": "Stock Market Auto-Investor",
+  "ModVersion": "0.1.0",
+  "GameVersion": "0.15.0",
+  "SteamWorkshop": false,
+  "Dependencies": ["AutoUtilitiesModFramework"],
+  "DLLFiles": ["StockMarketAutoInvestor.dll"],
+  "Description": "An independent investment panel with price graphs, asset details, manual trades, and optional automatic investing. Reserve cash as a percentage of cash plus owned share value, set a maximum share price, and choose how purchases are allocated. Auto-Invest uses Core's recorded daily price history without a new collection period. It starts off; disabling it stops all background investment processing. Requires Auto Utilities Mod Framework 1.4.0 with its pooled input callback repair. Initial test build."
+}

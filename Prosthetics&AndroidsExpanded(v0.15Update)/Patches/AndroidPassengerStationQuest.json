@@ -1,0 +1,10 @@
+{
+  "target": "Config/Quests/Quests/Random/Delivery_PassengerStation.json",
+  "operations": [
+    {
+      "op": "add",
+      "path": "/Steps/0/Config/0/StringSet/-",
+      "value": "Androids"
+    }
+  ]
+}

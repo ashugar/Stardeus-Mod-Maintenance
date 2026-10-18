@@ -1,0 +1,736 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <LangVersion>9.0</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup>
+        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+        <OutputType>Library</OutputType>
+    <TargetFramework>net481</TargetFramework>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+        <PlatformTarget>x64</PlatformTarget>
+
+        <!-- Modify [RootNamespace], [AssemblyName], [OutputPath], [VersionPrefix] -->
+        <RootNamespace>ColonistAndBotsAutoUpgrade</RootNamespace>
+        <AssemblyName>ColonistAndBotsAutoUpgrade</AssemblyName>
+        <OutputPath>../Libraries</OutputPath>
+        <VersionPrefix>1.1.3.0</VersionPrefix>
+
+        <!-- do not generate pdb file -->
+        <!-- <DebugType>none</DebugType> -->
+
+        <!-- embed the pdb file -->
+        <DebugType>embedded</DebugType>
+
+        <DebugSymbols>false</DebugSymbols>
+        <GenerateDependencyFile>false</GenerateDependencyFile>
+        <PreserveCompilationContext>false</PreserveCompilationContext>
+        <PreserveCompilationReferences>false</PreserveCompilationReferences>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    </PropertyGroup>
+    <PropertyGroup>
+        <NoConfig>true</NoConfig>
+        <NoStdLib>true</NoStdLib>
+        <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+        <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
+        <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
+    </PropertyGroup>
+
+    <ItemGroup>
+         <!-- Mod -->
+        <Compile Include="../Code/**/*.cs" />
+        <Reference Include="AutoUtilitiesModFramework">
+          <HintPath>../../AutoUtilitiesModFramework/Libraries/AutoUtilitiesModFramework.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <!-- Stardeus explicit DLL references -->
+    <Reference Include="0Harmony">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutomaticGraphLayout">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\AutomaticGraphLayout.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutomaticGraphLayout.Drawing">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\AutomaticGraphLayout.Drawing.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="com.rlabrecque.steamworks.net">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\com.rlabrecque.steamworks.net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DomainReloadHelper.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\DomainReloadHelper.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Game.CodeGen">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.CodeGen.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Game.Constants">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.Constants.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Game">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Game.I18n">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.I18n.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Game.Utils">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Game.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="KLUnityUtils">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\KLUnityUtils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MessagePack.Annotations">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\MessagePack.Annotations.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MessagePack">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\MessagePack.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.NET.StringTools">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Microsoft.NET.StringTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Mono.Security.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\mscorlib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\netstandard.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ProjectDawn.Collections">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\ProjectDawn.Collections.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ProjectDawn.Geometry">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\ProjectDawn.Geometry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ProjectDawn.Mathematics">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\ProjectDawn.Mathematics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SingularityGroup.HotReload.Runtime.Public">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\SingularityGroup.HotReload.Runtime.Public.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Buffers.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.ComponentModel.Composition.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Configuration.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Data.DataSetExtensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Drawing.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.EnterpriseServices">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.EnterpriseServices.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.IO.Compression.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.IO.Compression.FileSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Memory.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Net.Http.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Numerics">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Numerics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Runtime.Serialization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Security.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ServiceModel.Internals">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.ServiceModel.Internals.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Transactions">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Transactions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Xml.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\System.Xml.Linq.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ThirdParty">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\ThirdParty.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Burst">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Burst.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Burst.Unsafe">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Burst.Unsafe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Collections">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Collections.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Collections.LowLevel.ILSupport">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.InputSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.InputSystem.ForUI">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.InputSystem.ForUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.InternalAPIEngineBridge.001">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.InternalAPIEngineBridge.001.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.InternalAPIEngineBridge.004">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.InternalAPIEngineBridge.004.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.InternalAPIEngineBridge.RenderPipelines.Core.Runtime.Shared">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.InternalAPIEngineBridge.RenderPipelines.Core.Runtime.Shared.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Mathematics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.MemoryProfiler">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.MemoryProfiler.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.PathTracing.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.PathTracing.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Profiling.Core">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Profiling.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime.Shared">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipelines.Core.Runtime.Shared.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.GPUDriven.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipelines.GPUDriven.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.2D.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipelines.Universal.2D.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Config.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipelines.Universal.Config.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Shaders">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Scripting">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Scripting.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Analytics">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Analytics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Analytics">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Analytics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Components">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Components.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Configuration">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Configuration.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Device">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Device.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Environments">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Environments.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Environments.Internal">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Environments.Internal.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Internal">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Internal.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Networking">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Networking.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Registration">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Registration.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Scheduler">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Scheduler.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Telemetry">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Telemetry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Threading">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.Services.Core.Threading.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.SurfaceCache.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.SurfaceCache.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.UnifiedRayTracing.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.UnifiedRayTracing.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Unity.VisualEffectGraph.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.AccessibilityModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AdaptivePerformanceModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.AdaptivePerformanceModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AMDModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.AMDModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.AndroidJNIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ARModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ClothModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterInputModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ClusterInputModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterRendererModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ClusterRendererModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ContentLoadModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ContentLoadModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.CrashReportingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.DirectorModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.DSPGraphModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.DSPGraphModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.GameCenterModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.GIModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.GIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.GraphicsStateCollectionSerializerModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.GraphicsStateCollectionSerializerModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.GridModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.HierarchyCoreModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.HierarchyCoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.HierarchyModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.HierarchyModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.HotReloadModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IdentifiersModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.IdentifiersModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputForUIModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.InputForUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InsightsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.InsightsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.LocalizationModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.MarshallingModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.MarshallingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.MultiplayerModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.MultiplayerModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.NVIDIAModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.NVIDIAModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsBackendPhysXModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.PhysicsBackendPhysXModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PropertiesModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.PropertiesModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.RenderAs2DModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.RenderAs2DModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ScriptingModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ScriptingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ShaderVariantAnalyticsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.ShaderVariantAnalyticsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.SpriteMaskModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.StreamingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.SubstanceModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreFontEngineModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreTextEngineModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.TilemapModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.TLSModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UmbraModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityConnectModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConsentModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityConsentModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityCurlModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityCurlModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VectorGraphicsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.VectorGraphicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.VFXModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VirtualTexturingModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.VirtualTexturingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.WindModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityUIExtensions">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\UnityUIExtensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Uween.Runtime">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\Uween.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="websocket-sharp">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Stardeus\Stardeus_Data\Managed\websocket-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    </ItemGroup>
+</Project>
+

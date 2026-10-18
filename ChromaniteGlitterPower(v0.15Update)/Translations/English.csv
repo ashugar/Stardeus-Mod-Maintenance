@@ -1,0 +1,10 @@
+Key,Translation,Version,Comment (context for translators)
+objects.devices.glitterpanel,Glitter Panel ({0}kW),,
+objects.devices.glitterpanel.desc,Produces a constant {0}kW of electricity when clean. Will accumulate dust particles and lose efficiency over time. Can be cleaned by drones.,,
+objects.devices.glitterpanelarray,Glitter Panel Array ({0}kW),,
+objects.devices.glitterpanelarray.desc,Produces a constant {0}kW of electricity when clean. Will accumulate dust particles and lose efficiency over time. Can be cleaned by drones.,,
+objects.devices.glitterpanelarray2,Glitter Panel Array ({0}kW),,
+objects.devices.glitterpanelarray2.desc,Produces a constant {0}kW of electricity when clean. Will accumulate dust particles and lose efficiency over time. Can be cleaned by drones.,,
+research.chromaticenergy,Chromatic Energy,,
+research.advancedchromaticenergy,Advanced Chromatic Energy,,
+research.apexchromaticenergy,Apex Chromatic Energy,,

@@ -1,0 +1,12 @@
+{
+    "Type": "MolecularAssemblable",
+    "Ingredients": [
+        { "TypeId": "DarkMatter", "StackSize": 0 }
+    ],
+    "ProductDefId": "Obj/Materials/DarkMatter",
+    "ProductionTimeHours": 2.0,
+    "OutputMultiplier": 5,
+    "EnergyCost": 4.0,
+    "IgnoreEnergyOutput": true,
+    "IgnoreMarket": true
+}

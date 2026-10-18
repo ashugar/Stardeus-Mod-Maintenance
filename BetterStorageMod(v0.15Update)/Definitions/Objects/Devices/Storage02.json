@@ -1,0 +1,59 @@
+{
+    "ToolPath" : "Facilities",
+    "Layer" : "Objects",
+    "ParentId" : "Objects/Devices/StorageMini",
+    "UseParentTexts" : true,
+    "TranslationVars" : [ "10000" ],
+    "Researchable" : {
+        "Prerequisites" : [
+            "Research/Construction/IndustrialStorage"
+        ]
+    },
+    "Components" : [
+        {
+            "Component" : "TileTransform",
+            "Properties" : [
+                { "Key" : "Width", "Int" : 4 },
+                { "Key" : "Height", "Int" : 3 },
+                { "Key" : "IsRotatable", "Bool" : true },
+                { "Key" : "WorkSpot", "Vector2" : { "x" : 2, "y" : -1 } },
+                { "Key" : "OutPort", "Vector2" : { "x" : 1, "y" : -1 } },
+                { "Key" : "InPort", "Vector2" : { "x" : 1, "y" : -1 } }
+			]
+        },
+        {
+            "Component" : "TileGraphics",
+            "Properties" : [
+                { "Key" : "Type", "String": "Object" },
+                { "Key" : "Graphic", "String": "Objects/Devices/HugeStorage" },
+                { "Key" : "HasHeight", "Bool": true}
+            ]
+        },
+        {
+            "Component" : "MatStorage",
+            "Properties" : [
+                { "Key" : "MaxCapacity", "Int" : 10000 },
+                { "Key" : "IsPublic", "Bool" : true },
+                { "Key" : "ShowFulnessBar", "Bool" : true }
+            ]
+        },
+        { "Component" : "MatHaulTarget" },
+        {
+            "Component" : "Constructable",
+            "Properties" : [
+                { "Key" : "Placement", "String" : "OnFloor" },
+                { "Key" : "WorkAmount", "Int" : 3000 },
+                { "Key" : "CanDragRow", "Bool" : true },
+                {
+                    "Key" : "Contents",
+                    "RawMaterials" : [
+                        { "TypeId" : "TitaniumPlate", "StackSize" : 75 },
+                        { "TypeId" : "Gears", "StackSize" : 35 },
+                        { "TypeId" : "Microchip", "StackSize" : 15 },
+                        { "TypeId" : "Plastic", "StackSize" : 25 }
+                    ]
+                }
+            ]
+        }
+    ]
+}
