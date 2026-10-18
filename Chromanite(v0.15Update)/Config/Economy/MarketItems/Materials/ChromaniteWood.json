@@ -1,0 +1,9 @@
+{
+    "Id" : "Obj/Materials/ChromaniteWood",
+    "Type" : "CFD",
+    "Groups" : [ "Material", "Flora" ],
+    "Value" : 60.0,
+    "Rarity" : 0.2,
+    "TraderQuantity" : 50.0,
+    "Volatility" : 0.0015
+}

@@ -1,0 +1,16 @@
+﻿{
+  "Type" : "Robotics3",
+  "ProductDefId" : "Obj/Parts/Core/QuantumNexusCore",
+  "ProductionTimeHours" : 40,
+  "EnergyCost" : 100,
+  "IgnoreMarket" : true,
+  "Ingredients" : [
+    { "TypeId" : "TitaniumPlate", "StackSize" : 3 },
+    { "TypeId" : "PlatinumIngot", "StackSize" : 8 },
+    { "TypeId" : "GoldIngot", "StackSize" : 2 },
+    { "TypeId" : "Phasium", "StackSize" : 1 },
+    { "TypeId" : "Transistor", "StackSize" : 40 },
+    { "TypeId" : "OpticalFiber", "StackSize" : 10 },
+    { "TypeId" : "Microchip3", "StackSize" : 6 }
+  ]
+}

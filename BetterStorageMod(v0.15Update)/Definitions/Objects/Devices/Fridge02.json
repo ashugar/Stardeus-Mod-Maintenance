@@ -1,0 +1,95 @@
+{
+    "ToolPath" : "Food",
+    "Layer" : "Objects",
+    "ParentId" : "Objects/Devices/BaseDevice",
+    "Researchable" : {
+        "Prerequisites" : [
+            "Research/Habitation/CryoRefrigeration"
+        ]
+    },
+    "Components" : [
+        {
+            "Component" : "TileTransform",
+            "Properties" : [
+                { "Key" : "WorkSpot", "Vector2" : { "x" : 0, "y" : -1 } },
+				{ "Key" : "OutPort", "Vector2" : { "x" : 0, "y" : -1 } },
+                { "Key" : "InPort", "Vector2" : { "x" : 0, "y" : -1 } },
+                { "Key" : "IsRotatable", "Bool" : true },
+                { "Key" : "Height", "Int" : 1 },
+                { "Key" : "Width", "Int" : 2 }
+            ]
+        },
+        {
+            "Component" : "TileGraphics",
+            "Properties" : [
+                { "Key" : "Type", "String": "Object" },
+                { "Key" : "Graphic", "String": "Objects/Devices/Fridge02" },
+                { "Key" : "HasHeight", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "ElectricNode",
+            "Properties" : [
+                { "Key" : "IsConsumer", "Bool" : true }
+            ]
+        },
+        { "Component" : "SafetyCheck" },
+        {
+            "Component" : "PoweredStorage",
+            "Properties" : [
+                { "Key" : "EnergyCostBase", "Float" : 2.0 },
+                { "Key" : "EnergyCostPerItem", "Float" : 0.005 }
+            ]
+        },
+        {
+            "Component" : "Passability",
+            "Properties" : [
+                { "Key" : "IsPassable", "Bool" : false },
+                { "Key" : "IsWalkable", "Bool" : false },
+                { "Key" : "Difficulty", "Float" : 1 }
+            ]
+        },
+        {
+            "Component" : "Flammable",
+            "Properties" : [
+                { "Key" : "IgnitionTemperatureCelsius", "Int" : 350 },
+                { "Key" : "FireChance", "Float" : 0.5 },
+                { "Key" : "BaseExplosionLevel", "Int" : 1 },
+                { "Key" : "FlammabilityCurve", "String" : "Device" },
+                { "Key" : "ExplosivenessCurve", "String" : "DeviceLow" }
+            ]
+        },
+        {
+            "Component" : "MatStorage",
+            "Properties" : [
+                { "Key" : "Groups", "StringSet" : ["Food"] },
+                { "Key" : "MaxCapacity", "Int" : 500 },
+                { "Key" : "IsPublic", "Bool" : true },
+                { "Key" : "ShowFulnessBar", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "MatHaulTarget",
+            "Properties" : [
+                { "Key" : "NeedsElectricity", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "Constructable",
+            "Properties" : [
+                { "Key" : "WorkAmount", "Int" : 1500 },
+                {
+                    "Key" : "Contents",
+                    "RawMaterials" : [
+                        { "TypeId" : "TitaniumPlate", "StackSize" : 35 },
+                        { "TypeId" : "OpticalFiber", "StackSize" : 15 },
+                        { "TypeId" : "Glass", "StackSize" : 15 },
+                        { "TypeId" : "Transistor", "StackSize" : 10 },
+                        { "TypeId" : "CopperWire", "StackSize" : 50 },
+                        { "TypeId" : "Microchip", "StackSize" : 20 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

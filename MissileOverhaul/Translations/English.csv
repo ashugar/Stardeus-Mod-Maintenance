@@ -1,0 +1,3 @@
+Key,Translation,Version,Comment (context for translators)
+missileoverhaul.target.suspected_raid_storage_capsule,Suspected Raid Storage Capsule,,Rocket Pod target priority shown after Missile Overhaul loads.
+missileoverhaul.warning.suspected_storage_capsule_raid,Incoming Storage Capsules are suspected raid transports.,,Shown once when six or more flying Storage Capsules are detected together.

@@ -1,0 +1,13 @@
+Key,Translation,Version,Comment (context for translators)
+AutoFactory.NanoFabricator,Nano Fabricator,,
+AutoFactory.NanoFabricator.desc,"A universal production facility that recreates eligible advanced-crafting recipes, including Fabricator-produced beings. Requires Nanobots as fuel and uses normal ingredients with a 10% energy surcharge. Cannot produce Cloning Pod products; Ore; Plants; Food Ingredients; Food; Datoids; Plates; or Phasium.",,
+AutoFactory.NanoFabrication,Nano Fabrication,,
+AutoFactory.NanoFabrication.desc,Unlocks universal nanoscale manufacturing for non-raw industrial products.,,
+AutoFactory.NanoFoundry,Nano Foundry,,
+AutoFactory.NanoFoundry.desc,"An automated nanoscale foundry that recreates the complete Furnace recipe pool. Requires Nanobots as fuel and uses normal ingredients with a 10% energy surcharge.",,
+AutoFactory.NanoSmelting,Nano Smelting,,
+AutoFactory.NanoSmelting.desc,Unlocks automated nanoscale smelting based on Furnace production.,,
+AutoFactory.NanoCloningPod,Nano Cloning Pod,,
+AutoFactory.NanoCloningPod.desc,"An automated nanoscale cloning facility that recreates the complete Cloning Pod recipe pool. It can grow biological products and beings through Core's native cloning lifecycle. Requires Nanobots as fuel and uses normal ingredients with a 10% energy surcharge.",,
+AutoFactory.NanoCloning,Nano Cloning,,
+AutoFactory.NanoCloning.desc,Unlocks automated nanoscale cloning based on Cloning Pod production.,,

@@ -1,0 +1,26 @@
+﻿{
+    "Id": "Research/Habitation/AdvancedCooling",
+    "Tier": 2,
+    "IsAbstract": true,
+    "PreviewIcon": "Icons/Color/Temperature2",
+    "Researchable": {
+        "IsTreeNode": true,
+        "Prerequisites": [
+            "Research/Habitation/Storage"
+        ],
+        "DatoidCosts": [
+            {
+                "TypeId": "DatoidBasic",
+                "StackSize": 13
+            },
+            {
+                "TypeId": "DatoidTech",
+                "StackSize": 3
+            },
+            {
+                "TypeId": "DatoidBiotic",
+                "StackSize": 1
+            }
+        ]
+    }
+}

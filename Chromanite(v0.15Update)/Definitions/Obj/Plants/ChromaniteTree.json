@@ -1,0 +1,36 @@
+{
+    "Layer" : "FreeEntities",
+    "ParentId" : "Obj/Plants/BasePlant",
+    "Components" : [
+        {
+            "Component" : "ObjGraphics",
+            "Properties" : [
+                { "Key" : "Graphic", "String": "Obj/Plants/ChromaniteTree" },
+                { "Key" : "SelectableSize", "Vector2": { "x" : 1.5, "y" : 1.5 } },
+                { "Key" : "Size", "Vector2": { "x" : 2, "y" : 2 } }
+            ]
+        },
+        {
+            "Component" : "Plant",
+            "Properties" : [
+                { "Key" : "Size", "String" : "Large" },
+                {
+                    "Key" : "HarvestOutput",
+                    "RawMaterials" : [
+                        { "TypeId" : "ChromaniteWood", "StackSize" : 1 },
+                        { "TypeId" : "PlantFiber", "StackSize" : 5 }
+                    ]
+                },
+                { "Key" : "GrowthRate", "Float" : 0.3 },
+                { "Key" : "GrowthAfterHarvest", "Float" : 0.05 }
+            ]
+        },
+        {
+            "Component" : "Flammable",
+            "Properties" : [
+                { "Key" : "IgnitionTemperatureCelsius", "Int" : 650 },
+                { "Key" : "FireChance", "Float" : 0.7 }
+            ]
+        }
+    ]
+}

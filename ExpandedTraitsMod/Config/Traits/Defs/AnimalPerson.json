@@ -1,0 +1,8 @@
+{
+  "Id": "AnimalPerson",
+  "IconId": "Icons/Color/PreviewCat01",
+  "TypeId": "Mental",
+  "CompatibleSpecies": [ "Human" ],
+  "Rarity": 0.25
+}
+

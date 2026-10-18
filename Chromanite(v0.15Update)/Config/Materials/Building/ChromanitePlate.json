@@ -1,0 +1,12 @@
+﻿{
+    "Id" : "ChromanitePlate",
+    "GroupId" : "Plates",
+    "IsComposite" : true,
+    "IconId" : "Obj/Materials/ChromanitePlate",
+    "EnergyOutput" : 100000.0,
+    "InternalValue" : 22.0,
+    "MatRarity" : 0,
+    "Rarity" : 5
+}
+
+

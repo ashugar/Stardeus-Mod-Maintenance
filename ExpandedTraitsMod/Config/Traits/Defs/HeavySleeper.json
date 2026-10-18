@@ -1,0 +1,9 @@
+{
+  "Id": "HeavySleeper",
+  "IconId": "Icons/Color/Sleep",
+  "TypeId": "Mental",
+  "CompatibleSpecies": [ "Human" ],
+  "IncompatibleTraitIds": [ "LightSleeper" ],
+  "Rarity": 0.2
+}
+

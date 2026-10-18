@@ -1,0 +1,27 @@
+{
+  "Id" : "Research/Computing/QuantumStorage",
+  "Tier" : 5,
+  "IsAbstract" : true,
+  "PreviewIcon" : "Icons/Color/Store",
+  "Researchable" : {
+    "IsTreeNode" : true,
+    "Prerequisites" : [
+      "Research/Computing/ResearchQuantum",
+      "Research/Construction/Storage"
+    ],
+    "DatoidCosts" : [
+      {
+        "TypeId" : "DatoidTechHigh",
+        "StackSize" : 16
+      },
+      {
+        "TypeId" : "DatoidQuantum",
+        "StackSize" : 12
+      },
+      {
+        "TypeId" : "DatoidNuclear",
+        "StackSize" : 8
+      }
+    ]
+  }
+}

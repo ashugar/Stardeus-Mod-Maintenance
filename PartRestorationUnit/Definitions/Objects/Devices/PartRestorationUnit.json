@@ -1,0 +1,154 @@
+{
+    "ToolPath" : "Facilities",
+    "Layer" : "Objects",
+    "ParentId" : "Objects/Devices/BaseDevice",
+    "Researchable" : {
+        "Prerequisites" : [
+            "Research/LifeSupport/PartRestoration"
+        ]
+    },
+    "Spawnable" : {
+        "Category" : "Medical",
+        "Chance" : 0.8,
+        "ChanceLocked" : 0.35
+    },
+    "Components" : [
+        {
+            "Component" : "TileTransform",
+            "Properties" : [
+                { "Key" : "Width", "Int" : 2 },
+                { "Key" : "Height", "Int" : 1 },
+                { "Key" : "IsRotatable", "Bool" : true },
+                { "Key" : "CoverPercent", "Int" : 50 },
+                { "Key" : "OutPort", "Vector2" : { "x" : 1, "y" : -1 } },
+                { "Key" : "InPort", "Vector2" : { "x" : 1, "y" : -1 } }
+            ]
+        },
+        {
+            "Component" : "Flammable",
+            "Properties" : [
+                { "Key" : "IgnitionTemperatureCelsius", "Int" : 400 },
+                { "Key" : "FireChance", "Float" : 0.5 },
+                { "Key" : "BaseExplosionLevel", "Int" : 1 },
+                { "Key" : "FlammabilityCurve", "String" : "DeviceLow" },
+                { "Key" : "ExplosivenessCurve", "String" : "DeviceLow" }
+            ]
+        },
+        {
+            "Component" : "IndustrialEquipment",
+            "Properties" : [
+                { "Key" : "IsNoisy", "Bool" : true }
+            ]
+        },
+        { "Component" : "SafetyCheck" },
+        {
+            "Component" : "ElectricNode",
+            "Properties" : [
+                { "Key" : "IsConsumer", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "WithFuse",
+            "Properties" : [
+                { "Key" : "MalfunctionWeight", "Float" : 0.1 }
+            ]
+        },
+        {
+            "Component" : "TileGraphics",
+            "Properties" : [
+                { "Key" : "Type", "String" : "Object" },
+                { "Key" : "Graphic", "String" : "Objects/Devices/PartRestorationUnit_Base" },
+                { "Key" : "HasHeight", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "TileAnimation",
+            "Properties" : [
+                {
+                    "Key" : "Offsets",
+                    "Vector2Set" : [
+                        { "x" : 0.125, "y" : 0.335 },
+                        { "x" : 0.0, "y" : 0.17 },
+                        { "x" : -0.12, "y" : 0.33 },
+                        { "x" : 0.0, "y" : 0.39 }
+                    ]
+                },
+                {
+                    "Key" : "Rotations",
+                    "StringSet" : [ "D", "L", "U", "R" ]
+                },
+                {
+                    "Key" : "SpriteOrders",
+                    "StringSet" : [
+                        "InBetweenTile",
+                        "AboveAnyTile",
+                        "AboveAnyTile",
+                        "AboveAnyTile"
+                    ]
+                },
+                { "Key" : "Size", "Vector2" : { "x" : 1.45, "y" : 1.45 } },
+                { "Key" : "Direction", "Int" : 1 },
+                { "Key" : "BaseSprite", "String" : "Objects/Devices/PartRestorationUnit_Base" },
+                { "Key" : "AnimSprite", "String" : "Objects/DeviceAnims/CraftingStation_Anim" },
+                { "Key" : "CopyAnimSprite", "Bool" : true },
+                { "Key" : "Speed", "Float" : 0.66 },
+                { "Key" : "SpriteOrder", "String" : "InBetweenTile" },
+                { "Key" : "FramePrefix", "String" : "F" },
+                { "Key" : "NumFrames", "Int" : 25 },
+                { "Key" : "PingPong", "Bool" : true },
+                { "Key" : "PingPongStillFrames", "Int" : 6 },
+                { "Key" : "NeedsEnergy", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "AudioSource",
+            "Properties" : [
+                { "Key" : "AmbienceClip", "String" : "Devices/CraftingStationSFX" },
+                { "Key" : "Rolloff", "Vector2" : { "x" : 3, "y" : 15 } },
+                { "Key" : "IsLinkedToEnergy", "Bool" : true }
+            ]
+        },
+        {
+            "Component" : "VFX",
+            "Properties" : [
+                { "Key" : "Id", "String" : "VFXParticlesHeal" },
+                { "Key" : "Offset", "Vector2" : { "x" : 0, "y" : 0.25 } }
+            ]
+        },
+        {
+            "Component" : "PartRestorationUnit",
+            "Properties" : [
+                { "Key" : "RepairRate", "Float" : 5.0 },
+                { "Key" : "EnergyCost", "Float" : 25.0 },
+                { "Key" : "GoalPriority", "Int" : 4 }
+            ]
+        },
+        { "Component" : "ExtraInfo" },
+        {
+            "Component" : "Passability",
+            "Properties" : [
+                { "Key" : "IsPassable", "Bool" : false },
+                { "Key" : "IsWalkable", "Bool" : false },
+                { "Key" : "Difficulty", "Float" : 1 }
+            ]
+        },
+        {
+            "Component" : "Constructable",
+            "Properties" : [
+                { "Key" : "WorkAmount", "Int" : 700 },
+                {
+                    "Key" : "Contents",
+                    "RawMaterials" : [
+                        { "TypeId" : "TitaniumPlate", "StackSize" : 3 },
+                        { "TypeId" : "Plastic", "StackSize" : 2 },
+                        { "TypeId" : "Rubber", "StackSize" : 4 },
+                        { "TypeId" : "Glass", "StackSize" : 2 },
+                        { "TypeId" : "Microchip", "StackSize" : 3 },
+                        { "TypeId" : "Gears", "StackSize" : 4 },
+                        { "TypeId" : "CopperWire", "StackSize" : 5 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

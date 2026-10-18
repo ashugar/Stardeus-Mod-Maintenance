@@ -1,0 +1,20 @@
+{
+    "Type": "Robotics3",
+    "Ingredients": [
+        { "TypeId" : "TitaniumPlate", "StackSize" : 20 },
+        { "TypeId" : "Phasium", "StackSize" : 3 },
+        { "TypeId" : "CarbonFiber", "StackSize" : 14 },
+        { "TypeId" : "Transistor", "StackSize" : 50 },
+        { "TypeId" : "Microchip", "StackSize" : 20 },
+        { "TypeId" : "CopperWire", "StackSize" : 20 },
+        { "TypeId" : "PlatinumIngot", "StackSize" : 8 },
+        { "TypeId" : "GoldIngot", "StackSize" : 2 },
+        { "TypeId" : "OpticalFiber", "StackSize" : 10 },
+        { "TypeId" : "Microchip3", "StackSize" : 8 },
+        { "TypeId" : "Gears", "StackSize" : 8 },
+        { "TypeId" : "SiliconWafer", "StackSize" : 4 },
+    ],
+    "ProductDefId": "Beings/Androids01",
+    "ProductionTimeHours": 60,
+    "EnergyCost": 200.0
+}

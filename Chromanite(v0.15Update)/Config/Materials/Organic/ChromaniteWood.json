@@ -1,0 +1,14 @@
+﻿{
+    "Id" : "ChromaniteWood",
+    "GroupId" : "Plants",
+    "IsComposite" : true,
+    "IconId" : "Obj/Materials/ChromaniteWood",
+    "ProcessableDefId" : "Obj/Materials/ChromaniteWood",
+    "Property" : "Solid",
+    "InternalValue" : 22.0,
+    "EnergyOutput" : 1000.0,
+    "MatRarity" : 1,
+    "Rarity" : 5
+}
+
+

@@ -1,0 +1,15 @@
+﻿{
+    "Type": "MolecularAssemblable",
+    "Ingredients" : [
+        { "TypeId" : "Water", "StackSize" : 0 }
+    ],
+    "ProductDefId": "Obj/Materials/Water",
+    "ProductionTimeHours": 1.0,
+	"OutputMultiplier" : 10,
+    "EnergyCost": 2.0,
+    "IgnoreEnergyOutput": true,
+    "IgnoreMarket" : true
+}
+
+
+

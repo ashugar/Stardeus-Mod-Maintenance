@@ -1,0 +1,14 @@
+﻿{
+    "Type": "Grindable",
+    "IgnoreMarket" : true,
+	"IgnoreEnergyOutput" : true,
+    "Ingredients": [
+        { "TypeId" : "ChromanitePulp", "StackSize" : 1 }
+    ],
+    "OutputMultiplier" : 2,
+    "ProductDefId": "Obj/Materials/ChromaniteSand",
+    "ProductionTimeHours": 1,
+    "EnergyCost": 10.0
+}
+
+

@@ -1,0 +1,66 @@
+{
+    "SlotTypeId" : "Hand",
+    "Compatibility" : "Any",
+    "Tier" : 4,
+    "ResistanceBase" : 16.0,
+    "AddsAbilities" : [
+        "Carry",
+        "Build",
+        "Mine",
+        "UseItem",
+        "Manipulate",
+		"Pilot",
+		"Craft",
+        "PetAnimal",
+        "CleanDevice",
+        "CleanFloors"
+    ],
+    "ProvidesStats" : [
+        {
+            "Component" : "Dexterity",
+            "Properties" : [
+                { "Key" : "Amount", "Float" : 0.6 },
+                { "Key" : "CompoundLimit", "Float" : 1.2 },
+                { "Key" : "StateMul", "Float" : 0.6 }
+            ]
+        },
+        {
+            "Component" : "CarryCapacity",
+            "Properties" : [
+                { "Key" : "Amount", "Float" : 400 },
+                { "Key" : "CompoundLimit", "Float" : 0 },
+                { "Key" : "StateMul", "Float" : 0.6 }
+            ]
+        }
+    ],
+    "AddsAttackMethods" : [
+        {
+            "Component" : "Smash",
+            "Properties" : [
+                { "Key" : "AttackAction", "String" : "Melee" },
+                { "Key" : "DPS", "Float" : 4 },
+                { "Key" : "AttackType", "String" : "Blunt" },
+                { "Key" : "ChargeSec", "Float" : 2.0 },
+                { "Key" : "CooldownSec", "Float" : 0.5 },
+                { "Key" : "MoveSpeedMul", "Float" : 0.2 },
+                { "Key" : "StunChanceBio", "Float" : 0.8 },
+                { "Key" : "StunChanceRobo", "Float" : 0.8 },
+                { "Key" : "AccuracyMax", "Float" : 0.9 }
+            ]
+        },
+        {
+            "Component" : "Stab",
+            "Properties" : [
+                { "Key" : "AttackAction", "String" : "Melee" },
+                { "Key" : "DPS", "Float" : 4 },
+                { "Key" : "AttackType", "String" : "Sharp" },
+                { "Key" : "ChargeSec", "Float" : 2.0 },
+                { "Key" : "CooldownSec", "Float" : 0.5 },
+                { "Key" : "MoveSpeedMul", "Float" : 0.2 },
+                { "Key" : "StunChanceBio", "Float" : 0.1 },
+                { "Key" : "StunChanceRobo", "Float" : 0.1 },
+                { "Key" : "AccuracyMax", "Float" : 0.9 }
+            ]
+        }
+    ]
+}

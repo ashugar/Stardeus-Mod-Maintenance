@@ -1,0 +1,22 @@
+{
+    "Layer" : "FreeEntities",
+    "ParentId" : "Obj/Parts/BasePartRobotic",
+    "NameKey" : "bodypart.Kidney.BionicsKidney",
+    "Researchable" : {
+        "Prerequisites" : [ "Research/Robotics/BionicsOrgans" ]
+    },
+    "Components" : [
+        {
+            "Component" : "ObjGraphics",
+            "Properties" : [
+                { "Key" : "Graphic", "String": "Obj/BodyParts/Robotic2" }
+            ]
+        },
+        {
+            "Component" : "BodyPart",
+            "Properties" : [
+                { "Key" : "BodyPartDefId", "String" : "Kidney/BionicsKidney" }
+            ]
+        }
+    ]
+}
