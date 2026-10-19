@@ -218,7 +218,7 @@ internal static partial class Program
                 pathFindings.Add(new(pathId, "unsupported-file-name"));
             foreach (Finding finding in pathFindings) findings.Add(new(file.ObjectId, pathId, "path-" + finding.Category));
             if (!blobs.TryGetValue(file.ObjectId, out List<GitFile>? contexts)) blobs.Add(file.ObjectId, contexts = []);
-            if (!contexts.Any(existing => string.Equals(Path.GetExtension(existing.Path), Path.GetExtension(file.Path), StringComparison.OrdinalIgnoreCase)))
+            if (!contexts.Any(existing => string.Equals(existing.Path, file.Path, StringComparison.Ordinal)))
                 contexts.Add(file);
         }
         foreach ((string id, List<GitFile> contexts) in blobs)

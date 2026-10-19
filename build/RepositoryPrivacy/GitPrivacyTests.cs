@@ -1,5 +1,9 @@
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Reflection;
+using System.Reflection.Metadata;
+using System.Reflection.Metadata.Ecma335;
+using System.Reflection.PortableExecutable;
 using System.Text;
 
 internal static partial class Program
@@ -137,6 +141,17 @@ internal static partial class Program
             var dependency = Invoke("scan-index", root);
             Check(dependency.Code == 1 && dependency.Output.Contains("external-dependency-dll-refused", StringComparison.Ordinal));
             Run(root, null, "reset", "--hard", "--quiet", clean);
+            // Identical bytes must still receive each filename-sensitive policy.
+            byte[] cleanPe = FixtureCleanPe();
+            StageBytes("AAllowed.dll", cleanPe);
+            Check(Invoke("scan-index", root).Code == 0);
+            StageBytes("Game.dll", cleanPe);
+            var aliasIndex = Invoke("scan-index", root);
+            Check(aliasIndex.Code == 1 && aliasIndex.Output.Contains("external-dependency-dll-refused", StringComparison.Ordinal));
+            Run(root, null, "commit", "--quiet", "-m", "Public identical-blob alias fixture");
+            var aliasHistory = Invoke("scan-history", root, Revision(root));
+            Check(aliasHistory.Code == 1 && aliasHistory.Output.Contains("external-dependency-dll-refused", StringComparison.Ordinal));
+            Run(root, null, "reset", "--hard", "--quiet", clean);
             // A single blob must receive every applicable analysis, even when reused under multiple paths.
             byte[] shared = FixturePng("tEXt", false);
             string blobId = Run(root, shared, "hash-object", "-w", "--stdin").Trim();
@@ -247,6 +262,22 @@ internal static partial class Program
         }
     }
 
+    private static byte[] FixtureCleanPe()
+    {
+        MetadataBuilder metadata = new();
+        metadata.AddModule(0, metadata.GetOrAddString("PublicFixture.dll"),
+            metadata.GetOrAddGuid(new Guid("77d4a3ee-bdcc-4cc9-a048-31931de874c8")), default, default);
+        metadata.AddAssembly(metadata.GetOrAddString("PublicFixture"), new Version(1, 0, 0, 0),
+            default, default, (AssemblyFlags)0, AssemblyHashAlgorithm.None);
+        metadata.AddTypeDefinition(TypeAttributes.NotPublic, default, metadata.GetOrAddString("<Module>"),
+            default, MetadataTokens.FieldDefinitionHandle(1), MetadataTokens.MethodDefinitionHandle(1));
+        ManagedPEBuilder builder = new(
+            new PEHeaderBuilder(imageCharacteristics: Characteristics.ExecutableImage | Characteristics.Dll),
+            new MetadataRootBuilder(metadata), new BlobBuilder(), strongNameSignatureSize: 0, flags: CorFlags.ILOnly);
+        BlobBuilder image = new();
+        builder.Serialize(image);
+        return image.ToArray();
+    }
     private static string FixturePrivatePath() => "Q:" + "\\fixture\\private-file";
 
     private static (int Code, string Output) Invoke(string mode, string root, string? reference = null, string? input = null)
