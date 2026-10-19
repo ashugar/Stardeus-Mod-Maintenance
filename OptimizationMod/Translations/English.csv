@@ -1,2 +1,0 @@
-Key,Translation,Comment,Comment (context for translators)
-optimizationmod.nanobot.notcurrentlyavailable,Not currently available to Nanobots.,"Neutral status for a Nanobot-compatible task that is not currently workable. The reason may involve materials, reservations, eligibility, or physical reachability.",Do not translate this as physically unreachable because Core's NanobotWorkable flag represents broader eligibility.

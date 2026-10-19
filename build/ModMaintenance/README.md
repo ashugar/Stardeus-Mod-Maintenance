@@ -2,6 +2,8 @@
 
 Use a clean repository checkout, Git, PowerShell 7 and the .NET 10 SDK. Independently review the exact full commit before using it as `ReviewedCommit`. Release and installation read committed Git blobs through the same explicit per-mod recipe. They do not rebuild mods, download game dependencies, start or stop Stardeus, or publish to Workshop.
 
+Only Workshop mods with their tracked root SteamWorkshopItemId are eligible for new release and installation plans. Existing rollback recovery stays available independently of current catalog membership.
+
 ## Prepare one mod
 
 Choose an existing private parent directory outside the checkout, live game data, game installation and Steam libraries. The release output directory itself must be new:
@@ -51,7 +53,7 @@ pwsh -NoProfile -File build/ModMaintenance/Install-Mod.ps1 -Apply `
     -ReviewedCommit $ReviewedCommit -PlanPath $PlanPath -PlanSha256 $PlanSha256
 ```
 
-The helper recreates the plan from the same reviewed Git snapshot and current destination. Any changed source, plan, identity or preimage stops application. It verifies all rollback copies before replacing the first target file, then copies and checks only the planned files. Existing `LocalLogMod/Settings.json` and `OptimizationMod/Diagnostics.json` are preserved; absent defaults are seeded. Other unrelated files remain intact. No folder mirror or deletion synchronization runs.
+The helper recreates the plan from the same reviewed Git snapshot and current destination. Any changed source, plan, identity or preimage stops application. It verifies all rollback copies before replacing the first target file, then copies and checks only the planned files. Existing files selected as create-only defaults by a reviewed recipe are preserved; absent defaults are seeded. Other unrelated files remain intact. No folder mirror or deletion synchronization runs.
 
 Successful application reports its private transaction/journal location. Retain the plan digest and rollback records. Only file installation has been verified: fresh startup and relevant gameplay checks remain separate, and save migrations cannot be reversed merely by restoring an older DLL.
 

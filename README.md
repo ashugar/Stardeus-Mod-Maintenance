@@ -1,6 +1,6 @@
 # Stardeus Mod Maintenance
 
-Source, configuration, artwork, documentation, tests, and current mod assemblies for Stardeus mods created or maintained by ashugar. Each mod has its own folder at the repository root, using its existing installation folder name.
+Source, configuration, artwork, documentation, tests, and current mod assemblies for Stardeus mods created or maintained by ashugar. Only Workshop mods with a tracked `SteamWorkshopItemId` file in their root folder belong here. Each mod has its own folder at the repository root, using its existing installation folder name. Keep local-only mods and their development source outside this public checkout.
 
 This repository replaces the retired Workshop maintenance scripts. The old scripts and root changelog remain available in Git history.
 

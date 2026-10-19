@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <NewtonsoftJsonPath Condition="'$(NewtonsoftJsonPath)' == '' and '$(StardeusManagedPath)' != ''">$(StardeusManagedPath)/Newtonsoft.Json.dll</NewtonsoftJsonPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../.vscode/Code/OptionalTraitFingerprint.cs" />
+    <Compile Include="../.vscode/Code/OptionalTraitCompatibility.cs" />
+    <Compile Include="../.vscode/Code/TraitChangeTracker.cs" />
+    <Reference Include="Newtonsoft.Json" HintPath="$(NewtonsoftJsonPath)" Private="False" Condition="'$(NewtonsoftJsonPath)' != ''" />
+    <PackageReference Include="Newtonsoft.Json" Version="[13.0.2]" Condition="'$(NewtonsoftJsonPath)' == ''" />
+  </ItemGroup>
+  <Target Name="RequireExplicitNewtonsoftReference" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="'$(NewtonsoftJsonPath)' != '' and !Exists('$(NewtonsoftJsonPath)')" Text="The explicit NewtonsoftJsonPath must exist; no dependency fallback is used for an invalid override." />
+  </Target>
+</Project>

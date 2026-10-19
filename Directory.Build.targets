@@ -1,6 +1,6 @@
 <Project>
   <Target Name="ValidateStardeusBuildPaths" BeforeTargets="ResolveAssemblyReferences"
-          Condition="'$(MSBuildProjectName)' == 'mod' or '$(MSBuildProjectName)' == 'Investor.Tests'">
+          Condition="'$(MSBuildProjectName)' == 'mod'">
     <Error Condition="'$(StardeusManagedPath)' == ''"
            Text="Configure STARDEUS_GAME_ROOT or STARDEUS_MANAGED_PATH, or pass -p:StardeusManagedPath. See BUILDING.md." />
     <Error Condition="!Exists('$(StardeusManagedPath)/Game.dll')"

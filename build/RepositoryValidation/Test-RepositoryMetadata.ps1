@@ -45,6 +45,26 @@ try {
     $paths = @($tracked.Split([char]0, [StringSplitOptions]::RemoveEmptyEntries))
     $failures = [Collections.Generic.List[string]]::new()
     $counts = @{ Json = 0; Manifests = 0; Xml = 0; PowerShell = 0 }
+    $trackedSet = [Collections.Generic.HashSet[string]]::new([string[]]$paths, [StringComparer]::Ordinal)
+    $folders = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($path in $paths) {
+        $slash = $path.IndexOf('/')
+        if ($slash -gt 0) { $null = $folders.Add($path.Substring(0, $slash)) }
+    }
+    foreach ($folder in $folders) {
+        if ($folder -cin @('.github', 'build')) { continue }
+        $identity = Get-SafeFileIdentity $folder
+        try {
+            if (-not $trackedSet.Contains($folder + '/ModInfo.json') -or -not $trackedSet.Contains($folder + '/SteamWorkshopItemId')) { throw 'workshop-membership-required' }
+            $marker = Join-Path $root ($folder + '/SteamWorkshopItemId')
+            foreach ($item in @((Join-Path $root $folder), $marker)) {
+                if (([IO.File]::GetAttributes($item) -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'workshop-reparse-point-refused' }
+            }
+            if (-not [IO.File]::Exists($marker) -or [Text.UTF8Encoding]::new($false, $true).GetString([IO.File]::ReadAllBytes($marker)).Trim() -cnotmatch '\A[1-9][0-9]{0,19}\z') { throw 'workshop-identity-invalid' }
+        } catch {
+            $failures.Add("workshop-membership-invalid folder=$identity")
+        }
+    }
     $jsonOptions = [System.Text.Json.JsonDocumentOptions]::new()
     $jsonOptions.AllowTrailingCommas = $true
     $jsonOptions.CommentHandling = [System.Text.Json.JsonCommentHandling]::Skip

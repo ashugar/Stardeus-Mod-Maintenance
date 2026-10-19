@@ -1,9 +1,0 @@
-{
-  "Id": "LocalLogMod",
-  "SteamWorkshop": false,
-  "Name": "Local Log Mod",
-  "Description": "Session-local diagnostic logs for research, manufacturing, power, tasks, beings, fire, UI selection, audio, story events, ship combat, and timing.",
-  "ModVersion": "0.1.8",
-  "GameVersion": "0.15.0",
-  "DLLFiles": [ "LocalLogMod.dll" ]
-}

@@ -52,10 +52,11 @@ function Get-ModCatalogArtifacts {
         $dependencyText = if (@($dependencies | Where-Object { $null -ne $_ }).Count) { (@($dependencies | Where-Object { $null -ne $_ } | ForEach-Object { ConvertTo-CatalogCell $_ }) -join ', ') } else { '-' }
         $workshop = '-'
         $workshopPath = Join-Path $modRoot 'SteamWorkshopItemId'
+        if (($folder + '/SteamWorkshopItemId') -cnotin $TrackedPaths) { throw 'catalog-workshop-marker-required' }
         if (($folder + '/SteamWorkshopItemId') -cin $TrackedPaths) {
             Assert-CatalogPath $root $workshopPath
-            $workshopId = [IO.File]::ReadAllText($workshopPath).Trim()
-            if ($workshopId -notmatch '^[1-9][0-9]{0,19}$') { throw 'catalog-invalid-workshop-id' }
+            $workshopId = [Text.UTF8Encoding]::new($false, $true).GetString([IO.File]::ReadAllBytes($workshopPath)).Trim()
+            if ($workshopId -notmatch '\A[1-9][0-9]{0,19}\z') { throw 'catalog-invalid-workshop-id' }
             $workshop = '[Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=' + $workshopId + ')'
         }
         $libraryRoot = Join-Path $modRoot 'Libraries'

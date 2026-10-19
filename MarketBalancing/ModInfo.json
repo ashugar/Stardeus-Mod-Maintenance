@@ -1,8 +1,0 @@
-{
-  "Id": "MarketBalancing",
-  "SteamWorkshop": false,
-  "Name": "Market Balancing",
-  "Description": "Raises underpriced crafted goods to at least the base market value of their ingredients per output item. Includes meals, manufacturing chains and loaded mod recipes. Preserves higher prices. Deliberately lossy Converter recipes and circular recipes are excluded. Market fluctuations, trader spreads, crafting quantities and production requirements retain their native behavior.",
-  "ModVersion": "0.1.0",
-  "GameVersion": "0.15.0"
-}

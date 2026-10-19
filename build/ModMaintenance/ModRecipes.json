@@ -271,56 +271,6 @@
       "VersionSources": []
     },
     {
-      "Folder": "ExpandedTraitsMod",
-      "Id": "ExpandedTraitsMod",
-      "Project": ".vscode/mod.csproj",
-      "Dlls": [
-        "ExpandedTraitsMod.dll"
-      ],
-      "IncludeFiles": [
-        "ModInfo.json",
-        "README.md"
-      ],
-      "IncludeDirectories": [
-        "Config",
-        "Translations"
-      ],
-      "CreateOnlyFiles": [],
-      "VersionSources": [
-        {
-          "Path": ".vscode/Code/ExpandedTraitsSystem.cs",
-          "Kind": "constant",
-          "Name": "Version"
-        }
-      ]
-    },
-    {
-      "Folder": "ImprovedShipPathing",
-      "Id": "ImprovedShipPathing",
-      "Project": "mod.csproj",
-      "Dlls": [
-        "ImprovedShipPathing.dll"
-      ],
-      "IncludeFiles": [
-        "ModInfo.json",
-        "README.md"
-      ],
-      "IncludeDirectories": [],
-      "CreateOnlyFiles": [],
-      "VersionSources": [
-        {
-          "Path": "Code/AssemblyInfo.cs",
-          "Kind": "assembly-attributes",
-          "Name": ""
-        },
-        {
-          "Path": "Code/ImprovedShipPathingSys.cs",
-          "Kind": "constant",
-          "Name": "ModVersion"
-        }
-      ]
-    },
-    {
       "Folder": "IntelligentRecycling",
       "Id": "IntelligentRecycling",
       "Project": ".vscode/mod.csproj",
@@ -353,51 +303,6 @@
       ]
     },
     {
-      "Folder": "LocalLogMod",
-      "Id": "LocalLogMod",
-      "Project": "mod.csproj",
-      "Dlls": [
-        "LocalLogMod.dll"
-      ],
-      "IncludeFiles": [
-        "ModInfo.json",
-        "README.md",
-        "Settings.json"
-      ],
-      "IncludeDirectories": [],
-      "CreateOnlyFiles": [
-        "Settings.json"
-      ],
-      "VersionSources": [
-        {
-          "Path": "Code/AssemblyInfo.cs",
-          "Kind": "assembly-attributes",
-          "Name": ""
-        }
-      ]
-    },
-    {
-      "Folder": "MarketBalancing",
-      "Id": "MarketBalancing",
-      "Project": "mod.csproj",
-      "Dlls": [
-        "MarketBalancing.dll"
-      ],
-      "IncludeFiles": [
-        "ModInfo.json",
-        "README.md"
-      ],
-      "IncludeDirectories": [],
-      "CreateOnlyFiles": [],
-      "VersionSources": [
-        {
-          "Path": "Code/AssemblyInfo.cs",
-          "Kind": "assembly-attributes",
-          "Name": ""
-        }
-      ]
-    },
-    {
       "Folder": "MetalHuskRevisited(v0.15Update)",
       "Id": "MetalHusksRevisited(v0.15Update)",
       "Project": null,
@@ -414,35 +319,6 @@
       ],
       "CreateOnlyFiles": [],
       "VersionSources": []
-    },
-    {
-      "Folder": "MissileOverhaul",
-      "Id": "MissileOverhaul",
-      "Project": "mod.csproj",
-      "Dlls": [
-        "MissileOverhaul.dll"
-      ],
-      "IncludeFiles": [
-        "ModInfo.json",
-        "README.md"
-      ],
-      "IncludeDirectories": [
-        "Config",
-        "Translations"
-      ],
-      "CreateOnlyFiles": [],
-      "VersionSources": [
-        {
-          "Path": "Code/AssemblyInfo.cs",
-          "Kind": "assembly-attributes",
-          "Name": ""
-        },
-        {
-          "Path": "Code/MissileOverhaulSys.cs",
-          "Kind": "constant",
-          "Name": "ModVersion"
-        }
-      ]
     },
     {
       "Folder": "MolecularAssemblerFixed(v0.15Update)",
@@ -462,32 +338,6 @@
       ],
       "CreateOnlyFiles": [],
       "VersionSources": []
-    },
-    {
-      "Folder": "OptimizationMod",
-      "Id": "OptimizationMod",
-      "Project": "mod.csproj",
-      "Dlls": [
-        "OptimizationMod.dll"
-      ],
-      "IncludeFiles": [
-        "ModInfo.json",
-        "README.md",
-        "Diagnostics.json"
-      ],
-      "IncludeDirectories": [
-        "Translations"
-      ],
-      "CreateOnlyFiles": [
-        "Diagnostics.json"
-      ],
-      "VersionSources": [
-        {
-          "Path": "Code/AssemblyInfo.cs",
-          "Kind": "assembly-attributes",
-          "Name": ""
-        }
-      ]
     },
     {
       "Folder": "OrbotronUpgrade(v0.15Update)",
@@ -686,48 +536,6 @@
         "ModCover.jpg",
         "README.md",
         "SteamWorkshopItemId"
-      ],
-      "IncludeDirectories": [],
-      "CreateOnlyFiles": [],
-      "VersionSources": [
-        {
-          "Path": "Code/AssemblyInfo.cs",
-          "Kind": "assembly-attributes",
-          "Name": ""
-        }
-      ]
-    },
-    {
-      "Folder": "SkillCapMod",
-      "Id": "SkillCapMod",
-      "Project": "mod.csproj",
-      "Dlls": [
-        "SkillCapMod.dll"
-      ],
-      "IncludeFiles": [
-        "ModInfo.json",
-        "README.md"
-      ],
-      "IncludeDirectories": [],
-      "CreateOnlyFiles": [],
-      "VersionSources": [
-        {
-          "Path": "Code/AssemblyInfo.cs",
-          "Kind": "assembly-attributes",
-          "Name": ""
-        }
-      ]
-    },
-    {
-      "Folder": "StockMarketAutoInvestor",
-      "Id": "StockMarketAutoInvestor",
-      "Project": "mod.csproj",
-      "Dlls": [
-        "StockMarketAutoInvestor.dll"
-      ],
-      "IncludeFiles": [
-        "ModInfo.json",
-        "README.md"
       ],
       "IncludeDirectories": [],
       "CreateOnlyFiles": [],

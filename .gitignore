@@ -27,11 +27,6 @@
 *.tmp
 *.log
 /AutoHauling/.vscode/Backups/
-/MissileOverhaul/Work/
-/LocalLogMod/Logs/
-/LocalLogMod/BugReports/
-/LocalLogMod/CrewUI-Reproduction-*.txt
-/StockMarketAutoInvestor/Validation/
 
 # Repository-only development tool and harness outputs.
 /.build/

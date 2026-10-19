@@ -362,10 +362,12 @@ function Get-ModReleaseSnapshot {
         foreach ($dependency in $manifest.Dependencies) { if ($dependency -isnot [string] -or [string]::IsNullOrWhiteSpace($dependency)) { throw 'invalid-manifest-dependencies' } }
         $dependencies = @($manifest.Dependencies)
     }
+    if (-not $tree.ContainsKey($prefix + 'SteamWorkshopItemId')) { throw 'workshop-marker-required' }
+    if (-not $paths.Contains('SteamWorkshopItemId')) { throw 'workshop-marker-must-be-in-payload' }
     $workshop = $null
     if ($paths.Contains('SteamWorkshopItemId')) {
         $workshop = $script:ModUtf8.GetString((Get-ModBlob $root $tree ($prefix + 'SteamWorkshopItemId'))).Trim()
-        if ($workshop -cnotmatch '^[1-9][0-9]{0,19}$') { throw 'invalid-workshop-identity' }
+        if ($workshop -cnotmatch '\A[1-9][0-9]{0,19}\z') { throw 'invalid-workshop-identity' }
     }
     # Repeat clean/head check after all reads; a changing checkout never yields a ready snapshot.
     $null = Assert-ModReviewedRepository $root $ReviewedCommit

@@ -51,7 +51,7 @@ internal static partial class Program
             if (args[0] == "self-test") return SelfTest();
             if (args[0] == "self-test-git") return SelfTestGit();
             if (args[0] == "capabilities") { Console.WriteLine("git-object-scan-v1"); return 0; }
-            if (args[0] is "scan-index" or "scan-history" or "pre-push") return GitMode(args);
+            if (args[0] is "scan-index" or "scan-history" or "scan-workshop" or "pre-push") return GitMode(args);
             string mode = args[0];
             if (mode is not ("scan" or "sanitize" or "verify")) throw new GuardFailure("unknown-mode");
             Dictionary<string, string> options = ParseOptions(args.Skip(1).ToArray());

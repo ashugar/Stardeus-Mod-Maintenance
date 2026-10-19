@@ -1,9 +1,0 @@
-{
-  "Id": "Daredevil",
-  "IconId": "Icons/Color/AttackTarget",
-  "TypeId": "Mental",
-  "CompatibleSpecies": [ "Human" ],
-  "IncompatibleTraitIds": [ "Cautious" ],
-  "Rarity": 0.2
-}
-

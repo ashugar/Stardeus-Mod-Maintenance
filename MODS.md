@@ -17,15 +17,9 @@ Versions and dependencies come from the current manifests. These entries do not 
 | [Chromanite Power (v0.15 Update)](ChromaniteGlitterPower%28v0.15Update%29/) | 2.0.1 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748932401) |
 | [Chromanite Walls (v0.15 Update)](ChromaniteWalls%28v0.15Update%29/) | 2.0.1 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748937799) |
 | [Colonist And Bots Auto Upgrade](ColonistAndBotsAutoUpgrade/) | 1.1.3 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3754689644) |
-| [Expanded Traits](ExpandedTraitsMod/) | 0.1.4 | 0.15.0 | - | DLL + data | - |
-| [Improved Ship Pathing](ImprovedShipPathing/) | 0.1.1 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | - |
 | [Intelligent Recycling](IntelligentRecycling/) | 1.3.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3775577154) |
-| [Local Log Mod](LocalLogMod/) | 0.1.8 | 0.15.0 | - | DLL + data | - |
-| [Market Balancing](MarketBalancing/) | 0.1.0 | 0.15.0 | - | DLL + data | - |
 | [Metal Husks Revisited (v0.15 Update)](MetalHuskRevisited%28v0.15Update%29/) | 2.0.1 | 0.15.0 | - | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3749399478) |
-| [Missile Overhaul](MissileOverhaul/) | 0.4.0 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | - |
 | [MolecularAssembler Fixed (v0.15 Update)](MolecularAssemblerFixed%28v0.15Update%29/) | 2.0.1 | 0.15.0 | - | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748810380) |
-| [Optimization Mod](OptimizationMod/) | 0.1.34 | 0.15.0 | - | DLL + data | - |
 | [Orbotron Upgrades (v0.15 Update)](OrbotronUpgrade%28v0.15Update%29/) | 2.1.0 | 0.15.0 | Core | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748954299) |
 | [Part Restoration Unit](PartRestorationUnit/) | 1.1.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3792407697) |
 | [Planning Overhaul](PlanningOverhaul/) | 1.1.0 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3805289692) |
@@ -34,8 +28,6 @@ Versions and dependencies come from the current manifests. These entries do not 
 | [Quest Request Preview](QuestRequestPreview/) | 1.0.2 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3783715878) |
 | [Reconnect Teleporter Connections](ReconnectTeleporterConnections/) | 1.1.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3785027459) |
 | [Remember Facility Upgrades](RememberFacilityUpgrades/) | 1.1.0 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3791306246) |
-| [Skill Cap Mod](SkillCapMod/) | 0.1.2 | 0.15.0 | Core | DLL + data | - |
-| [Stock Market Auto-Investor](StockMarketAutoInvestor/) | 0.1.0 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | - |
 | [Super Cleaning](SuperCleaning/) | 1.0.3 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3787822873) |
 | [Tractor Beam Auto Connect](TractorBeamAutoConnect/) | 1.2.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3776012239) |
 | [Tractor Beam Overhaul](TractorBeamOverhaul/) | 1.1.1 | 0.15.0 | AutoUtilitiesModFramework, TractorBeamAutoConnect | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3791894872) |

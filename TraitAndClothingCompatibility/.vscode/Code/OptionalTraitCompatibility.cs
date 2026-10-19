@@ -44,7 +44,7 @@ namespace TraitAndClothingCompatibility {
                 string[] ignored = change.Id == "AnimalPerson"
                     ? new[] { "CompatibleSpecies", "Rarity" }
                     : new[] { "CompatibleSpecies" };
-                return SameExcept(baseline, change.Current, ignored)
+                return SameFingerprintExcept(baseline, change.Current, ignored)
                     && (change.Id != "AnimalPerson" || HasReviewedPetRarity(change.Current, current));
             }
             return change.Id.StartsWith(GeneratedPetPrefix, StringComparison.Ordinal)
@@ -124,5 +124,14 @@ namespace TraitAndClothingCompatibility {
         }
 
         private static string Hex(byte[] bytes) => BitConverter.ToString(bytes).Replace("-", "");
+
+        private static bool SameFingerprintExcept(string reference, string current, params string[] ignored) {
+            if (string.IsNullOrEmpty(reference) || string.IsNullOrEmpty(current)) return false;
+            try {
+                var a = JObject.Parse(reference); var b = JObject.Parse(current);
+                foreach (string name in ignored) { a.Remove(name); b.Remove(name); }
+                return JToken.DeepEquals(a, OptionalTraitFingerprint.Project(b));
+            } catch { return false; }
+        }
     }
 }

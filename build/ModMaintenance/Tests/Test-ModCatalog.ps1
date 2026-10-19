@@ -19,11 +19,12 @@ try {
     Set-FixtureManifest 'AMod&More' 'FirstId' 'First' '2.0.0'
     $workshopPath = Join-Path $fixture 'ZMod(v0.15Update)/SteamWorkshopItemId'
     [IO.File]::WriteAllText($workshopPath, '1234567890')
+    [IO.File]::WriteAllText((Join-Path $fixture 'AMod&More/SteamWorkshopItemId'), '2345678901')
     & git -c core.hooksPath= -C $fixture init --quiet
     if ($LASTEXITCODE -ne 0) { throw 'fixture git init failed' }
     & git -c core.hooksPath= -C $fixture add -- .
     if ($LASTEXITCODE -ne 0) { throw 'fixture git add failed' }
-    $trackedPaths = @('AMod&More/ModInfo.json', 'ZMod(v0.15Update)/ModInfo.json', 'ZMod(v0.15Update)/SteamWorkshopItemId')
+    $trackedPaths = @('AMod&More/ModInfo.json', 'AMod&More/SteamWorkshopItemId', 'ZMod(v0.15Update)/ModInfo.json', 'ZMod(v0.15Update)/SteamWorkshopItemId')
     $generated = Get-ModCatalogArtifacts $fixture $trackedPaths
     Assert-CatalogTest ($generated.Count -eq 2) 'wrong mod count'
     Assert-CatalogTest ($generated.Catalog.Contains('Name&#124;&#91;x&#93; next')) 'unsafe Markdown'
@@ -59,6 +60,12 @@ try {
     Assert-CatalogTest ([IO.File]::ReadAllText((Join-Path $fixture 'MODS.md')) -ceq $before) 'check mode wrote files'
     & $updater -RepoRoot $fixture
     Assert-CatalogTest ([IO.File]::ReadAllText((Join-Path $fixture 'MODS.md')).Contains('2.0.1')) 'new version not generated'
+    $refused=$false; try { $null=Get-ModCatalogArtifacts $fixture @($trackedPaths | Where-Object { $_ -cne 'AMod&More/SteamWorkshopItemId' }) } catch {$refused=$true}
+    Assert-CatalogTest $refused 'untracked Workshop identity accepted'
+    [IO.File]::Delete((Join-Path $fixture 'AMod&More/SteamWorkshopItemId'))
+    $refused=$false; try { $null=Get-ModCatalogArtifacts $fixture $trackedPaths } catch {$refused=$true}
+    Assert-CatalogTest $refused 'missing Workshop identity accepted'
+    [IO.File]::WriteAllText((Join-Path $fixture 'AMod&More/SteamWorkshopItemId'), '2345678901')
     [IO.File]::WriteAllText($workshopPath, 'bad')
     $refused=$false; try { $null=Get-ModCatalogArtifacts $fixture $trackedPaths } catch {$refused=$true}
     Assert-CatalogTest $refused 'invalid Workshop identity accepted'

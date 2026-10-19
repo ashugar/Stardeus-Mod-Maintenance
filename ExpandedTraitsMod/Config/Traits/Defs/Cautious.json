@@ -1,9 +1,0 @@
-{
-  "Id": "Cautious",
-  "IconId": "Icons/Color/Warning",
-  "TypeId": "Mental",
-  "CompatibleSpecies": [ "Human" ],
-  "IncompatibleTraitIds": [ "Daredevil" ],
-  "Rarity": 0.2
-}
-

@@ -73,6 +73,7 @@ class VersionHolder {
 '@
     Write-Fixture 'Data(Folder)/ModInfo.json' '{"Id":"Data.Public","Name":"Data Fixture","ModVersion":"2.0.0","GameVersion":"0.15.0"}'
     Write-Fixture 'Data(Folder)/Definitions/Data.json' '{}'
+    Write-Fixture 'Data(Folder)/SteamWorkshopItemId' '234567890'
     $dll = Join-Path $repo 'Fixture/Libraries/Fixture.dll'
     $null = [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($dll))
     $binaryRoot = Join-Path $fixtureRoot 'binary-source'
@@ -86,7 +87,7 @@ class VersionHolder {
     [IO.File]::WriteAllBytes($dll, [IO.File]::ReadAllBytes((Join-Path $binaryRun 'Fixture.dll')))
     $recipes = [ordered]@{ SchemaVersion = 1; Mods = @(
         [ordered]@{Folder='Fixture';Id='Fixture.Public';Project='.vscode/mod.csproj';Dlls=@('Fixture.dll');IncludeFiles=@('ModInfo.json','README.md','Settings.json','SteamWorkshopItemId');IncludeDirectories=@('Definitions');CreateOnlyFiles=@('Settings.json');VersionSources=@(@{Path='Code/AssemblyInfo.cs';Kind='assembly-attributes';Name=''},@{Path='Code/Version.cs';Kind='constant';Name='ModVersion'})},
-        [ordered]@{Folder='Data(Folder)';Id='Data.Public';Project=$null;Dlls=@();IncludeFiles=@('ModInfo.json');IncludeDirectories=@('Definitions');CreateOnlyFiles=@();VersionSources=@()}
+        [ordered]@{Folder='Data(Folder)';Id='Data.Public';Project=$null;Dlls=@();IncludeFiles=@('ModInfo.json','SteamWorkshopItemId');IncludeDirectories=@('Definitions');CreateOnlyFiles=@();VersionSources=@()}
     ) }
     Write-Recipes $recipes
     $sha = Commit-Fixture 'Initial fixture'
@@ -101,7 +102,7 @@ class VersionHolder {
     Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Surface -ceq '.vscode/mod.csproj:VersionPrefix' -and $_.Status -ceq 'observed' -and $_.Value -ceq '1.2.3.0' }).Count -eq 1) 'utf8-bom-project-version-observed'
     Assert-Test (@($snapshot.Files | Where-Object RelativePath -CLike 'Code/*').Count -eq 0) 'source-excluded'
     $data = Get-ModReleaseSnapshot $repo $sha 'Data(Folder)'
-    Assert-Test ($data.Files.Count -eq 2 -and $null -eq $data.WorkshopItemId) 'data-only-no-project-or-workshop'
+    Assert-Test ($data.Files.Count -eq 3 -and $data.WorkshopItemId -ceq '234567890') 'data-only-with-workshop-marker'
     Assert-Test (@($data.VersionEvidence | Where-Object { $_.Surface -ceq 'ProductionProject' -and $_.Status -ceq 'no-project' -and $null -eq $_.Value }).Count -eq 1) 'data-only-project-omission-recorded'
     Write-Fixture 'Fixture/ignored-decoy.log' 'decoy'
     $withDecoy = Get-ModReleaseSnapshot $repo $sha 'Fixture'
@@ -195,6 +196,17 @@ class VersionHolder {
     Write-Recipes $recipes
     [IO.File]::WriteAllBytes((Join-Path $repo 'Fixture/Code/AssemblyInfo.cs'), $originalAttributes)
     $sha = Commit-Fixture 'Restore compiled fixture project and metadata'
+    $recipes.Mods[1].IncludeFiles = @('ModInfo.json')
+    Write-Recipes $recipes
+    $bad = Commit-Fixture 'Omitted Workshop payload marker'
+    Assert-Refused { Get-ModReleaseSnapshot $repo $bad 'Data(Folder)' } 'omitted-workshop-payload-refused'
+    $recipes.Mods[1].IncludeFiles = @('ModInfo.json','SteamWorkshopItemId')
+    Write-Recipes $recipes
+    [IO.File]::Delete((Join-Path $repo 'Data(Folder)/SteamWorkshopItemId'))
+    $bad = Commit-Fixture 'Unpublished mod fixture'
+    Assert-Refused { Get-ModReleaseSnapshot $repo $bad 'Data(Folder)' } 'missing-workshop-marker-refused'
+    Write-Fixture 'Data(Folder)/SteamWorkshopItemId' '234567890'
+    $sha = Commit-Fixture 'Restore Workshop marker'
     $null = Invoke-ModGitBytes $repo @('remote', 'set-url', 'origin', 'https://example.invalid/wrong')
     Assert-Refused { Get-ModReleaseSnapshot $repo $sha 'Fixture' } 'wrong-origin-refused'
     $null = Invoke-ModGitBytes $repo @('remote', 'set-url', 'origin', 'https://github.com/ashugar/Stardeus-Mod-Maintenance.git')

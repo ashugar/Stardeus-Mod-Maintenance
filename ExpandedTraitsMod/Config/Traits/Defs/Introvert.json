@@ -1,9 +1,0 @@
-{
-  "Id": "Introvert",
-  "IconId": "Icons/Color/Room",
-  "TypeId": "Mental",
-  "CompatibleSpecies": [ "Human" ],
-  "IncompatibleTraitIds": [ "Extrovert" ],
-  "Rarity": 0.25
-}
-

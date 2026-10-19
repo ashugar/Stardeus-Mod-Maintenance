@@ -46,40 +46,16 @@
       "Label": "mod:ColonistAndBotsAutoUpgrade"
     },
     {
-      "Folder": "ExpandedTraitsMod",
-      "Label": "mod:ExpandedTraitsMod"
-    },
-    {
-      "Folder": "ImprovedShipPathing",
-      "Label": "mod:ImprovedShipPathing"
-    },
-    {
       "Folder": "IntelligentRecycling",
       "Label": "mod:IntelligentRecycling"
-    },
-    {
-      "Folder": "LocalLogMod",
-      "Label": "mod:LocalLogMod"
-    },
-    {
-      "Folder": "MarketBalancing",
-      "Label": "mod:MarketBalancing"
     },
     {
       "Folder": "MetalHuskRevisited(v0.15Update)",
       "Label": "mod:MetalHuskRevisited(v0.15Update)"
     },
     {
-      "Folder": "MissileOverhaul",
-      "Label": "mod:MissileOverhaul"
-    },
-    {
       "Folder": "MolecularAssemblerFixed(v0.15Update)",
       "Label": "mod:MolecularAssemblerFixed(v0.15Update)"
-    },
-    {
-      "Folder": "OptimizationMod",
-      "Label": "mod:OptimizationMod"
     },
     {
       "Folder": "OrbotronUpgrade(v0.15Update)",
@@ -112,14 +88,6 @@
     {
       "Folder": "RememberFacilityUpgrades",
       "Label": "mod:RememberFacilityUpgrades"
-    },
-    {
-      "Folder": "SkillCapMod",
-      "Label": "mod:SkillCapMod"
-    },
-    {
-      "Folder": "StockMarketAutoInvestor",
-      "Label": "mod:StockMarketAutoInvestor"
     },
     {
       "Folder": "SuperCleaning",

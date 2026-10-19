@@ -1,8 +1,0 @@
-{
-  "Id": "Empath",
-  "IconId": "Icons/Color/BrainWaves",
-  "TypeId": "Mental",
-  "CompatibleSpecies": [ "Human" ],
-  "Rarity": 0.15
-}
-
