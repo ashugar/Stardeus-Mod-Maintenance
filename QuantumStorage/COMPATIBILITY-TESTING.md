@@ -1,12 +1,20 @@
 # Quantum Storage 1.3.6 — rc337 acceptance
 
-Target: Stardeus v0.15.0-rc337.3219. Version 1.3.6 narrowly restores the reviewed material-panel optimization; hauling and gameplay policies are unchanged. Fresh startup, panel actions and open/closed FPS comparison remain pending. This document separates historical acceptance from remaining gameplay checks. Keep a separate known-good save. No save migration is introduced.
+Target: Stardeus v0.15.0-rc337.3219. Version 1.3.6 narrowly restores the reviewed material-panel optimization; hauling and gameplay policies are unchanged. Fresh startup, the observed panel-performance result and user-controlled Workshop publication are recorded below. Detailed panel actions and broader gameplay checks remain individually unconfirmed. Keep a separate known-good save. No save migration is introduced.
+
+## Recorded 1.3.6 acceptance — 2026-10-19
+
+The player confirmed that opening the Quantum Storage Unit panel caused only a slight initial FPS dip before performance recovered to its starting level with the panel open. This accepts the narrow fix for the sustained open-panel slowdown in that observed test. It is not a controlled numeric benchmark, proof of internal row reuse, or confirmation of every panel action.
+
+A fresh rc337.3219 log confirms Quantum Storage 1.3.6 loading from the live mod folder, with no matched Quantum Storage exception or material-panel fallback warning. This is focused startup/error evidence, not a claim that the whole log is error-free or every feature ran.
+
+The player confirmed Workshop publication of 1.3.6. This documentation closeout leaves the accepted DLL and version unchanged. The remaining object-Hive, detailed UI, Relay and save/reload checks below are unconfirmed scenarios, not reported failures or a reopening of the accepted panel fix. Research-cost/tier advisories remain deferred to the separate Stardeus v1.0 balance review.
 
 ## Historical 1.3.5 acceptance — 2026-10-17
 
 The player confirmed that the Quantum Storage Unit panel showed no visible desynchronization or FPS drop after the 1.3.5 fix. This establishes no visual/performance regression in the observed panel test, not a quantified gain, proof of the internal row-reuse path, or individual validation of every panel action. Object-Hive delivery, interruption/recovery, pending/active save-reload and optional-integration scenarios below remain unconfirmed.
 
-The player subsequently confirmed Workshop publication of 1.3.5. Its observed panel acceptance does not cover later Core builds or the rebuilt 1.3.6 DLL. Workshop publication of 1.3.6 is not yet confirmed.
+The player subsequently confirmed Workshop publication of 1.3.5. Its observed panel acceptance does not cover later Core builds or the rebuilt 1.3.6 DLL; the separate 1.3.6 acceptance is recorded above.
 
 A fresh rc335.3217 log reviewed during release preparation confirms 1.3.5 loading from the live mod folder, with no matched Quantum Storage exception or material-panel fallback warning. The earlier startup-file sharing and safe-mode messages are absent from this newer log. This is focused load/error evidence, not a claim that the entire log is error-free or that every feature was exercised.
 
@@ -22,7 +30,7 @@ A fresh rc335.3217 log reviewed during release preparation confirms 1.3.5 loadin
 
 ## Material panels
 
-Run [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md), including live quantity/type/sort changes, partial/full ejection, Eject All, filters, endpoint/tab changes, disposal/reopening and Relay power transitions. Retain every row and immediate updates. Compare the same busy scene with the panel closed/open and the previous build before claiming an FPS gain.
+The observed 1.3.6 panel-performance result is accepted above. Detailed checks in [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) remain individually unconfirmed, including live quantity/type/sort changes, partial/full ejection, Eject All, filters, endpoint/tab changes, disposal/reopening and Relay power transitions. Retain every row and immediate updates. A controlled comparison of the same busy scene with the panel closed/open and the previous build would be needed to quantify an FPS gain.
 
 ## Evidence boundaries and recovery
 

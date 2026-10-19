@@ -12,7 +12,9 @@ Target: Core v0.15.0-rc337.3219. The exact three callback fingerprints remain in
 
 Current external evidence: Release build passed with zero warnings/errors. The focused harness passed 10,360 checks against the actual compiled guard and row cache, retaining 1,000 rows through 10,000 quantity notifications with only 10,000 changed-label writes. It also checks callback-only drift, missing/extra/duplicate actions, sorting, structural fallback and native forbidden-item inventory notification. Independent binary review resolved 380 relevant member references and 145 types without failures; all other 754 method bodies are unchanged from 1.3.5. See `Tests/README.md` in the development repository for the local harness.
 
-Fresh startup and gameplay acceptance for 1.3.6 are pending. Confirm the expected version and no panel-fallback notice, then compare the same busy scene with the panel closed/open and exercise the checklist below. In particular, check partial/full ejection and Core's forbidden-item icon/state. External contract and row-policy tests cannot establish actual FPS, Unity rendering or live Harmony ordering.
+On 2026-10-19, the player confirmed that the 1.3.6 fix works: opening the Quantum Storage Unit panel produced only a slight initial FPS dip before performance recovered to its starting level with the panel open. This accepts the narrow fix for the sustained open-panel slowdown in that observed test, not a controlled numeric benchmark or individual validation of every UI action.
+
+A fresh rc337.3219 log confirms 1.3.6 loading with no matched Quantum Storage exception or material-panel fallback warning. The player also confirmed Workshop publication of 1.3.6. The documentation closeout retains the same version and accepted DLL. Detailed interaction checks below remain individually unconfirmed, especially partial/full ejection and Core's forbidden-item icon/state. External contract and row-policy tests cannot establish Unity rendering or live Harmony ordering; absence of a fallback notice alone does not prove row reuse occurred.
 
 Use the private installation plan/journal for the exact changed-file rollback. Restoring 1.3.5 on rc337 restores the native-panel fallback; no save migration is introduced.
 
@@ -56,7 +58,7 @@ Only presentation of material contents: Quantum Storage, Cabinet, Freezer, Fridg
 
 ## Targeted regression checklist
 
-The earlier 1.3.5 panel observation does not validate 1.3.6 on rc337. The scenarios below remain pending for the new binary, not a claim that each was individually exercised.
+The 1.3.6 open-panel performance observation is accepted above. The checklist remains available for future regressions and broader validation; a controlled FPS benchmark and the detailed interaction scenarios have not been individually confirmed. These are coverage limits, not reported failures.
 
 1. Open a busy Quantum Storage material panel during deposits and withdrawals. Confirm all materials and live quantities remain visible, and compare FPS with the previous build under the same conditions.
 2. Test By Name, ascending quantity and descending quantity, including equal counts and changing order. Rows must still eject the material they display.
