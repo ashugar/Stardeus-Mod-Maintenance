@@ -12,7 +12,8 @@ entirely by Stardeus's current scheduler.
 - Every eligible material, object category, and specific item is enabled by
   default underneath the master switch.
 - Existing tasks, reservations, carried items, stored items, unavailable
-  objects, and Forbidden items are left alone by automatic scans.
+  objects, Forbidden items, and material piles marked unreachable by Core
+  are left alone by automatic scans.
 - Auto Hauling never cancels assigned, active, disabled-priority, failed,
   cooling-down, or unrelated work. Its optional stale-task refresh is limited
   to eligible ordinary Store tasks that have remained continuously unassigned
@@ -46,7 +47,8 @@ accepted by compatible storage, and inside every Intelligent Recycling, Part
 Restoration Unit, quality, mind, body, and special-target boundary. Priority-0
 tasks, assigned work, active work, failed or cooling-down work, restricted-worker
 tasks, Optimization Mod dormant tasks, and non-Store jobs that merely use the
-Hauling skill are never refreshed.
+Hauling skill are never refreshed. Forbidden cargo and material piles marked
+unreachable by Core are also excluded from refresh.
 
 The old task is cancelled through Core and the normal cargo scan recreates it
 through the same vanilla Store-order path during that scan. The replacement
@@ -137,12 +139,14 @@ Controls explains that idle-worker bidding is managed by Stardeus. The former
 **Prompt idle beings to haul** toggle and its bid diagnostics are retired.
 
 The Controls tab also provides **Allow Forbidden Loose Cargo**. This is always
-a deliberate manual action. It removes every vanilla hauling-forbidden flag
+a deliberate manual action. It removes every vanilla Forbidden flag
 currently found on a loose material pile or storable object, including quality
 objects, Intelligent Recycling targets, and mind-associated objects. It does
 not create or cancel a task, change a reservation, or modify either mod's
-settings. Removing the flag can allow vanilla systems or other mods to process
-the object afterward. The action reports the number of flags removed, schedules
+settings. **Warning:** Forbidden now blocks more than hauling. Removing it can
+also permit construction, crafting, eating, equipment use, or processing by
+other mods where applicable. It does not clear Core's separate unreachable-pile
+marker. The action reports the number of flags removed, schedules
 an early normal Auto Hauling scan, and never runs repeatedly on its own.
 
 An optional AUMF keyboard shortcut invokes that exact same manual action once
@@ -163,6 +167,25 @@ coordinate or linked being name, that exact portion can be clicked to focus the
 reported location or being.
 
 ## Release history
+
+### 1.1.6
+
+- Updated material and storable-object access to Core's current `IsForbidden`
+  API, fixing the removed-member exceptions in scans, Controls previews,
+  manual cleanup, and eligible stale-task refresh.
+- Added Core's separate unreachable-pile refusal to automatic Store creation
+  and stale refresh. These refusals count as unavailable, not Forbidden.
+- Kept the manual button and shortcut as deliberate full Forbidden overrides
+  within their existing loose, uncarried cargo scope; expanded both warnings
+  to cover construction, crafting, eating, equipment, and other mod processing.
+  Neither action clears the separate unreachable marker.
+- Preserved native setter side effects and the narrow restoration of an
+  allowed pile after Auto Hauling's own stale-task cancellation.
+- Retained save schema 3, cargo settings, tracked tasks, failure history,
+  Core-managed bidding, optional integration contracts, and AUMF 1.4.0.
+- Built against Stardeus v0.15.0-rc337.3219. Source, binary, and automated
+  compatibility checks are separate from fresh startup/gameplay validation,
+  which remains pending.
 
 ### 1.1.5
 
