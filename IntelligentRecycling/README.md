@@ -133,7 +133,8 @@ inherit the saved Intelligent Recycling threshold when construction completes.
 
 ## 1.3.3
 
-Status: accepted and closed on 2026-10-19; maintenance mode.
+Status: published to Steam Workshop and closed; maintenance mode.
+Publication confirmed by the maintainer on 2026-10-19.
 
 - Restored compatibility with Stardeus 0.15.0-rc337.3219 after Core renamed
   `StorableObjComp.IsHaulingForbidden` to `IsForbidden`.
@@ -146,7 +147,6 @@ Status: accepted and closed on 2026-10-19; maintenance mode.
   initialization on rc337.3219, with no Intelligent Recycling missing-method,
   initialization, or `OnTick` failures in the captured session.
 - Further work is on demand for reported issues or compatibility changes.
-  Workshop publication remains a separate maintainer action.
 
 ## 1.3.2
 
