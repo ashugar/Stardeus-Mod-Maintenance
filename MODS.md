@@ -17,7 +17,7 @@ Versions and dependencies come from the current manifests. These entries do not 
 | [Chromanite Power (v0.15 Update)](ChromaniteGlitterPower%28v0.15Update%29/) | 2.0.1 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748932401) |
 | [Chromanite Walls (v0.15 Update)](ChromaniteWalls%28v0.15Update%29/) | 2.0.1 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748937799) |
 | [Colonist And Bots Auto Upgrade](ColonistAndBotsAutoUpgrade/) | 1.1.3 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3754689644) |
-| [Intelligent Recycling](IntelligentRecycling/) | 1.3.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3775577154) |
+| [Intelligent Recycling](IntelligentRecycling/) | 1.3.3 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3775577154) |
 | [Metal Husks Revisited (v0.15 Update)](MetalHuskRevisited%28v0.15Update%29/) | 2.0.1 | 0.15.0 | - | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3749399478) |
 | [MolecularAssembler Fixed (v0.15 Update)](MolecularAssemblerFixed%28v0.15Update%29/) | 2.0.1 | 0.15.0 | - | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748810380) |
 | [Orbotron Upgrades (v0.15 Update)](OrbotronUpgrade%28v0.15Update%29/) | 2.1.0 | 0.15.0 | Core | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748954299) |
