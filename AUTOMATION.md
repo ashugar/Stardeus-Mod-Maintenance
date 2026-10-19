@@ -62,3 +62,18 @@ GitHub's `expectedHeadOid` prevents an activation-time race; it does not permane
 ## Recovery
 
 Repair automation through a normal PR. Preserve the existing PR, no-force-push, no-deletion, and secret protection settings. If a broken required check blocks its own repair, document and restore only that check's last known-good configuration, retain PR protections, merge the reviewed repair, then restore the check. Do not force-push or rewrite history as an automation repair. Save configuration backups outside tracked content before changing repository settings.
+## Routine maintenance
+
+Dependabot checks GitHub Actions dependencies weekly and groups proposed updates into a workflow dependency PR. It preserves the existing review, privacy, required-check and opt-in merge process. Game and mod package dependencies are outside this update scope.
+
+[MODS.md](MODS.md) and [.github/mod-labels.json](.github/mod-labels.json) are generated from tracked root manifests and Workshop ID files. After changing a manifest, adding/removing a mod, or changing a Workshop ID, stage new/removed input files and run:
+
+```powershell
+pwsh -NoProfile -File build/ModMaintenance/Update-ModCatalog.ps1
+```
+
+Commit both generated outputs with the change. CI checks freshness without writing; it also exercises catalog generation and the actual label workflow against isolated fixtures. Manifest versions remain authoritative. Catalog entries are not gameplay or compatibility certification.
+
+After each PR check run, a separate default-branch workflow reads GitHub PR file metadata and adds labels for affected mods and shared repository automation. It uses the trusted default-branch map, verifies the current PR head, and never checks out PR code, downloads candidate artifacts, approves or merges. Manual labels remain intact; labels are added only, so an old mod label can remain after a later change removes that mod from the PR.
+
+Repository labels are precreated to keep the workflow token limited to reading contents and labeling PRs. For a new mod, add its generated map through a normal PR and create the corresponding `mod:<folder>` repository label through repository settings. Its first PR may not receive the new label until the trusted map is merged; subsequent PRs are automatic. The workflow does not use `pull_request_target` or change its event policy.
