@@ -20,26 +20,27 @@ namespace Game.Systems.QuantumStorage
     [HarmonyPatch(typeof(MatStorageTab), "BuildContentsList", new Type[] { })]
     internal static class QuantumMaterialPanelPatch
     {
-        // Reviewed against rc335.3217 Game.dll SHA256 7122A8E390B8B34D9D3241960FCCF743EE022BB30B346E841C372CAC72FEC62B,
+        // Reviewed against rc337.3219 Game.dll SHA256 38985F083AF23E557664230BC835BBF8BED3A4256F4F346C32E8428D68B33FA4,
         // including all generated BuildContentsList action callbacks:
         // quantities are read at click time and callbacks no longer edit pooled rows
-        // after Eject. Keep Core's callbacks and filter-panel lifecycle untouched.
+        // after Eject. rc337 uses the native general forbidden-item policy, including
+        // its inventory notification. Keep callbacks and filter lifecycle untouched.
         // A different root OR callback body must use the complete native panel until
         // reviewed. The root IL alone does not change when a callback body changes.
-        internal const string ReviewedBodyHash = "76FF13D9C8D9F78833C6CD7F0BC7263FA03E072C7B49B615817E6FAAB2F8CD54";
+        internal const string ReviewedBodyHash = "10D138AC3AB5DA81625F66CF82E0B8188EDEECB67790C3F4C46CDF5299503A2C";
         private const BindingFlags DeclaredMethods = BindingFlags.Public | BindingFlags.NonPublic |
             BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
         private static readonly Dictionary<string, string> ReviewedCallbackHashes = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             // Eject All: native DumpContents(true), then ReloadTab.
             { "Game.Systems.UIUX.MatStorageTab+<>c__DisplayClass22_0::<BuildContentsList>b__0",
-                "ED56B7B1DE015F3ABA2A14FC9BE52549269CACD4DFD58D1D7E442AF7683547A1" },
+                "C9A9504D622D4DD659B1FFAAE59BF539CCCE366BAB7148D8912920016C8BE85A" },
             // Row click: current contents, native quantity options/labels and menu.
             { "Game.Systems.UIUX.MatStorageTab+<>c__DisplayClass22_1::<BuildContentsList>b__1",
-                "0D35DB527C74E70A4085C43E7477716B87C3D7A04787FC945D587DBA797B6609" },
+                "1E9100BA0BCE357CBAB51C7E6C25AD251A33A5859F9F96C191C0C3844EA7A746" },
             // Quantity click: native eject and returned-pile policy; no row mutation.
             { "Game.Systems.UIUX.MatStorageTab+<>c__DisplayClass22_2::<BuildContentsList>b__2",
-                "A5D2C3A9FA33CB98B0AD1E98AA9D61DC8AB9CB850CAC7E062342521C4EC2E1A9" }
+                "FDEBD7B21AF894C09237D290C819A0DF87DD92A4B9A2FBE7F525927E88E18817" }
         };
         private static readonly FieldInfo Label = AccessTools.Field(typeof(WIconText), "lastText");
         private static readonly FieldInfo Icon = AccessTools.Field(typeof(WIconText), "lastIcon");

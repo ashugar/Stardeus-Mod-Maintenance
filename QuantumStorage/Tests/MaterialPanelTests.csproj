@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <StardeusManagedPath Condition="'$(StardeusManagedPath)' == '' and '$(STARDEUS_GAME_ROOT)' != ''">$(STARDEUS_GAME_ROOT)/Stardeus_Data/Managed</StardeusManagedPath>
+  </PropertyGroup>
+  <Target Name="CheckLocalReferences" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(StardeusManagedPath)/Game.dll')" Text="Set StardeusManagedPath to the installed Stardeus Managed directory." />
+    <Error Condition="!Exists('$(MonoCecilPath)')" Text="Set MonoCecilPath to a locally available Mono.Cecil.dll (for example from ILSpy)." />
+  </Target>
+  <ItemGroup>
+    <Reference Include="Game" HintPath="$(StardeusManagedPath)/Game.dll" Private="False" />
+    <Reference Include="Game.Constants" HintPath="$(StardeusManagedPath)/Game.Constants.dll" Private="False" />
+    <Reference Include="Game.CodeGen" HintPath="$(StardeusManagedPath)/Game.CodeGen.dll" Private="False" />
+    <Reference Include="Game.Utils" HintPath="$(StardeusManagedPath)/Game.Utils.dll" Private="False" />
+    <Reference Include="KLUnityUtils" HintPath="$(StardeusManagedPath)/KLUnityUtils.dll" Private="False" />
+    <Reference Include="0Harmony" HintPath="$(StardeusManagedPath)/0Harmony.dll" Private="False" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(StardeusManagedPath)/UnityEngine.CoreModule.dll" Private="False" />
+    <Reference Include="Mono.Cecil" HintPath="$(MonoCecilPath)" Aliases="panelcecil" />
+  </ItemGroup>
+</Project>
+
