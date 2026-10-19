@@ -1,0 +1,69 @@
+name: Label affected mods
+
+on:
+  workflow_run:
+    workflows: [Repository checks]
+    types: [completed]
+
+permissions: {}
+
+concurrency:
+  group: mod-labels-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  labels:
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.repository == 'ashugar/Stardeus-Mod-Maintenance' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      # No checkout, artifacts, caches, candidate code, approvals or merge operations.
+      - name: Add labels from trusted mapping and current PR file metadata
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          script: |
+            const repo = context.repo;
+            if (`${repo.owner}/${repo.repo}` !== 'ashugar/Stardeus-Mod-Maintenance') throw new Error('Unexpected repository');
+            const run = context.payload.workflow_run;
+            if (run.event !== 'pull_request' || run.repository.full_name !== `${repo.owner}/${repo.repo}` || !/^[0-9a-f]{40}$/.test(run.head_sha)) throw new Error('Unexpected triggering run');
+            // context.sha is trusted default-branch workflow code, never the PR head.
+            const mappingResponse = await github.rest.repos.getContent({...repo, path: '.github/mod-labels.json', ref: context.sha});
+            const data = mappingResponse.data;
+            if (data.type !== 'file' || data.encoding !== 'base64' || !data.content) throw new Error('Missing trusted mapping');
+            const map = JSON.parse(Buffer.from(data.content, 'base64').toString('utf8'));
+            if (map.SchemaVersion !== 1 || !Array.isArray(map.Mods) || map.AutomationLabel !== 'repository-automation') throw new Error('Invalid trusted mapping');
+            const seen = new Set();
+            for (const mod of map.Mods) {
+              if (!/^[A-Za-z0-9][A-Za-z0-9().&_\-]*$/.test(mod.Folder) || mod.Folder.length > 46 || mod.Label !== `mod:${mod.Folder}` || seen.has(mod.Folder)) throw new Error('Invalid mod label');
+              seen.add(mod.Folder);
+            }
+            let candidates = run.pull_requests || [];
+            if (!candidates.length) {
+              candidates = await github.paginate(github.rest.repos.listPullRequestsAssociatedWithCommit, {...repo, commit_sha: run.head_sha, per_page: 100});
+            }
+            for (const number of new Set(candidates.map(pr => pr.number))) {
+              if (!Number.isSafeInteger(number) || number < 1) throw new Error('Invalid PR number');
+              const pr = (await github.rest.pulls.get({...repo, pull_number: number})).data;
+              if (pr.state !== 'open' || pr.base.ref !== 'main' || pr.base.repo.full_name !== `${repo.owner}/${repo.repo}` || pr.head.sha !== run.head_sha) {
+                core.info('Ignoring closed, unrelated or stale PR run');
+                continue;
+              }
+              if (pr.changed_files > 3000) throw new Error('PR exceeds GitHub file-list limit; label coverage unavailable');
+              const files = await github.paginate(github.rest.pulls.listFiles, {...repo, pull_number: number, per_page: 100});
+              if (files.length !== pr.changed_files) throw new Error('Incomplete PR file metadata');
+              const paths = files.flatMap(file => [file.filename, file.previous_filename].filter(path => typeof path === 'string'));
+              const labels = map.Mods.filter(mod => paths.some(path => path.startsWith(mod.Folder + '/'))).map(mod => mod.Label);
+              if (paths.some(path => !path.includes('/') || path.startsWith('.github/') || path.startsWith('build/'))) labels.push(map.AutomationLabel);
+              const latest = (await github.rest.pulls.get({...repo, pull_number: number})).data;
+              if (latest.state !== 'open' || latest.head.sha !== run.head_sha || latest.base.ref !== 'main') {
+                core.info('PR changed during labeling; waiting for its next run');
+                continue;
+              }
+              const existing = new Set(latest.labels.map(label => label.name));
+              const missing = [...new Set(labels)].filter(label => !existing.has(label));
+              if (missing.length) await github.rest.issues.addLabels({...repo, issue_number: number, labels: missing});
+              core.info(`Label metadata checked for PR ${number}`);
+            }

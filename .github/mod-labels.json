@@ -1,0 +1,110 @@
+{
+  "SchemaVersion": 1,
+  "Mods": [
+    {
+      "Folder": "AggressiveAutoConnectUpgrade",
+      "Label": "mod:AggressiveAutoConnectUpgrade"
+    },
+    {
+      "Folder": "AutoFactory",
+      "Label": "mod:AutoFactory"
+    },
+    {
+      "Folder": "AutoHauling",
+      "Label": "mod:AutoHauling"
+    },
+    {
+      "Folder": "AutoUtilitiesModFramework",
+      "Label": "mod:AutoUtilitiesModFramework"
+    },
+    {
+      "Folder": "BetterStorageMod(v0.15Update)",
+      "Label": "mod:BetterStorageMod(v0.15Update)"
+    },
+    {
+      "Folder": "BotAutoHack",
+      "Label": "mod:BotAutoHack"
+    },
+    {
+      "Folder": "Chromanite(v0.15Update)",
+      "Label": "mod:Chromanite(v0.15Update)"
+    },
+    {
+      "Folder": "ChromaniteDoors(v0.15Update)",
+      "Label": "mod:ChromaniteDoors(v0.15Update)"
+    },
+    {
+      "Folder": "ChromaniteGlitterPower(v0.15Update)",
+      "Label": "mod:ChromaniteGlitterPower(v0.15Update)"
+    },
+    {
+      "Folder": "ChromaniteWalls(v0.15Update)",
+      "Label": "mod:ChromaniteWalls(v0.15Update)"
+    },
+    {
+      "Folder": "ColonistAndBotsAutoUpgrade",
+      "Label": "mod:ColonistAndBotsAutoUpgrade"
+    },
+    {
+      "Folder": "IntelligentRecycling",
+      "Label": "mod:IntelligentRecycling"
+    },
+    {
+      "Folder": "MetalHuskRevisited(v0.15Update)",
+      "Label": "mod:MetalHuskRevisited(v0.15Update)"
+    },
+    {
+      "Folder": "MolecularAssemblerFixed(v0.15Update)",
+      "Label": "mod:MolecularAssemblerFixed(v0.15Update)"
+    },
+    {
+      "Folder": "OrbotronUpgrade(v0.15Update)",
+      "Label": "mod:OrbotronUpgrade(v0.15Update)"
+    },
+    {
+      "Folder": "PartRestorationUnit",
+      "Label": "mod:PartRestorationUnit"
+    },
+    {
+      "Folder": "PlanningOverhaul",
+      "Label": "mod:PlanningOverhaul"
+    },
+    {
+      "Folder": "Prosthetics&AndroidsExpanded(v0.15Update)",
+      "Label": "mod:Prosthetics&AndroidsExpanded(v0.15Update)"
+    },
+    {
+      "Folder": "QuantumStorage",
+      "Label": "mod:QuantumStorage"
+    },
+    {
+      "Folder": "QuestRequestPreview",
+      "Label": "mod:QuestRequestPreview"
+    },
+    {
+      "Folder": "ReconnectTeleporterConnections",
+      "Label": "mod:ReconnectTeleporterConnections"
+    },
+    {
+      "Folder": "RememberFacilityUpgrades",
+      "Label": "mod:RememberFacilityUpgrades"
+    },
+    {
+      "Folder": "SuperCleaning",
+      "Label": "mod:SuperCleaning"
+    },
+    {
+      "Folder": "TractorBeamAutoConnect",
+      "Label": "mod:TractorBeamAutoConnect"
+    },
+    {
+      "Folder": "TractorBeamOverhaul",
+      "Label": "mod:TractorBeamOverhaul"
+    },
+    {
+      "Folder": "TraitAndClothingCompatibility",
+      "Label": "mod:TraitAndClothingCompatibility"
+    }
+  ],
+  "AutomationLabel": "repository-automation"
+}

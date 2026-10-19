@@ -6,36 +6,7 @@ This repository replaces the retired Workshop maintenance scripts. The old scrip
 
 ## Mods
 
-The versions below describe the initial import on October 18, 2026. Each mod's `ModInfo.json` is the authority for its current version; see its own README and documentation for features, requirements, and validation status.
-
-| Mod | Imported version | Steam Workshop |
-| --- | --- | --- |
-| [Aggressive Auto Connect Upgrade](AggressiveAutoConnectUpgrade/) | 1.2.2 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3770671842) |
-| [Auto Factory](AutoFactory/) | 1.5.2 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3784267361) |
-| [Auto Hauling](AutoHauling/) | 1.1.5 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3783767356) |
-| [Auto Utilities Mod Framework](AutoUtilitiesModFramework/) | 1.4.0 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3776751765) |
-| [Better Storage (v0.15 Update)](BetterStorageMod%28v0.15Update%29/) | 2.0.4 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748324441) |
-| [Bot Auto Hack](BotAutoHack/) | 1.0.7 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3788363114) |
-| [Chromanite Material (v0.15 Update)](Chromanite%28v0.15Update%29/) | 2.0.1 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748921886) |
-| [Chromanite Doors (v0.15 Update)](ChromaniteDoors%28v0.15Update%29/) | 2.0.1 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748937744) |
-| [Chromanite Power (v0.15 Update)](ChromaniteGlitterPower%28v0.15Update%29/) | 2.0.1 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748932401) |
-| [Chromanite Walls (v0.15 Update)](ChromaniteWalls%28v0.15Update%29/) | 2.0.1 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748937799) |
-| [Colonist And Bots Auto Upgrade](ColonistAndBotsAutoUpgrade/) | 1.1.3 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3754689644) |
-| [Intelligent Recycling](IntelligentRecycling/) | 1.3.2 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3775577154) |
-| [Metal Husks Revisited (v0.15 Update)](MetalHuskRevisited%28v0.15Update%29/) | 2.0.1 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3749399478) |
-| [MolecularAssembler Fixed (v0.15 Update)](MolecularAssemblerFixed%28v0.15Update%29/) | 2.0.1 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748810380) |
-| [Orbotron Upgrades (v0.15 Update)](OrbotronUpgrade%28v0.15Update%29/) | 2.1.0 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748954299) |
-| [Part Restoration Unit](PartRestorationUnit/) | 1.1.2 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3792407697) |
-| [Planning Overhaul](PlanningOverhaul/) | 1.1.0 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3805289692) |
-| [Prosthetics & Androids Expanded (v0.15 Update)](Prosthetics%26AndroidsExpanded%28v0.15Update%29/) | 2.3.3 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3746773189) |
-| [Quantum Storage](QuantumStorage/) | 1.3.5 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3794784281) |
-| [Quest Request Preview](QuestRequestPreview/) | 1.0.2 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3783715878) |
-| [Reconnect Teleporter Connections](ReconnectTeleporterConnections/) | 1.1.2 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3785027459) |
-| [Remember Facility Upgrades](RememberFacilityUpgrades/) | 1.1.0 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3791306246) |
-| [Super Cleaning](SuperCleaning/) | 1.0.3 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3787822873) |
-| [Tractor Beam Auto Connect](TractorBeamAutoConnect/) | 1.2.2 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3776012239) |
-| [Tractor Beam Overhaul](TractorBeamOverhaul/) | 1.1.1 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3791894872) |
-| [Trait and Clothing Compatibility Mod (TACC)](TraitAndClothingCompatibility/) | 1.1.3 | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3796663540) |
+See the [generated mod catalog](MODS.md) for current manifest versions, dependencies, package type, and Workshop links. Each mod's own documentation describes its features and validation status.
 
 ## Repository contents
 
