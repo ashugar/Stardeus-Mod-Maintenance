@@ -1,30 +1,32 @@
 # Repository privacy checker
 
-This dependency-free .NET 10 utility checks Git-tracked content, including hidden project files, for hardcoded machine paths. Findings contain repository-relative filenames and categories, without matched private values. It checks decoded text and JSON strings, PE CodeView data, embedded Portable PDB document names, and structured PNG text metadata. It does not inspect visible text in image pixels or rewrite Git history. Existing author credits and compatibility identifiers are not path findings.
+This dependency-free .NET 10 checker detects hardcoded machine paths and selected high-confidence secrets without renaming public author credits or compatibility identifiers. Git-object findings use categories and safe object/path identifiers, never matched private values. See [repository automation](../../AUTOMATION.md) for installation and PR workflow.
 
-Build into a private temporary directory from the repository root:
+Build into private temporary output from the repository root:
 
 ```powershell
 $RepoRoot = (git rev-parse --show-toplevel).Trim()
-$ToolBuild = Join-Path ([IO.Path]::GetTempPath()) 'StardeusRepositoryPrivacy'
-dotnet build build/RepositoryPrivacy/RepositoryPrivacy.csproj -c Release `
-    "-p:BaseOutputPath=$ToolBuild/bin/" `
-    "-p:BaseIntermediateOutputPath=$ToolBuild/obj/"
-$Checker = Join-Path $ToolBuild 'bin/Release/net10.0/RepositoryPrivacy.dll'
+$ToolBuild = Join-Path ([IO.Path]::GetTempPath()) ('StardeusPrivacy-' + [Guid]::NewGuid().ToString('N'))
+dotnet build build/RepositoryPrivacy/RepositoryPrivacy.csproj -c Release --artifacts-path $ToolBuild
+$Checker = Join-Path $ToolBuild 'bin/RepositoryPrivacy/release/RepositoryPrivacy.dll'
 dotnet $Checker self-test
-dotnet $Checker scan --repo $RepoRoot
+dotnet $Checker self-test-git
+dotnet $Checker scan-index --repo $RepoRoot
+dotnet $Checker scan-history --repo $RepoRoot --ref (git rev-parse HEAD)
 ```
 
-`scan` returns 0 for a clean scan, 1 for findings, and 2 for an operation failure. Invalid or unsupported artifact structures are reported as findings. UTF-8 and UTF-16 text are supported. PNG text is decompressed only within structured text chunks; compressed image bytes are not treated as text. Embedded PDBs are decompressed and parsed rather than searched as compressed bytes.
+`scan-index` reads exact stage-zero index blobs. `scan-history --ref` accepts a full commit or annotated-tag object ID and scans its complete reachable graph. `pre-push --repo` reads Git's four-field ref-update records on standard input and scans every non-deletion proposed tip. No mode fetches unrelated refs. Incomplete/shallow history, missing objects, unsupported structures, and malformed input fail closed. Return codes are 0 clean, 1 findings, 2 operation failure/refusal. These modes are read-only.
 
-The explicit `sanitize` mode modifies only tracked DLL/EXE debug provenance and offending PNG `File` text chunks. It does not edit textual source/configuration paths. It refuses signed or ambiguous artifacts, derives and validates every allowed PE byte range, rejects overlap with method bodies and other protected data, and stages and verifies all candidates before replacement. Unchanged clean artifacts are left byte-for-byte intact. Removing current DLL symbols loses source-file/line debugging while preserving executable bytes, metadata, identities, and resources. No game process is started or stopped. Live mod deployment folders are refused.
+Coverage includes UTF-8/UTF-16 and ASCII-compatible legacy single-byte text, decoded JSON strings, PE debug provenance and embedded Portable PDB document names, and structured/decompressed PNG text. Opaque containers and unreviewed binary content are refused by the Git-object policy. Existing binary exceptions are explicit reviewed hashes, not permission to upload arbitrary new opaque files. Policy changes need deliberate review. The tool does not perform OCR, inspect arbitrary steganographic payloads, or guarantee detection of all credentials/personal information. GitHub secret scanning and manual review remain useful independent controls.
+
+The legacy `scan --repo` inspects tracked working files for machine paths and remains a diagnostic convenience; it is not the pre-push boundary. Its evidence includes relative filenames, so keep reports private. Optional `--evidence` on legacy scan/sanitize/verify must point outside the repository.
+
+The explicit `sanitize` mode modifies only tracked DLL/EXE debug provenance and offending PNG `File` text chunks. It does not edit text source/configuration paths or rewrite Git history. It refuses signed or ambiguous artifacts, validates every allowed PE byte range, rejects overlap with method bodies/protected data, and validates all candidates before replacement. Unchanged artifacts remain byte-identical. It is never run by hooks or CI. Live mod deployment folders are refused.
 
 ```powershell
-# Review scan findings and preserve the original Git revision before mutation.
+# Review findings and preserve an original revision before any authorized mutation.
 dotnet $Checker sanitize --repo $RepoRoot
 dotnet $Checker verify --repo $RepoRoot --baseline-ref $OriginalCommit
 ```
 
-`verify` recomputes permitted changes from the specified original Git commit. It requires exact equality to that transformation, checks unchanged PE bytes outside debug spans, metadata/MVID and method-body hashes, retained PNG chunks and ordered IDAT data, image dimensions/type, and idempotence. Preserving every nonremoved PNG chunk proves the decoder inputs and pixels unchanged; an independent image-decoding check can provide an additional cross-check.
-
-All modes accept optional `--evidence $PrivateReportPath`, which must be outside the repository. JSON evidence includes relative paths, categories, hashes, and permitted byte spans, never matched private values. Sanitation and verification return 2 on refusal/failure. Existing runtime compatibility is not re-certified by these preservation checks.
+`verify` recomputes the permitted transformation and checks exact equality, unchanged PE bytes outside allowed spans, CLR metadata/MVID and method-body hashes, retained PNG chunks and ordered image data, dimensions/type, and idempotence. Symbol sanitation loses source-file/line debugging while preserving executable bytes, identities, resources, and pixels. These preservation checks do not re-certify runtime compatibility.

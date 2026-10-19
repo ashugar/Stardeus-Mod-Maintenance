@@ -55,3 +55,8 @@ The initial import preserved the selected files byte-for-byte. Repository privac
 ## License and attribution
 
 The existing root [LICENSE](LICENSE) is retained. Original author credits, Workshop identities, and any mod-specific notices remain with each mod. Upstream content remains subject to its existing license terms.
+
+
+## Repository workflow
+
+See [AUTOMATION.md](AUTOMATION.md) for local privacy prevention, required PR checks, reviewed auto-merge, and merged-branch cleanup. Builds and live deployment remain governed by [BUILDING.md](BUILDING.md) and [AGENTS.md](AGENTS.md).

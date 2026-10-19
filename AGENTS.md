@@ -18,6 +18,15 @@ This guide applies to work in this repository and its mod folders. Read any addi
 - Before copying, verify the exact source and live destination, preserve rollback copies outside the public repository, and confirm Stardeus is closed. Never start or stop the game without the user's direct authorization; if it is running, finish independent repository work and defer live replacement until it is closed.
 - Copy only the intended deployable files for the affected mod. Do not mirror/delete-sync or replace whole live folders. Preserve player settings, saves, generated logs, unrelated files, Workshop identity, and existing state unless the active task explicitly changes them. Verify copied file hashes against the reviewed repository artifacts, and report the pull request, commit, deployed files, rollback location, and remaining runtime checks.
 
+
+## Automated repository workflow
+
+- Follow [AUTOMATION.md](AUTOMATION.md). Install the committed, independently reviewed privacy guard in each checkout/worktree before pushing. Scan exact staged content and complete selected outgoing history; do not substitute a working-tree-only scan or fetch old PR refs.
+- After changing privacy/automation source, independently review the committed revision and refresh the local guard before pushing. Preserve existing hook setups, secret protection, and compatibility identifiers. Never bypass a failing guard to publish private content.
+- Every PR into `main` must pass `Repository validation`, including privacy, compatible configuration parsing, and all five hosted portable harnesses. Review workflow/policy edits themselves; hosted checks do not establish gameplay compatibility.
+- Auto-merge is opt-in after independent review of the exact head SHA. Use `build/RepositoryAutomation/Manage-PullRequest.ps1` to enable it. Before subsequent pushes, its `Update` action must disable and confirm auto-merge off, then push through the privacy hook. Review the new SHA and opt in again. GitHub's activation-time SHA check is not a permanent reviewed-head lock.
+- Preserve native merged-branch deletion and existing protections. Do not add automatic approval bots, blanket PR auto-merge, write-enabled untrusted PR execution, game-PC runners, or automatic live deployment. Current task authorization controls deployment.
+
 ## Stardeus mod investigation, audit, validation, and release process
 
 ### 1. Establish scope and authority

@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-internal static class Program
+internal static partial class Program
 {
     internal const int MaximumMetadataBytes = 64 * 1024 * 1024;
     private static readonly UTF8Encoding Utf8 = new(false, true);
@@ -49,6 +49,9 @@ internal static class Program
         {
             if (args.Length == 0) throw new GuardFailure("usage-scan-sanitize-verify-self-test");
             if (args[0] == "self-test") return SelfTest();
+            if (args[0] == "self-test-git") return SelfTestGit();
+            if (args[0] == "capabilities") { Console.WriteLine("git-object-scan-v1"); return 0; }
+            if (args[0] is "scan-index" or "scan-history" or "pre-push") return GitMode(args);
             string mode = args[0];
             if (mode is not ("scan" or "sanitize" or "verify")) throw new GuardFailure("unknown-mode");
             Dictionary<string, string> options = ParseOptions(args.Skip(1).ToArray());
@@ -129,10 +132,7 @@ internal static class Program
 
     private static byte[] GitBytes(string root, params string[] args)
     {
-        ProcessStartInfo start = new("git") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-        start.ArgumentList.Add("--no-replace-objects");
-        start.ArgumentList.Add("-C"); start.ArgumentList.Add(root);
-        foreach (string arg in args) start.ArgumentList.Add(arg);
+        ProcessStartInfo start = GitStart(root, args);
         using Process process = Process.Start(start) ?? throw new GuardFailure("git-start-failed");
         Task<string> stderr = process.StandardError.ReadToEndAsync();
         using MemoryStream output = new();
@@ -159,33 +159,16 @@ internal static class Program
         List<Finding> findings = [];
         foreach (string path in paths)
         {
-            try
-            {
-                byte[] bytes = File.ReadAllBytes(FullTrackedPath(root, path));
-                string extension = Path.GetExtension(path);
-                if (extension.Equals(".dll", StringComparison.OrdinalIgnoreCase) || extension.Equals(".exe", StringComparison.OrdinalIgnoreCase))
-                {
-                    PeAnalysis pe = AnalyzePe(bytes);
-                    if (pe.Leaking) findings.Add(new(path, "pe-debug-machine-path"));
-                }
-                else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
-                {
-                    PngAnalysis png = AnalyzePng(bytes, findings, path);
-                    _ = png;
-                }
-                else if (!BinaryExtensions.Contains(extension) && TryDecodeText(bytes) is string text &&
-                    (ContainsMachinePath(text) || (extension.Equals(".json", StringComparison.OrdinalIgnoreCase) && JsonContainsMachinePath(text))))
-                    findings.Add(new(path, "text-machine-path"));
-            }
-            catch (GuardFailure error) { findings.Add(new(path, "validation-" + error.Category)); }
-            catch (Exception error) { findings.Add(new(path, "validation-" + error.GetType().Name)); }
+            string location = Hash(Utf8.GetBytes(path))[..16];
+            try { InspectContent(path, File.ReadAllBytes(FullTrackedPath(root, path)), findings); }
+            catch (GuardFailure error) { findings.Add(new(location, "validation-" + error.Category)); }
+            catch (Exception error) { findings.Add(new(location, "validation-" + error.GetType().Name)); }
         }
-        foreach (Finding finding in findings) Console.WriteLine(finding.Path + ": " + finding.Category);
+        foreach (Finding finding in findings.Distinct()) Console.WriteLine("location " + finding.Path + ": " + finding.Category);
         WriteEvidence(evidencePath, new { Mode = "scan", TrackedFiles = paths.Count, Findings = findings });
         Console.WriteLine($"Scanned {paths.Count} tracked files; {findings.Count} findings.");
         return findings.Count == 0 ? 0 : 1;
     }
-
     private static string? TryDecodeText(byte[] bytes)
     {
         if (bytes.Length >= 2 && bytes[0] == 0xff && bytes[1] == 0xfe)
@@ -208,7 +191,7 @@ internal static class Program
             catch (DecoderFallbackException) { }
             return null;
         }
-        try { return Utf8.GetString(bytes); }
+        try { return bytes.AsSpan().StartsWith(new byte[] { 0xef, 0xbb, 0xbf }) ? Utf8.GetString(bytes, 3, bytes.Length - 3) : Utf8.GetString(bytes); }
         catch (DecoderFallbackException) { return null; }
     }
 
