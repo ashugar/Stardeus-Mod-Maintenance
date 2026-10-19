@@ -173,6 +173,10 @@ try {
     Assert-Refusal { Invoke-TestApply $recheck $recheckPlan } 'install-failed-recovery-required'
     Set-Item Function:Assert-InstallGameClosed $originalProcess
     Assert-Test ($script:processCalls -ge 2 -and (Get-TestTree $recheck.ModRoot) -ceq $recheckBefore) 'game state rechecked after backup before target changes'
+    $unwrittenJournal=@(Get-ChildItem -LiteralPath $recheck.Rollback -Recurse -File -Filter journal.json)[0].FullName
+    $unwrittenRecovery=Invoke-ModInstallRecovery $unwrittenJournal $recheckPlan.Sha256
+    Assert-Test ($unwrittenRecovery.Status -eq 'rolled-back') 'legitimate prepared unwritten transaction can complete recovery'
+    Assert-Test ((Get-TestTree $recheck.ModRoot) -ceq $recheckBefore) 'prepared unwritten recovery verifies unchanged preimages'
 
     $started = New-TestFixture
     $startedPlan=Save-TestPlan $started
@@ -315,6 +319,51 @@ try {
     Assert-Refusal { Invoke-ModInstallRecovery $conflictResult.JournalPath $conflictPlan.Sha256 } 'install-recovery-concurrent-changes-preserved'
     Assert-Test ([IO.File]::ReadAllText((Join-Path $conflict.ModRoot 'Libraries/Fixture.dll')) -eq 'later-user-change') 'recovery never overwrites later user edit'
     Assert-Test ((Read-InstallJson $conflictResult.JournalPath).State -eq 'recovery-conflicts') 'recovery conflict remains recorded'
+
+    $preparedCorruption=New-TestFixture
+    $preparedBefore=Get-TestTree $preparedCorruption.ModRoot
+    $preparedPlan=Save-TestPlan $preparedCorruption
+    $preparedResult=Invoke-TestApply $preparedCorruption $preparedPlan
+    $preparedJournal=Read-InstallJson $preparedResult.JournalPath
+    @($preparedJournal.Items|Where-Object RelativePath -eq 'Config/Rules.json')[0].State='prepared'
+    [IO.File]::WriteAllBytes($preparedResult.JournalPath,(Get-InstallJsonBytes $preparedJournal))
+    Assert-Refusal {Invoke-ModInstallRecovery $preparedResult.JournalPath $preparedPlan.Sha256} 'install-recovery-concurrent-changes-preserved'
+    Assert-Test ((Read-InstallJson $preparedResult.JournalPath).State -eq 'recovery-conflicts') 'valid prepared-state corruption cannot claim rolled back'
+    Assert-Test ([IO.File]::ReadAllText((Join-Path $preparedCorruption.ModRoot 'Config/Rules.json')) -eq '{"rule":"new"}') 'uncertain prepared-state bytes are preserved rather than overwritten'
+    Assert-Test ((Get-TestTree $preparedCorruption.ModRoot) -cne $preparedBefore) 'incomplete recovery is reported while target differs from preimage'
+    $preparedJournal=Read-InstallJson $preparedResult.JournalPath
+    @($preparedJournal.Items|Where-Object RelativePath -eq 'Config/Rules.json')[0].State='written'
+    [IO.File]::WriteAllBytes($preparedResult.JournalPath,(Get-InstallJsonBytes $preparedJournal))
+    $null=Invoke-ModInstallRecovery $preparedResult.JournalPath $preparedPlan.Sha256
+    Assert-Test ((Get-TestTree $preparedCorruption.ModRoot) -ceq $preparedBefore) 'corrected journal resumes verified safe restoration'
+
+    foreach($existingReceipt in @($false,$true)){
+        $receiptCorruption=New-TestFixture
+        if($existingReceipt){
+            $firstReceiptPlan=Save-TestPlan $receiptCorruption
+            $null=Invoke-TestApply $receiptCorruption $firstReceiptPlan
+            $receiptCorruption.PlanPath=Join-Path $receiptCorruption.Root 'next-plan.json'
+            $receiptCorruption.Snapshot.ReviewedCommit='e'*40
+        }
+        $receiptBeforeTree=Get-TestTree $receiptCorruption.ModRoot
+        $receiptPath=Get-InstallReceiptPath $receiptCorruption.Rollback $receiptCorruption.ModRoot
+        $receiptBeforeState=Get-InstallFileState $receiptPath
+        $receiptPlan=Save-TestPlan $receiptCorruption
+        $receiptResult=Invoke-TestApply $receiptCorruption $receiptPlan
+        $receiptJournal=Read-InstallJson $receiptResult.JournalPath
+        $receiptJournal.ReceiptState='prepared'
+        [IO.File]::WriteAllBytes($receiptResult.JournalPath,(Get-InstallJsonBytes $receiptJournal))
+        Assert-Refusal {Invoke-ModInstallRecovery $receiptResult.JournalPath $receiptPlan.Sha256} 'install-recovery-concurrent-changes-preserved'
+        Assert-Test ((Read-InstallJson $receiptResult.JournalPath).State -eq 'recovery-conflicts') 'prepared receipt-state corruption cannot claim rolled back'
+        Assert-Test ((Get-InstallFileState $receiptPath).Sha256 -ceq $receiptJournal.NewReceiptSha256) 'uncertain receipt is preserved'
+        $receiptJournal=Read-InstallJson $receiptResult.JournalPath
+        $receiptJournal.ReceiptState='written'
+        [IO.File]::WriteAllBytes($receiptResult.JournalPath,(Get-InstallJsonBytes $receiptJournal))
+        $null=Invoke-ModInstallRecovery $receiptResult.JournalPath $receiptPlan.Sha256
+        $receiptAfterState=Get-InstallFileState $receiptPath
+        Assert-Test ($receiptAfterState.Exists -eq $receiptBeforeState.Exists -and $receiptAfterState.Sha256 -ceq $receiptBeforeState.Sha256) 'receipt recovery verifies prior existence and exact hash'
+        Assert-Test ((Get-TestTree $receiptCorruption.ModRoot) -ceq $receiptBeforeTree) 'receipt-state correction leaves exact recovered mod tree'
+    }
 
     $corrupt = New-TestFixture
     $corruptPlan = Save-TestPlan $corrupt

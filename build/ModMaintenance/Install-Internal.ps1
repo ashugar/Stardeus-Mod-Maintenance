@@ -493,6 +493,15 @@ function Invoke-ModInstallRecovery {
             Assert-InstallNoReparse $directory
             if ([IO.Directory]::Exists($directory) -and @(Get-ChildItem -LiteralPath $directory -Force).Count -eq 0) { Assert-InstallGameClosed; [IO.Directory]::Delete($directory, $false) }
         }
+        # Journal states guide safe mutations; only verified preimages can establish
+        # completed recovery, including items recorded as prepared but never restored.
+        foreach ($row in $copies) {
+            $final = Get-InstallFileState (Join-Path $plan.ModRoot $row.RelativePath)
+            if ($final.Exists -ne $row.BeforeExists -or $final.Sha256 -cne $row.BeforeSha256) { $conflicts.Add($row.RelativePath) }
+        }
+        $finalReceipt = Get-InstallFileState $receiptPath
+        $receiptExisted = -not [string]::IsNullOrEmpty([string]$plan.ReceiptBeforeSha256)
+        if ($finalReceipt.Exists -ne $receiptExisted -or $finalReceipt.Sha256 -cne $plan.ReceiptBeforeSha256) { $conflicts.Add('receipt') }
         $journal.State = if ($conflicts.Count) { 'recovery-conflicts' } else { 'rolled-back' }
         Save-InstallJournal $journalFile $journal
         if ($conflicts.Count) { throw 'install-recovery-concurrent-changes-preserved' }
