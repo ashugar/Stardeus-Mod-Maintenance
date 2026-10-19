@@ -54,3 +54,8 @@ Current historical mod DLLs can have private debug-symbol provenance removed wit
 Use the [repository privacy tool](build/RepositoryPrivacy/README.md) to scan tracked files before publication and verify sanitation against its original Git baseline. Its findings must identify repository-relative files and categories without printing private values. Build caches, backups, and private evidence stay outside tracked content.
 
 This workflow cleans current files. Earlier Git commits retain their original snapshots; rewriting history requires a separate explicit request. A successful privacy check does not establish new gameplay compatibility or replace per-mod runtime validation.
+
+
+## Automated checks
+
+Install the per-checkout privacy guard and follow [AUTOMATION.md](AUTOMATION.md) before publishing a branch. Hosted PR checks run five game-independent logic harnesses and repository privacy/configuration checks. They do not replace game-dependent builds or runtime acceptance for a mod change, and never copy files to live installations.

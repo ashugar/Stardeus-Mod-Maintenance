@@ -1,0 +1,190 @@
+name: Repository checks
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  privacy:
+    name: Privacy guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      REVIEWED_BOOTSTRAP_SHA: c71c3243bb02e712eed0f4d1f0f584dfeb7077f7
+    steps:
+      - name: Check out candidate and its selected history
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          path: candidate
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Check out trusted base checker
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted-base
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Check out reviewed initial checker
+        if: ${{ github.event.pull_request.base.sha == '9a667ef0e6e2673bb0234ca01d5db88d9f08357f' }}
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ env.REVIEWED_BOOTSTRAP_SHA }}
+          path: reviewed-bootstrap
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Set up .NET
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Test candidate and scan Git objects
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_MERGE_SHA: ${{ github.sha }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($sha in @($env:PR_HEAD_SHA, $env:PR_BASE_SHA, $env:PR_MERGE_SHA)) {
+            if ($sha -notmatch '^[0-9a-fA-F]{40,64}$') { throw 'Invalid PR commit identity.' }
+          }
+          $candidate = Join-Path $env:GITHUB_WORKSPACE 'candidate'
+          $base = Join-Path $env:GITHUB_WORKSPACE 'trusted-base'
+          Set-Location -LiteralPath $env:RUNNER_TEMP
+          $neutralConfig = Join-Path $env:RUNNER_TEMP 'privacy-authority/NuGet.Config'
+          New-Item -ItemType Directory -Path (Split-Path -Parent $neutralConfig) -Force | Out-Null
+          [IO.File]::WriteAllText($neutralConfig, '<configuration><packageSources><clear /></packageSources></configuration>')
+          function Build-PrivacyChecker {
+            param([string]$SourceRoot, [string]$OutputRoot)
+            $project = Join-Path $SourceRoot 'build/RepositoryPrivacy/RepositoryPrivacy.csproj'
+            & dotnet build $project --configuration Release --artifacts-path $OutputRoot --output "$OutputRoot/run" "-p:BaseOutputPath=$OutputRoot/bin/" "-p:BaseIntermediateOutputPath=$OutputRoot/obj/" -p:ImportDirectoryBuildProps=false -p:ImportDirectoryBuildTargets=false -p:ImportDirectoryPackagesProps=false -noAutoResponse "-p:RestoreConfigFile=$neutralConfig" | Out-Host
+            if ($LASTEXITCODE -ne 0) { throw 'Isolated privacy checker build failed.' }
+            return (Join-Path $OutputRoot 'run/RepositoryPrivacy.dll')
+          }
+          $shallow = (& git -C $candidate rev-parse --is-shallow-repository).Trim()
+          if ($LASTEXITCODE -ne 0 -or $shallow -notin @('true', 'false')) { throw 'Cannot establish candidate graph completeness.' }
+          $depthArguments = if ($shallow -eq 'true') { @('--unshallow') } else { @() }
+          & git -C $candidate -c credential.helper= fetch --no-tags --no-recurse-submodules @depthArguments origin $env:PR_MERGE_SHA $env:PR_BASE_SHA $env:PR_HEAD_SHA
+          if ($LASTEXITCODE -ne 0) { throw 'Selected PR ancestry fetch failed.' }
+          $shallow = (& git -C $candidate rev-parse --is-shallow-repository).Trim()
+          if ($LASTEXITCODE -ne 0 -or $shallow -ne 'false') { throw 'Selected PR ancestry is incomplete.' }
+          # No candidate build or test code runs before the trusted scans finish.
+          $baseChecker = Build-PrivacyChecker $base (Join-Path $env:RUNNER_TEMP 'privacy-base')
+          $probeStart = [Diagnostics.ProcessStartInfo]::new('dotnet')
+          $probeStart.UseShellExecute = $false
+          $probeStart.RedirectStandardOutput = $true
+          $probeStart.RedirectStandardError = $true
+          $probeStart.ArgumentList.Add($baseChecker)
+          $probeStart.ArgumentList.Add('capabilities')
+          $probe = [Diagnostics.Process]::Start($probeStart)
+          try {
+            $errorRead = $probe.StandardError.ReadToEndAsync()
+            $probeOutput = $probe.StandardOutput.ReadToEnd().Trim()
+            $probe.WaitForExit()
+            $probeError = $errorRead.GetAwaiter().GetResult().Trim()
+            if ($probe.ExitCode -eq 0 -and $probeOutput -eq 'git-object-scan-v1' -and $probeError -eq '') {
+              $checker = $baseChecker
+              Write-Output 'Privacy authority: trusted base checker.'
+            } elseif ($env:PR_BASE_SHA -eq '9a667ef0e6e2673bb0234ca01d5db88d9f08357f' -and $probe.ExitCode -eq 2 -and $probeOutput -eq '' -and $probeError -eq 'ERROR unknown-mode') {
+              if ($env:REVIEWED_BOOTSTRAP_SHA -notmatch '^[0-9a-fA-F]{40,64}$') { throw 'Reviewed bootstrap checker is not pinned.' }
+              $reviewed = Join-Path $env:GITHUB_WORKSPACE 'reviewed-bootstrap'
+              $reviewedHead = (& git -C $reviewed rev-parse --verify HEAD).Trim()
+              if ($LASTEXITCODE -ne 0 -or $reviewedHead -cne $env:REVIEWED_BOOTSTRAP_SHA) { throw 'Reviewed bootstrap commit mismatch.' }
+              $reviewedTree = (& git -C $reviewed rev-parse --verify 'HEAD:build/RepositoryPrivacy').Trim()
+              if ($LASTEXITCODE -ne 0) { throw 'Reviewed bootstrap scanner tree unavailable.' }
+              $candidateTree = (& git -C $candidate rev-parse --verify "$($env:PR_HEAD_SHA):build/RepositoryPrivacy").Trim()
+              if ($LASTEXITCODE -ne 0 -or $reviewedTree -cne $candidateTree) { throw 'Candidate scanner differs from reviewed bootstrap tree.' }
+              $checker = Build-PrivacyChecker $reviewed (Join-Path $env:RUNNER_TEMP 'privacy-reviewed-bootstrap')
+              Write-Output 'Privacy authority: immutable reviewed bootstrap checker; exact initial base and scanner tree verified.'
+            } else {
+              throw 'Trusted checker capability verification failed.'
+            }
+          } finally {
+            $probe.Dispose()
+          }
+          & dotnet $checker scan-history --repo $candidate --ref $env:PR_HEAD_SHA
+          if ($LASTEXITCODE -ne 0) { throw 'Selected PR history privacy scan failed.' }
+          & dotnet $checker scan-index --repo $candidate
+          if ($LASTEXITCODE -ne 0) { throw 'Candidate merge index privacy scan failed.' }
+          $candidateChecker = Build-PrivacyChecker $candidate (Join-Path $env:RUNNER_TEMP 'privacy-candidate')
+          foreach ($mode in @('self-test', 'self-test-git')) {
+            & dotnet $candidateChecker $mode
+            if ($LASTEXITCODE -ne 0) { throw 'Candidate privacy checker self-tests failed.' }
+          }
+
+  metadata:
+    name: Repository metadata
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Check configuration and script syntax
+        run: ./build/RepositoryValidation/Test-RepositoryMetadata.ps1
+
+  isolated-logic:
+    name: Isolated logic tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Set up .NET runtimes and SDKs
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+      - name: Run portable production-logic harnesses
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $projects = @(
+            'ImprovedShipPathing/Tests/InterceptSolver.Tests.csproj',
+            'MissileOverhaul/Tests/Defense.Tests.csproj',
+            'PlanningOverhaul/Tests/HardeningTests.csproj',
+            'SkillCapMod/Tests/SkillCapMath.Tests.csproj',
+            'MarketBalancing/Tests/MarketBalancing.Tests.csproj'
+          )
+          foreach ($project in $projects) {
+            $name = [IO.Path]::GetFileNameWithoutExtension($project)
+            $output = Join-Path $env:RUNNER_TEMP "isolated-logic/$name"
+            & dotnet build $project --configuration Release --artifacts-path $output --output "$output/run" "-p:BaseOutputPath=$output/bin/" "-p:BaseIntermediateOutputPath=$output/obj/"
+            if ($LASTEXITCODE -ne 0) { throw "Isolated harness build failed: $name" }
+            & dotnet (Join-Path $output "run/$name.dll")
+            if ($LASTEXITCODE -ne 0) { throw "Isolated harness failed: $name" }
+          }
+
+  required:
+    name: Repository validation
+    if: ${{ always() }}
+    needs: [privacy, metadata, isolated-logic]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Require every validation job to succeed
+        env:
+          PRIVACY_RESULT: ${{ needs.privacy.result }}
+          METADATA_RESULT: ${{ needs.metadata.result }}
+          ISOLATED_LOGIC_RESULT: ${{ needs.isolated-logic.result }}
+        run: |
+          $results = @($env:PRIVACY_RESULT, $env:METADATA_RESULT, $env:ISOLATED_LOGIC_RESULT)
+          if ($results.Count -ne 3 -or @($results | Where-Object { $_ -cne 'success' }).Count -ne 0) {
+            throw 'A required validation job failed, was cancelled, or did not run.'
+          }
+          Write-Output 'PASS all repository validation jobs succeeded.'
