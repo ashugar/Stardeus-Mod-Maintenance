@@ -32,6 +32,7 @@ try {
         }
     }
     Write-Output "PASS generated catalog and label map: $($generated.Count) mods"
+    exit 0
 } catch {
     # Do not echo parser input or machine paths into hosted logs.
     [Console]::Error.WriteLine('ERROR catalog-generation-or-freshness-check-failed')

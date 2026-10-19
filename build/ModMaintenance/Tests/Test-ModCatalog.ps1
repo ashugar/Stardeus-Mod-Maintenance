@@ -37,8 +37,9 @@ try {
     $updater = Join-Path $PSScriptRoot '../Update-ModCatalog.ps1'
     & $updater -RepoRoot $fixture
     Assert-CatalogTest ([IO.File]::ReadAllText((Join-Path $fixture 'MODS.md')) -ceq $generated.Catalog) 'write differs from pure output'
+    $global:LASTEXITCODE = 37
     & $updater -RepoRoot $fixture -Check
-    Assert-CatalogTest ($LASTEXITCODE -eq 0 -or $null -eq $LASTEXITCODE) 'fresh check failed'
+    Assert-CatalogTest ($LASTEXITCODE -eq 0) 'fresh check did not reset inherited native failure'
     $catalogPath = Join-Path $fixture 'MODS.md'
     [IO.File]::WriteAllText($catalogPath, $generated.Catalog, [Text.UTF8Encoding]::new($true))
     $bomStart = [Diagnostics.ProcessStartInfo]::new((Get-Process -Id $PID).Path)
@@ -70,3 +71,5 @@ try {
     # This unique directory was created by this harness. Keep it for diagnosis on failure.
     # No live mod location is queried or used by this harness.
 }
+
+exit 0
