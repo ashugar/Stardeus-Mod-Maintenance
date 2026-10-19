@@ -33,6 +33,10 @@ meaning: Core-forbidden objects remain excluded from recycling and report
 `Forbidden` through the API. Contract version 1, save schema 13, and API shapes
 are unchanged.
 
+Runtime log review on 2026-10-19 confirmed 1.3.3 loading and automation
+initialization without the earlier missing-member or tick failures. The
+compatibility update is accepted and closed; the mod is in maintenance mode.
+
 Version 1.3.2 uses Core's public Breach Capsule raid-started state so
 special-target snapshots and automation remain blocked until the capsule has
 opened and Core has released its raiders or resolved the failed spawn. It also
