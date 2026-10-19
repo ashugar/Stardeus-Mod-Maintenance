@@ -74,7 +74,7 @@ jobs:
           }
           $shallow = (& git -C $candidate rev-parse --is-shallow-repository).Trim()
           if ($LASTEXITCODE -ne 0 -or $shallow -notin @('true', 'false')) { throw 'Cannot establish candidate graph completeness.' }
-          $depthArguments = if ($shallow -eq 'true') { @('--unshallow') } else { @() }
+          [string[]]$depthArguments = if ($shallow -eq 'true') { @('--unshallow') } else { @() }
           & git -C $candidate -c credential.helper= fetch --no-tags --no-recurse-submodules @depthArguments origin $env:PR_MERGE_SHA $env:PR_BASE_SHA $env:PR_HEAD_SHA
           if ($LASTEXITCODE -ne 0) { throw 'Selected PR ancestry fetch failed.' }
           $shallow = (& git -C $candidate rev-parse --is-shallow-repository).Trim()
