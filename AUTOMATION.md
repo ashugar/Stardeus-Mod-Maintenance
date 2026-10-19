@@ -23,7 +23,7 @@ Local hooks can be deliberately bypassed and cannot protect other unconfigured c
 
 Every PR targeting `main`, including documentation-only PRs, runs:
 
-- Privacy checker structural self-tests, isolated Git integration tests, and exact-object scans. Established CI uses the base revision's checker for its privacy decision; candidate checker tests run separately. The initial workflow bootstrap is restricted to the explicitly audited initial base commit.
+- Privacy checker structural self-tests, isolated Git integration tests, and exact-object scans. CI always uses the exact PR base revision's checker for its privacy decision before running candidate checker tests.
 - All tracked JSON syntax checks with Core-compatible comments/trailing commas, strict root mod manifests, project XML, and PowerShell syntax.
 - Existing isolated logic harnesses for Market Balancing, Missile Overhaul, Planning Overhaul, Improved Ship Pathing, and Skill Cap.
 

@@ -21,8 +21,6 @@ jobs:
     name: Privacy guard
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      REVIEWED_BOOTSTRAP_SHA: c71c3243bb02e712eed0f4d1f0f584dfeb7077f7
     steps:
       - name: Check out candidate and its selected history
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -35,14 +33,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: trusted-base
-          fetch-depth: 1
-          persist-credentials: false
-      - name: Check out reviewed initial checker
-        if: ${{ github.event.pull_request.base.sha == '9a667ef0e6e2673bb0234ca01d5db88d9f08357f' }}
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          ref: ${{ env.REVIEWED_BOOTSTRAP_SHA }}
-          path: reviewed-bootstrap
           fetch-depth: 1
           persist-credentials: false
       - name: Set up .NET
@@ -96,17 +86,6 @@ jobs:
             if ($probe.ExitCode -eq 0 -and $probeOutput -eq 'git-object-scan-v1' -and $probeError -eq '') {
               $checker = $baseChecker
               Write-Output 'Privacy authority: trusted base checker.'
-            } elseif ($env:PR_BASE_SHA -eq '9a667ef0e6e2673bb0234ca01d5db88d9f08357f' -and $probe.ExitCode -eq 2 -and $probeOutput -eq '' -and $probeError -eq 'ERROR unknown-mode') {
-              if ($env:REVIEWED_BOOTSTRAP_SHA -notmatch '^[0-9a-fA-F]{40,64}$') { throw 'Reviewed bootstrap checker is not pinned.' }
-              $reviewed = Join-Path $env:GITHUB_WORKSPACE 'reviewed-bootstrap'
-              $reviewedHead = (& git -C $reviewed rev-parse --verify HEAD).Trim()
-              if ($LASTEXITCODE -ne 0 -or $reviewedHead -cne $env:REVIEWED_BOOTSTRAP_SHA) { throw 'Reviewed bootstrap commit mismatch.' }
-              $reviewedTree = (& git -C $reviewed rev-parse --verify 'HEAD:build/RepositoryPrivacy').Trim()
-              if ($LASTEXITCODE -ne 0) { throw 'Reviewed bootstrap scanner tree unavailable.' }
-              $candidateTree = (& git -C $candidate rev-parse --verify "$($env:PR_HEAD_SHA):build/RepositoryPrivacy").Trim()
-              if ($LASTEXITCODE -ne 0 -or $reviewedTree -cne $candidateTree) { throw 'Candidate scanner differs from reviewed bootstrap tree.' }
-              $checker = Build-PrivacyChecker $reviewed (Join-Path $env:RUNNER_TEMP 'privacy-reviewed-bootstrap')
-              Write-Output 'Privacy authority: immutable reviewed bootstrap checker; exact initial base and scanner tree verified.'
             } else {
               throw 'Trusted checker capability verification failed.'
             }
