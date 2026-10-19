@@ -458,6 +458,8 @@
         "ModInfo.json",
         "ModCover.jpg",
         "README.md",
+        "COMPATIBILITY-TESTING.md",
+        "UI-PERFORMANCE-TESTING.md",
         "SteamWorkshopItemId"
       ],
       "IncludeDirectories": [

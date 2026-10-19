@@ -11,7 +11,7 @@
     <RootNamespace>Game.Systems.QuantumStorage</RootNamespace>
     <AssemblyName>QuantumStorage</AssemblyName>
     <OutputPath>Libraries</OutputPath>
-    <VersionPrefix>1.3.5.0</VersionPrefix>
+    <VersionPrefix>1.3.6.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <GenerateDependencyFile>false</GenerateDependencyFile>

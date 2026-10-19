@@ -1,6 +1,22 @@
-# Material panel performance — 1.3.5
+# Material panel performance — 1.3.6
 
-## Current rc335 compatibility update — 2026-10-17
+## Current rc337 compatibility update — 2026-10-19
+
+The player reported approximately 75 FPS with the material panel closed and 25–30 FPS open after Core updated. The rc337 log confirms 1.3.5 intentionally disabled its optional row-reuse optimization and used Core's complete native panel. That fallback explains the loss of the optimization; the reported FPS difference is not a controlled benchmark or proof of a sole cause.
+
+Version 1.3.6 updates only the reviewed builder/callback fingerprints and release metadata. The root builder, Eject All and quantity-menu callbacks retain the previous resolved instruction behavior; the quantity-ejection callback now uses Core's general forbidden-item policy, including its inventory notification. Native callbacks are retained, not replaced. Full contents, immediate updates, sorting, tooltips, filters and Relay offline handling remain unchanged. Unknown root/callback contracts still fall back safely.
+
+Reviewed Game.dll SHA256: `38985F083AF23E557664230BC835BBF8BED3A4256F4F346C32E8428D68B33FA4`.
+Reviewed MatStorageTab.BuildContentsList body SHA256: `10D138AC3AB5DA81625F66CF82E0B8188EDEECB67790C3F4C46CDF5299503A2C`.
+Target: Core v0.15.0-rc337.3219. The exact three callback fingerprints remain in the production guard.
+
+Current external evidence: Release build passed with zero warnings/errors. The focused harness passed 10,360 checks against the actual compiled guard and row cache, retaining 1,000 rows through 10,000 quantity notifications with only 10,000 changed-label writes. It also checks callback-only drift, missing/extra/duplicate actions, sorting, structural fallback and native forbidden-item inventory notification. Independent binary review resolved 380 relevant member references and 145 types without failures; all other 754 method bodies are unchanged from 1.3.5. See `Tests/README.md` in the development repository for the local harness.
+
+Fresh startup and gameplay acceptance for 1.3.6 are pending. Confirm the expected version and no panel-fallback notice, then compare the same busy scene with the panel closed/open and exercise the checklist below. In particular, check partial/full ejection and Core's forbidden-item icon/state. External contract and row-policy tests cannot establish actual FPS, Unity rendering or live Harmony ordering.
+
+Use the private installation plan/journal for the exact changed-file rollback. Restoring 1.3.5 on rc337 restores the native-panel fallback; no save migration is introduced.
+
+## Historical rc335 compatibility update — 2026-10-17
 
 Version 1.3.5 restores row reuse for the reviewed rc335.3217 panel and extends approval to its native action callbacks. Core still owns the complete list, current-count quantity choices, ejection, tooltips, sorting and filter lifetimes. Unknown root or callback bodies retain the full native panel. No rows are truncated, updates delayed or inventory records changed.
 
@@ -40,7 +56,7 @@ Only presentation of material contents: Quantum Storage, Cabinet, Freezer, Fridg
 
 ## Targeted regression checklist
 
-The 1.3.5 Quantum Storage Unit panel's visible synchronization and lack of noticeable FPS regression are user-confirmed. The detailed scenarios below remain a regression checklist, not a claim that each was individually exercised; specific sorting, ejection, filter, Relay and save/reload cases remain unconfirmed.
+The earlier 1.3.5 panel observation does not validate 1.3.6 on rc337. The scenarios below remain pending for the new binary, not a claim that each was individually exercised.
 
 1. Open a busy Quantum Storage material panel during deposits and withdrawals. Confirm all materials and live quantities remain visible, and compare FPS with the previous build under the same conditions.
 2. Test By Name, ascending quantity and descending quantity, including equal counts and changing order. Rows must still eject the material they display.

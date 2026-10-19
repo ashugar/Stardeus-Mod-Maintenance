@@ -4,7 +4,16 @@ Quantum Storage provides ten compact late-game storage endpoints. Matching endpo
 
 The first endpoint supplies a fixed initial capacity. Each additional endpoint of the same type doubles the network total.
 
-## Current release — 1.3.5 Core rc335 hauling and panel compatibility
+## Current update — 1.3.6 Core rc337 material-panel compatibility
+
+- Restores material-panel row reuse for reviewed Core v0.15.0-rc337.3219 after the compatibility guard correctly fell back to the complete native panel.
+- Reviews the contents builder and all three native action callbacks, preserving Core's current general forbidden-item policy after individual ejection.
+- Keeps the full list, immediate quantities, sorting, tooltips, filters, Eject All and Relay offline controls. No refresh throttling, inventory, save-schema, capacity or gameplay changes.
+- Fresh startup, panel interaction and an open/closed FPS comparison on the new binary remain pending player testing. Workshop publication of 1.3.6 is not yet confirmed.
+
+See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) for the current contract and regression checklist.
+
+## Previous release — 1.3.5 Core rc335 hauling and panel compatibility
 
 - Repairs Quantum's extra object-Hive hauling after Core removed its old weighted-distance helper. Each object's eligible destination is chosen by Core's strict storage priority, then squared distance and a stable endpoint tie-break.
 - Selection between ready hauling jobs uses the bounded existing picker with geometric two-leg trip distance and stable goal ties. This intentionally replaces the old weighted-priority contribution; storage priority does not dominate unrelated jobs.
@@ -13,7 +22,7 @@ The first endpoint supplies a fixed initial capacity. Each additional endpoint o
 - Includes 1.3.2's incremental object-network counts, removing the global object recount after each normal deposit while preserving authoritative recovery.
 - Retains the 1.3.1 Core material-spawning compatibility fix. No save migration, recipe, capacity or network-rule changes.
 
-Player-confirmed on 2026-10-17: the Quantum Storage Unit panel showed no visible desynchronization or noticeable FPS drop after the 1.3.5 fix. This confirms no visual/performance regression in that observed panel test, not a measured FPS gain or completion of every UI interaction. Actual object-Hive delivery, interruption/save-reload and detailed panel controls remain separate acceptance checks. Version 1.3.5 is prepared for user-controlled Workshop upload; publication has not been confirmed. See [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md) and [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
+Player-confirmed on 2026-10-17: the Quantum Storage Unit panel showed no visible desynchronization or noticeable FPS drop after the 1.3.5 fix. This confirms no visual/performance regression in that observed panel test, not a measured FPS gain or completion of every UI interaction. The player subsequently confirmed Workshop publication of 1.3.5. That acceptance does not cover later Core builds or 1.3.6; actual object-Hive delivery, interruption/save-reload and detailed panel controls remain separate acceptance checks. See [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md) and [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
 
 ## Storage Relays
 
@@ -184,7 +193,7 @@ The network identifier defines each pool. Common systems manage capacity and int
 
 ## Compatibility and save behavior
 
-Version 1.3.5 targets installed Core `v0.15.0-rc335.3217`. It uses the current `IsBetterStorage` contract rather than treating regional distance as tile distance. Existing research, filter, power, range, task and reservation checks remain authoritative. Stored object identities, transfer cleanup, the save format and optional TACC/Part Restoration Unit coordination are unchanged. The material-panel compatibility guard also checks reviewed native action callbacks, retaining complete native fallback on a mismatch. Older Core builds are not certified for this version.
+Version 1.3.6 targets installed Core `v0.15.0-rc337.3219`. It retains 1.3.5's `IsBetterStorage` selection rather than treating regional distance as tile distance. Existing research, filter, power, range, task and reservation checks remain authoritative. Stored object identities, transfer cleanup, the save format and optional TACC/Part Restoration Unit coordination are unchanged. The material-panel compatibility guard checks the reviewed native builder and action callbacks, retaining complete native fallback on a mismatch. Older and later Core builds are not certified by this review.
 
 Version 1.3.1 targets installed Core `v0.15.0-rc327.3205`. Core extended the `SpawnRawMaterial(Mat, ...)` signature with `mergeIntoBlock`. Both Relay upgrade-recovery calls explicitly pass `false`, preserving normal nearby-pile merging without opting into block-wide deconstruction merging. The old binary could fail before the recovery method's early return, interrupting the Relay tick even in the main-menu demo. Save formats, inventories, capacities, reservations and network rules are unchanged. Restart after installing the rebuilt DLL; no save migration is required.
 
@@ -205,6 +214,12 @@ Core serializes object contents once as individual records. Quantum object endpo
 When a Being withdraws a stored object, Quantum Storage resolves the nearest safe, reachable endpoint in that object's matching network. The object's serialized owner is left unchanged unless Core successfully removes it from storage. Equipment searches, device loading, and organic or robotic surgery all use the same resolver.
 
 ## Change Log
+
+### 1.3.6 — Core rc337 material-panel compatibility
+
+- Rebaseline the existing fail-closed panel guard after reviewing the builder and all three action callbacks against rc337.3219.
+- Preserve Core's general forbidden-item handling and inventory notification for ejected piles; retain complete immediate UI updates and native structural rebuilds.
+- No stock, reservations, saved ownership, Relay behavior, research, recipes or capacities changed. Fresh startup and in-game performance acceptance remain pending.
 
 ### 1.3.5 — Core rc335 object-Hive and material-panel compatibility
 
