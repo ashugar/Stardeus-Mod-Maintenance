@@ -58,7 +58,7 @@ This workflow cleans current files. Earlier Git commits retain their original sn
 
 ## Automated checks
 
-Install the per-checkout privacy guard and follow [AUTOMATION.md](AUTOMATION.md) before publishing a branch. Hosted PR checks run five game-independent logic harnesses and repository privacy/configuration checks. They do not replace game-dependent builds or runtime acceptance for a mod change, and never copy files to live installations.
+Install the per-checkout privacy guard and follow [AUTOMATION.md](AUTOMATION.md) before publishing a branch. Hosted PR checks run Planning Overhaul's game-independent logic harness, TACC's fingerprint privacy/comparison harness, and repository privacy/configuration checks, including the Workshop-only admission policy. They do not replace game-dependent builds or runtime acceptance for a mod change, and never copy files to live installations.
 
 ## Release preparation
 

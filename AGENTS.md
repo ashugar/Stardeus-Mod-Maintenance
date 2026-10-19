@@ -9,6 +9,8 @@ This guide applies to work in this repository and its mod folders. Read any addi
 
 ## Repository checkout and live deployment workflow
 
+- This public repository contains only Workshop mods. Every root mod folder must have a tracked `ModInfo.json` and a regular, tracked root `SteamWorkshopItemId` containing its positive decimal Workshop ID. Keep local-only mod source in a private development location outside this checkout; do not add it here, even temporarily. Preserve established optional integration and compatibility identifiers in retained mods.
+
 - The maintained development source is `$RepoRoot`, connected to `https://github.com/ashugar/Stardeus-Mod-Maintenance`. Each mod has its own folder at the repository root. Make future mod code, configuration, documentation, and test changes in this checkout or an isolated Git worktree of this repository.
 - Treat `$LiveModsRoot` as the live deployment location. Inspect it read-only during development; do not edit or build directly in the live mod folders. Compare repository and live files before changes or deployment, and preserve/reconcile existing differences rather than overwriting them.
 - Start authorized implementation on a task branch based on current `main`, preserving existing work. Use separate branches/worktrees for concurrent tasks. Commit only the intended changes, including updated mod DLLs in `Libraries` when applicable; keep generated caches, backups, private logs/evidence, and game dependency assemblies out of commits.
@@ -23,7 +25,7 @@ This guide applies to work in this repository and its mod folders. Read any addi
 
 - Follow [AUTOMATION.md](AUTOMATION.md). Install the committed, independently reviewed privacy guard in each checkout/worktree before pushing. Scan exact staged content and complete selected outgoing history; do not substitute a working-tree-only scan or fetch old PR refs.
 - After changing privacy/automation source, independently review the committed revision and refresh the local guard before pushing. Preserve existing hook setups, secret protection, and compatibility identifiers. Never bypass a failing guard to publish private content.
-- Every PR into `main` must pass `Repository validation`, including privacy, compatible configuration parsing, and all five hosted portable harnesses. Review workflow/policy edits themselves; hosted checks do not establish gameplay compatibility.
+- Every PR into `main` must pass `Repository validation`, including privacy, compatible configuration parsing, and the hosted portable harnesses for retained Workshop mods. Review workflow/policy edits themselves; hosted checks do not establish gameplay compatibility.
 - Auto-merge is opt-in after independent review of the exact head SHA. Use `build/RepositoryAutomation/Manage-PullRequest.ps1` to enable it. Before subsequent pushes, its `Update` action must disable and confirm auto-merge off, then push through the privacy hook. Review the new SHA and opt in again. GitHub's activation-time SHA check is not a permanent reviewed-head lock.
 - Preserve native merged-branch deletion and existing protections. Do not add automatic approval bots, blanket PR auto-merge, write-enabled untrusted PR execution, game-PC runners, or automatic live deployment. Current task authorization controls deployment.
 

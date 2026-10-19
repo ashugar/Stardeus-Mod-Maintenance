@@ -234,7 +234,9 @@ internal static partial class Program
             Run(root, null, "checkout", "--quiet", "--detach", clean);
             Check(Push(root, target, "HEAD:refs/heads/repeated") == 0);
             Check(Run(root, null, "status", "--porcelain").Length == 0);
+            int workshopChecks = SelfTestWorkshop(temporary);
             Console.WriteLine($"PASS {checks} Git object, history, encoding, diagnostics, and refusal integration tests.");
+            Console.WriteLine($"PASS {workshopChecks} Workshop admission integration tests.");
             return 0;
 
             void StageBytes(string name, byte[] content)

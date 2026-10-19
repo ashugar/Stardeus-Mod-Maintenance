@@ -67,6 +67,8 @@ Every comparison uses the **50-trait validated Core reference catalog shipped in
 
 Expanded Traits remains optional. When the exact reviewed Expanded Traits 0.1.3 DLL and its 13 trait-definition files are loaded, TACC recognizes those static traits, the species-driven `ExpandedTraits.PetAffinity.*` family, and the reviewed Cat Person/Dog Person rarity normalization. An installation without Expanded Traits receives no missing-trait warning. A changed DLL, definition set, static trait field, generated-trait structure, pet-family rarity, or Minimalist equipment patch becomes unvalidated again.
 
+The optional static reference stores fingerprints of decoded string values rather than their authored text. Numeric reference values and JSON structure retain the existing comparison rules. This repository privacy change does not refresh the reviewed Core or optional-mod fingerprints.
+
 Core's `SerializableProperty.IsUsed` flag is excluded from the comparison because a successful configuration read changes it; it is usage bookkeeping, not a trait value. All actual property values remain compared. This resolves the 17 false trait warnings in the supplied balance-update log without treating a real modifier change as validated.
 
 **Clear diagnostic log** clears history and immediately checks again, even while paused. Any currently unknown trait, modified/missing validated trait, unknown/changed equipment-effect value, changed checked assembly, or unvalidated external patch returns to the log. Repeated observations and save/load never validate a finding. Only a TACC update containing a reviewed comparison can add that validation; simply increasing the version does not accept anything.

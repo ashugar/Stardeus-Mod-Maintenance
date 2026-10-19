@@ -92,8 +92,9 @@ jobs:
           } finally {
             $probe.Dispose()
           }
-          & dotnet $checker scan-history --repo $candidate --ref $env:PR_HEAD_SHA
-          if ($LASTEXITCODE -ne 0) { throw 'Selected PR history privacy scan failed.' }
+          $pushRecord = 'HEAD ' + $env:PR_HEAD_SHA + ' refs/heads/ci-validation ' + ('0' * $env:PR_HEAD_SHA.Length)
+          $pushRecord | & dotnet $checker pre-push --repo $candidate
+          if ($LASTEXITCODE -ne 0) { throw 'Selected PR history privacy/admission scan failed.' }
           & dotnet $checker scan-index --repo $candidate
           if ($LASTEXITCODE -ne 0) { throw 'Candidate merge index privacy scan failed.' }
           $candidateChecker = Build-PrivacyChecker $candidate (Join-Path $env:RUNNER_TEMP 'privacy-candidate')
@@ -101,6 +102,11 @@ jobs:
             & dotnet $candidateChecker $mode
             if ($LASTEXITCODE -ne 0) { throw 'Candidate privacy checker self-tests failed.' }
           }
+          # Bootstrap this admission policy on its first PR; later trusted bases also enforce it above.
+          & dotnet $candidateChecker scan-workshop --repo $candidate --ref $env:PR_HEAD_SHA
+          if ($LASTEXITCODE -ne 0) { throw 'Workshop-only admission failed.' }
+          & dotnet $candidateChecker scan-index --repo $candidate
+          if ($LASTEXITCODE -ne 0) { throw 'Candidate index admission failed.' }
 
   metadata:
     name: Repository metadata
@@ -143,6 +149,15 @@ jobs:
             & dotnet (Join-Path $output "run/$name.dll")
             if ($LASTEXITCODE -ne 0) { throw "Isolated harness failed: $name" }
           }
+
+      - name: Check opaque optional-trait references
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $output = Join-Path $env:RUNNER_TEMP 'optional-trait-fingerprint'
+          & dotnet build TraitAndClothingCompatibility/Tests/OptionalTraitFingerprint.Tests.csproj --configuration Release --artifacts-path $output --output "$output/run" "-p:BaseOutputPath=$output/bin/" "-p:BaseIntermediateOutputPath=$output/obj/"
+          if ($LASTEXITCODE -ne 0) { throw 'Fingerprint harness build failed.' }
+          & dotnet (Join-Path $output 'run/OptionalTraitFingerprint.Tests.dll') TraitAndClothingCompatibility/.vscode/Resources/BaselineExpandedTraits.json
+          if ($LASTEXITCODE -ne 0) { throw 'Fingerprint privacy/comparison tests failed.' }
 
   maintenance:
     name: Maintenance tooling

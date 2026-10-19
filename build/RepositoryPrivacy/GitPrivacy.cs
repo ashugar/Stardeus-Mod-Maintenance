@@ -10,6 +10,11 @@ using System.Text.RegularExpressions;
 internal static partial class Program
 {
     private const int MaximumGitEntries = 2_000_000;
+    // Fixed reviewed legacy boundary. There is intentionally no CLI or environment override.
+    private const string WorkshopLegacyBaseline = "da428c1970a229c9c109eb462a736373abfd4a76";
+    // Reviewed private rewrite maps the pre-policy baseline to this exact clean commit.
+    // Retire the original boundary through a follow-up PR immediately after the rewrite.
+    private const string WorkshopRewrittenBaseline = "ac3cfb513490cadd23d00c3040e7d23791340687";
     private static readonly Regex HighConfidenceSecret = new(
         @"-----BEGIN (?:RSA |EC |OPENSSH |DSA |ENCRYPTED )?PRIVATE KEY-----|\bgh[pousr]_[A-Za-z0-9]{36}\b|\bgithub_pat_[A-Za-z0-9_]{70,255}\b|\bxox[baprs]-[A-Za-z0-9-]{20,255}\b|\bAIza[A-Za-z0-9_-]{35}\b|\bsk-(?:proj-|svcacct-)[A-Za-z0-9_-]{40,255}\b|https?://[^\s/:@]+:[^\s/@]{4,}@(?!example\.invalid(?=[:/?#\s]|$))[^\s/]+",
         RegexOptions.CultureInvariant, TimeSpan.FromSeconds(2));
@@ -18,6 +23,7 @@ internal static partial class Program
     private sealed record GitObject(string Type, byte[] Bytes);
     private sealed record GitFile(string ObjectId, string Path, string Mode);
     private sealed record ObjectFinding(string ObjectId, string PathId, string Category);
+    private sealed record GitCommit(string Tree, List<string> Parents);
 
     private static int GitMode(string[] args)
     {
@@ -28,13 +34,13 @@ internal static partial class Program
             if (i + 1 >= args.Length || args[i] is not ("--repo" or "--ref") ||
                 !options.TryAdd(args[i], args[i + 1])) throw new GuardFailure("invalid-git-options");
         }
-        if ((mode == "scan-history") != options.ContainsKey("--ref")) throw new GuardFailure("invalid-git-ref-option");
+        if ((mode is "scan-history" or "scan-workshop") != options.ContainsKey("--ref")) throw new GuardFailure("invalid-git-ref-option");
         string root = ResolveRepository(options.GetValueOrDefault("--repo", Environment.CurrentDirectory));
         int hashLength = GitText(root, "rev-parse", "--show-object-format").Trim() switch
         { "sha1" => 40, "sha256" => 64, _ => throw new GuardFailure("unsupported-git-object-format") };
         if (mode == "scan-index") return ScanIndex(root, hashLength);
         List<string> tips = [];
-        if (mode == "scan-history")
+        if (mode is "scan-history" or "scan-workshop")
         {
             string tip = options["--ref"];
             ValidateObjectId(tip, hashLength);
@@ -62,7 +68,8 @@ internal static partial class Program
             }
             if (tips.Count == 0) { Console.WriteLine("PASS no outgoing objects."); return 0; }
         }
-        return ScanHistory(root, tips.Distinct(StringComparer.Ordinal).ToList(), hashLength);
+        return ScanHistory(root, tips.Distinct(StringComparer.Ordinal).ToList(), hashLength,
+            workshopAdmission: mode != "scan-history", privacy: mode != "scan-workshop");
     }
 
     private static bool ValidRefName(string name) => name.StartsWith("refs/", StringComparison.Ordinal) &&
@@ -106,6 +113,7 @@ internal static partial class Program
         using GitBatch batch = new(root, hashLength);
         List<ObjectFinding> findings = [];
         ScanGitFiles(batch, files, findings);
+        InspectWorkshopSnapshot(batch, files, findings);
         return PrintObjectFindings("index", files.Count, findings);
     }
 
@@ -121,57 +129,70 @@ internal static partial class Program
         if (mode is not ("100644" or "100755")) throw new GuardFailure("unsupported-git-file-mode");
     }
 
-    private static int ScanHistory(string root, List<string> tips, int hashLength)
+    private static int ScanHistory(string root, List<string> tips, int hashLength,
+        bool workshopAdmission = false, bool privacy = true, string legacyBaseline = WorkshopLegacyBaseline)
     {
         EnsureCompleteHistory(root);
         using GitBatch batch = new(root, hashLength);
         List<ObjectFinding> findings = [];
-        HashSet<string> commits = new(StringComparer.Ordinal);
-        HashSet<string> tags = new(StringComparer.Ordinal);
+        Dictionary<string, GitCommit> commits = new(StringComparer.Ordinal);
+        Dictionary<string, string> tags = new(StringComparer.Ordinal);
         HashSet<string> roots = new(StringComparer.Ordinal);
         Queue<string> queue = new(tips);
         while (queue.TryDequeue(out string? id))
         {
-            if (commits.Contains(id) || tags.Contains(id)) continue;
+            if (commits.ContainsKey(id) || tags.ContainsKey(id)) continue;
             if (commits.Count + tags.Count >= MaximumGitEntries) throw new GuardFailure("history-entry-limit");
             GitObject item = batch.Read(id);
             if (item.Type is not ("commit" or "tag")) throw new GuardFailure("unsupported-push-object");
-            List<Finding> metadata = [];
-            InspectText("metadata", DecodeCompatibleText(item.Bytes), metadata);
-            foreach (Finding finding in metadata) findings.Add(new(id, "metadata", finding.Category));
+            if (privacy)
+            {
+                List<Finding> metadata = [];
+                InspectText("metadata", DecodeCompatibleText(item.Bytes), metadata);
+                foreach (Finding finding in metadata) findings.Add(new(id, "metadata", finding.Category));
+            }
             string text = Utf8.GetString(item.Bytes);
             int end = text.IndexOf("\n\n", StringComparison.Ordinal);
             if (end < 0) throw new GuardFailure("invalid-git-metadata");
             string[] headers = text[..end].Split('\n');
             if (item.Type == "tag")
             {
-                tags.Add(id);
                 if (headers.Length < 2 || !headers[0].StartsWith("object ", StringComparison.Ordinal) ||
                     headers[1] is not ("type commit" or "type tag")) throw new GuardFailure("unsupported-tag-target");
                 string target = headers[0][7..];
                 ValidateObjectId(target, hashLength);
+                tags.Add(id, target);
                 queue.Enqueue(target);
             }
             else
             {
-                commits.Add(id);
                 if (!headers[0].StartsWith("tree ", StringComparison.Ordinal)) throw new GuardFailure("invalid-commit-tree");
                 string tree = headers[0][5..]; ValidateObjectId(tree, hashLength); roots.Add(tree);
+                List<string> parents = [];
                 foreach (string header in headers.Where(header => header.StartsWith("parent ", StringComparison.Ordinal)))
                 {
-                    string parent = header[7..]; ValidateObjectId(parent, hashLength); queue.Enqueue(parent);
+                    string parent = header[7..]; ValidateObjectId(parent, hashLength); parents.Add(parent); queue.Enqueue(parent);
                 }
+                commits.Add(id, new(tree, parents));
             }
         }
 
         List<GitFile> files = [];
         Dictionary<string, byte[]> trees = new(StringComparer.Ordinal);
-        foreach (string tree in roots) ReadTree(tree, "", 0);
-        ScanGitFiles(batch, files, findings);
+        HashSet<string> admissionRoots = workshopAdmission ? GetWorkshopRoots(commits, tags, tips, legacyBaseline) : [];
+        int entries = 0;
+        foreach (string tree in privacy ? roots : admissionRoots)
+        {
+            List<GitFile> snapshot = [];
+            ReadTree(tree, "", 0, snapshot);
+            if (admissionRoots.Contains(tree)) InspectWorkshopSnapshot(batch, snapshot, findings);
+            if (privacy) files.AddRange(snapshot);
+        }
+        if (privacy) ScanGitFiles(batch, files, findings);
         Console.WriteLine($"Selected history: {commits.Count} commits, {tags.Count} tags.");
-        return PrintObjectFindings("history", files.Count, findings);
+        return PrintObjectFindings(privacy ? "history" : "workshop history", entries, findings);
 
-        void ReadTree(string treeId, string prefix, int depth)
+        void ReadTree(string treeId, string prefix, int depth, List<GitFile> snapshot)
         {
             if (depth > 128) throw new GuardFailure("tree-depth-limit");
             if (!trees.TryGetValue(treeId, out byte[]? bytes))
@@ -194,15 +215,89 @@ internal static partial class Program
                 if (name is "." or ".." || name.Contains('/')) throw new GuardFailure("invalid-tree-name");
                 string id = Convert.ToHexString(bytes.AsSpan(nul + 1, rawHashLength)).ToLowerInvariant();
                 string path = prefix + name;
-                if (mode == "40000") ReadTree(id, path + "/", depth + 1);
+                if (mode == "40000") ReadTree(id, path + "/", depth + 1, snapshot);
                 else
                 {
                     ValidateMode(mode);
-                    files.Add(new(id, path, mode));
-                    if (files.Count > MaximumGitEntries) throw new GuardFailure("tree-entry-limit");
+                    snapshot.Add(new(id, path, mode));
+                    if (++entries > MaximumGitEntries) throw new GuardFailure("tree-entry-limit");
                 }
                 position = nul + 1 + rawHashLength;
             }
+        }
+    }
+
+    private static HashSet<string> GetWorkshopRoots(Dictionary<string, GitCommit> commits,
+        Dictionary<string, string> tags, List<string> tips, string legacyBaseline)
+    {
+        HashSet<string> exempt = new(StringComparer.Ordinal);
+        // Only ancestors actually reached through the fixed baseline are grandfathered.
+        // A graph without that baseline receives no exemptions, including side branches.
+        Queue<string> queue = new();
+        if (commits.ContainsKey(legacyBaseline)) queue.Enqueue(legacyBaseline);
+        if (legacyBaseline == WorkshopLegacyBaseline && commits.ContainsKey(WorkshopRewrittenBaseline))
+            queue.Enqueue(WorkshopRewrittenBaseline);
+        while (queue.TryDequeue(out string? id))
+            if (exempt.Add(id)) foreach (string parent in commits[id].Parents) queue.Enqueue(parent);
+        HashSet<string> roots = new(StringComparer.Ordinal);
+        foreach ((string id, GitCommit commit) in commits)
+            if (!exempt.Contains(id)) roots.Add(commit.Tree);
+        // Every explicitly proposed tip is checked, even if it points to legacy history.
+        foreach (string tip in tips)
+        {
+            string id = tip;
+            while (tags.TryGetValue(id, out string? target)) id = target;
+            if (!commits.TryGetValue(id, out GitCommit? commit)) throw new GuardFailure("invalid-workshop-tip");
+            roots.Add(commit.Tree);
+        }
+        return roots;
+    }
+
+    private static void InspectWorkshopSnapshot(GitBatch batch, List<GitFile> files, List<ObjectFinding> findings)
+    {
+        Dictionary<string, GitFile> exact = new(StringComparer.Ordinal);
+        Dictionary<string, string> aliases = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, GitFile> folders = new(StringComparer.Ordinal);
+        foreach (GitFile file in files)
+        {
+            string pathId = Hash(Utf8.GetBytes(file.Path))[..16];
+            if (!exact.TryAdd(file.Path, file))
+                findings.Add(new(file.ObjectId, pathId, "workshop-case-alias"));
+            string prefix = "";
+            foreach (string part in file.Path.Split('/'))
+            {
+                prefix = prefix.Length == 0 ? part : prefix + "/" + part;
+                if (aliases.TryGetValue(prefix, out string? prior) && prior != prefix)
+                    findings.Add(new(file.ObjectId, pathId, "workshop-case-alias"));
+                else aliases.TryAdd(prefix, prefix);
+            }
+            if (file.Path.Any(char.IsControl) || file.Path.Contains('\\'))
+                findings.Add(new(file.ObjectId, pathId, "workshop-unsupported-file-name"));
+            int slash = file.Path.IndexOf('/');
+            if (slash < 0) continue;
+            string folder = file.Path[..slash];
+            if (folder is not (".github" or "build")) folders.TryAdd(folder, file);
+        }
+        foreach ((string folder, GitFile first) in folders)
+        {
+            string manifestPath = folder + "/ModInfo.json";
+            string markerPath = folder + "/SteamWorkshopItemId";
+            if (!exact.TryGetValue(manifestPath, out GitFile? manifest))
+                findings.Add(new(first.ObjectId, Hash(Utf8.GetBytes(manifestPath))[..16], "workshop-root-manifest-required"));
+            else if (batch.Read(manifest.ObjectId).Type != "blob") throw new GuardFailure("invalid-blob-object");
+            string pathId = Hash(Utf8.GetBytes(markerPath))[..16];
+            if (!exact.TryGetValue(markerPath, out GitFile? marker))
+            {
+                findings.Add(new(first.ObjectId, pathId, "workshop-root-marker-required"));
+                continue;
+            }
+            GitObject blob = batch.Read(marker.ObjectId);
+            if (blob.Type != "blob") throw new GuardFailure("invalid-blob-object");
+            string value;
+            try { value = Utf8.GetString(blob.Bytes).Trim(); }
+            catch (DecoderFallbackException) { findings.Add(new(marker.ObjectId, pathId, "workshop-invalid-marker")); continue; }
+            if (!Regex.IsMatch(value, "\\A[1-9][0-9]{0,19}\\z", RegexOptions.CultureInvariant))
+                findings.Add(new(marker.ObjectId, pathId, "workshop-invalid-marker"));
         }
     }
 

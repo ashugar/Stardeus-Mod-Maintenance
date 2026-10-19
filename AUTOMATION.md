@@ -13,7 +13,7 @@ pwsh -NoProfile -File build/RepositoryAutomation/Install-PrivacyHooks.ps1 -Revie
 
 Installation is local to this checkout/worktree. Repeat it in each new clone or worktree. If Git copies an existing managed hook path into a linked worktree, the guard refuses operations until a dedicated installation rebinds that worktree; the parent installation stays intact. Git does not automatically enable hooks from a clone. The installer preserves unknown existing hooks and refuses conflicting `core.hooksPath` configuration. Resolve such a conflict explicitly rather than disabling another guard.
 
-The installer builds committed source into private Git metadata and enables pre-commit and pre-push hooks. Dirty working files cannot replace the installed checker. Pre-commit reads exact index blobs. Pre-push reads every non-deletion tip supplied by Git and its complete reachable history, including earlier commits whose contents were subsequently removed, commit metadata, and annotated tag messages. Deletion-only pushes do not publish content. A failed or incomplete scan blocks the operation. No remote refs are fetched by the guard; do not fetch old PR refs as a privacy baseline.
+The installer builds committed source into private Git metadata and enables pre-commit and pre-push hooks. Dirty working files cannot replace the installed checker. Pre-commit reads exact index blobs. Pre-push reads every non-deletion tip supplied by Git and its complete reachable history, including earlier commits whose contents were subsequently removed, commit metadata, and annotated tag messages. Deletion-only pushes do not publish content. Every mod/source root must also have a tracked root `ModInfo.json` and a regular root `SteamWorkshopItemId` with a positive decimal ID. Only `.github` and `build` are exempt infrastructure directories. Admission checks the staged index, every outgoing tip, and new commit history, including a local-only mod added and then removed before pushing. The fixed pre-policy baseline and its ancestors are exempt only from historical Workshop admission; existing personal-data and secret scans still cover the complete history. Removing a mod from the current tree does not erase its older public versions. A failed or incomplete scan blocks the operation. No remote refs are fetched by the guard; do not fetch old PR refs as a privacy baseline.
 
 When privacy or automation source changes, commit and independently review it, then rerun the installer for that exact commit before pushing. The hook refuses outdated installed source. Retained installation versions make diagnosis/recovery possible; they are private local files, not repository content. To undo installation, restore the recorded previous checkout-specific hook configuration; do not change global Git configuration.
 
@@ -25,11 +25,11 @@ Every PR targeting `main`, including documentation-only PRs, runs:
 
 - Privacy checker structural self-tests, isolated Git integration tests, and exact-object scans. CI always uses the exact PR base revision's checker for its privacy decision before running candidate checker tests.
 - All tracked JSON syntax checks with Core-compatible comments/trailing commas, strict root mod manifests, project XML, and PowerShell syntax.
-- Existing isolated logic harnesses for Market Balancing, Missile Overhaul, Planning Overhaul, Improved Ship Pathing, and Skill Cap.
+- Planning Overhaul's existing isolated logic harness and TACC's optional-trait fingerprint privacy/comparison harness. Local-only mod source and its tests stay outside this public repository.
 
 `Repository validation` is the stable required aggregate. It succeeds only if every underlying job succeeds; failure, cancellation, or a skipped prerequisite blocks merging. Actions use GitHub-hosted runners, read-only repository permissions, pinned official actions, and no private game dependencies or repository secrets. Changes to workflow or guard policy still require human/agent review of the exact commit.
 
-These checks do not build all mods or prove Core/gameplay compatibility. Investor's game-dependent harness and AUMF's platform-dependent harness remain separate task-specific checks. Runtime changes still need their applicable installed-game build and validation.
+These checks do not build all mods or prove Core/gameplay compatibility. AUMF's platform-dependent harness remains a separate task-specific check. Runtime changes still need their applicable installed-game build and validation.
 
 ## Reviewed auto-merge and updates
 
