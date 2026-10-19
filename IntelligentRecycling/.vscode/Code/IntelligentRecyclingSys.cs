@@ -25,7 +25,7 @@ namespace Game.Systems.IntelligentRecycling {
         public const string SysId = "IntelligentRecyclingSys";
         public const string ModId = "IntelligentRecycling";
         public const string DisplayName = "Intelligent Recycling";
-        public const string ModVersion = "1.3.2";
+        public const string ModVersion = "1.3.3";
         private const string ConsumerId = ModId;
         internal const string ArtilleryFungusDefinitionId =
             "Obj/Plants/ArtilleryFungus";
@@ -1276,7 +1276,7 @@ namespace Game.Systems.IntelligentRecycling {
 
         private static bool IsHaulingForbidden(Obj obj) {
             return obj.TryGetComponent<StorableObjComp>(out var storable)
-                && storable.IsHaulingForbidden;
+                && storable.IsForbidden;
         }
 
         private static bool TryCancelUnassignedStorageGoal(Obj obj) {

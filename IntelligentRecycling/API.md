@@ -1,6 +1,6 @@
 # Intelligent Recycling read-only API
 
-Intelligent Recycling 1.3.2 exposes contract version 1 at:
+Intelligent Recycling 1.3.3 exposes contract version 1 at:
 
 ```csharp
 Game.Systems.IntelligentRecycling.IntelligentRecyclingApi
@@ -25,6 +25,13 @@ and collection values are read-only copies.
   unload boundaries.
 - Snapshots do not update in place. Query again when `DataRevision` changes or
   when the consumer needs current object state.
+
+Version 1.3.3 restores Core forbidden-state reads through
+`StorableObjComp.IsForbidden` for Stardeus 0.15.0-rc337.3219 and newer.
+Recycling eligibility and read-only object snapshots retain their established
+meaning: Core-forbidden objects remain excluded from recycling and report
+`Forbidden` through the API. Contract version 1, save schema 13, and API shapes
+are unchanged.
 
 Version 1.3.2 uses Core's public Breach Capsule raid-started state so
 special-target snapshots and automation remain blocked until the capsule has

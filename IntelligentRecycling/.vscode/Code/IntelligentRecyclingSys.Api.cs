@@ -550,7 +550,7 @@ namespace Game.Systems.IntelligentRecycling {
                 obj.TryGetComponent<StorableObjComp>(out result.Storable);
             }
             AIGoal goal = obj?.Goal;
-            snapshot.Forbidden = result.Storable?.IsHaulingForbidden == true;
+            snapshot.Forbidden = result.Storable?.IsForbidden == true;
             snapshot.ExistingGoal = goal != null;
             snapshot.GoalId = goal?.Id ?? 0;
             snapshot.GoalJobTypeCode = goal?.JobIdH ?? 0;

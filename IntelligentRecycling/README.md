@@ -11,7 +11,7 @@ can also replace a Shuttle landing pad after its Shuttle is permanently lost.
 
 ## Requirements
 
-- Stardeus 0.15.x (rc290 or newer)
+- Stardeus 0.15.x (rc337.3219 or newer)
 - Auto Utilities Mod Framework feature level 1.4.0
 
 The mod declares AUMF 1.4.0 as its tested feature level through the framework's
@@ -130,6 +130,16 @@ effective cutoff that save was already using. It then synchronizes every
 matching facility. If no compatible facility exists during migration, the
 corresponding threshold starts at Core's existing 50% default. New facilities
 inherit the saved Intelligent Recycling threshold when construction completes.
+
+## 1.3.3
+
+- Restored compatibility with Stardeus 0.15.0-rc337.3219 after Core renamed
+  `StorableObjComp.IsHaulingForbidden` to `IsForbidden`.
+- Uses Core's current forbidden-state contract for both recycling eligibility
+  and read-only object snapshots, preserving the existing exclusion of
+  forbidden objects and the API's established `Forbidden` meaning.
+- Auto Utilities Mod Framework feature level 1.4.0, save schema 13, and
+  read-only API contract 1 are unchanged.
 
 ## 1.3.2
 
