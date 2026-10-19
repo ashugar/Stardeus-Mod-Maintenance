@@ -54,6 +54,8 @@ For each MVID, TACC recognizes the exact priority-400 prefixes owned by `Expande
 - AUMF, Core, Harmony, Newtonsoft, Expanded Traits, and Quantum Storage remain external and are not bundled.
 - The curated Workshop package excludes development-only `Tests`, `.vscode`, and generated build outputs.
 
-## Runtime acceptance still required
+## Runtime acceptance and maintenance status
 
-Fully restart Stardeus with TACC 1.1.4 and Core rc337.3219. Confirm TACC initializes once and the top-bar panel opens. With Quantum Storage 1.3.5 and Expanded Traits 0.1.4 enabled, clear TACC's diagnostic log; the reviewed Core identities and exact optional patch identities should remain absent. Repeat with Expanded Traits disabled and confirm its optional traits do not appear as missing or unknown. Exercise one managed **Allow forbidden loose equipment** pickup and confirm the item can be equipped while its red marker and ordinary hauling restriction remain intact. Static/build evidence does not replace these in-game checks.
+On **2026-10-19**, after deployment of the merged 1.1.4 build, the user confirmed: "Validated in-game. TACC 1.1.4 is working and the diagnostic log is clear."
+
+This records user acceptance for the reported installation and its clear diagnostic log. **TACC remains at version 1.1.4 and is back in maintenance mode.** It does not claim that optional-dependency removal, every clothing-policy scenario, or washing/save-load regressions were individually repeated. Keep those scenarios in `RUNTIME-CHECKS.md` for future maintenance. Workshop publication has not been reported for this build.
