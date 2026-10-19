@@ -10,7 +10,7 @@
     <RootNamespace>Game.Systems.AutoHauling</RootNamespace>
     <AssemblyName>AutoHauling</AssemblyName>
     <OutputPath>../Libraries</OutputPath>
-    <VersionPrefix>1.1.5.0</VersionPrefix>
+    <VersionPrefix>1.1.6.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <GenerateDependencyFile>false</GenerateDependencyFile>

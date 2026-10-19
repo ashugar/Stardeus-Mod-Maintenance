@@ -21,7 +21,7 @@ namespace Game.Systems.AutoHauling {
     public sealed class AutoHaulingSys : GameSystem, ISaveable {
         public const string SysId = "AutoHaulingSys";
         public const string ConsumerId = "AutoHauling";
-        public const string ModVersion = "1.1.5";
+        public const string ModVersion = "1.1.6";
         public const string RequiredUtilitiesVersion = "1.4.0";
 
         private const int SaveSchemaVersion = 3;
@@ -388,10 +388,10 @@ namespace Game.Systems.AutoHauling {
                 bool forbidden;
                 bool usePile;
                 if (data.Obj.Pile != null && !data.Obj.Pile.TreatAsObj) {
-                    forbidden = data.Obj.Pile.IsHaulingForbidden;
+                    forbidden = data.Obj.Pile.IsForbidden;
                     usePile = true;
                 } else if (data.Obj.StorableObj != null) {
-                    forbidden = data.Obj.StorableObj.IsHaulingForbidden;
+                    forbidden = data.Obj.StorableObj.IsForbidden;
                     usePile = false;
                 } else {
                     continue;
@@ -405,9 +405,9 @@ namespace Game.Systems.AutoHauling {
                     continue;
                 }
                 if (usePile) {
-                    data.Obj.Pile.IsHaulingForbidden = false;
+                    data.Obj.Pile.IsForbidden = false;
                 } else {
-                    data.Obj.StorableObj.IsHaulingForbidden = false;
+                    data.Obj.StorableObj.IsForbidden = false;
                 }
             }
             return result;
@@ -503,8 +503,15 @@ namespace Game.Systems.AutoHauling {
                 }
 
                 if (pile != null) {
-                    if (pile.IsHaulingForbidden) {
+                    if (pile.IsForbidden) {
                         LastForbidden++;
+                        continue;
+                    }
+                    // Direct TryOrderStore does not apply Core's automatic
+                    // unreachable-pile gate. Respect it here without clearing
+                    // the marker or treating it as a player Forbidden flag.
+                    if (pile.IsMarkedUnreachable) {
+                        LastUnavailable++;
                         continue;
                     }
                     if (!pile.HasCompatibleStorage()) {
@@ -518,7 +525,7 @@ namespace Game.Systems.AutoHauling {
                         continue;
                     }
                 } else {
-                    if (storable.IsHaulingForbidden) {
+                    if (storable.IsForbidden) {
                         LastForbidden++;
                         continue;
                     }
@@ -612,7 +619,7 @@ namespace Game.Systems.AutoHauling {
                 // cancellation, so restore only the pre-existing allowed
                 // state rather than broadening the manual Forbidden action.
                 bool restoreAllowedPile = pile != null
-                    && !pile.IsHaulingForbidden;
+                    && !pile.IsForbidden;
                 staleStorePriorities[data.Id] = goal.GoalPriority;
                 AIGoal.Cancel(
                     goal,
@@ -622,8 +629,8 @@ namespace Game.Systems.AutoHauling {
                 if (restoreAllowedPile
                         && data.Obj?.Pile == pile
                         && data.Obj.IsActive
-                        && pile.IsHaulingForbidden) {
-                    pile.IsHaulingForbidden = false;
+                        && pile.IsForbidden) {
+                    pile.IsForbidden = false;
                 }
                 LastStaleStoreTasksCancelled++;
             }
@@ -695,11 +702,14 @@ namespace Game.Systems.AutoHauling {
             }
 
             if (pile != null) {
-                return !pile.IsHaulingForbidden
+                // Refresh must not undo Core's unreachable suppression by
+                // cancelling and recreating work that the scan would refuse.
+                return !pile.IsForbidden
+                    && !pile.IsMarkedUnreachable
                     && pile.HasCompatibleStorage();
             }
             return storable != null
-                && !storable.IsHaulingForbidden
+                && !storable.IsForbidden
                 && storable.IsItemUsable
                 && storable.HasCompatibleStorage();
         }

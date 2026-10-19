@@ -258,7 +258,8 @@ namespace Game.Systems.AutoHauling {
                 "No compatible storage / unavailable",
                 system.LastNoStorage + " / " + system.LastUnavailable,
                 "Compatibility is determined by Stardeus's current storage "
-                + "filters and availability rules.");
+                + "filters and availability rules. Unavailable also includes "
+                + "material piles marked unreachable by Stardeus.");
             context.AddInfo(
                 IconId.CWarning,
                 "Hard-protected / order rejected",
@@ -307,13 +308,15 @@ namespace Game.Systems.AutoHauling {
                 "Allow Forbidden Loose Cargo",
                 preview.Allowed + " flag(s)",
                 system.AllowForbiddenLooseCargo,
-                "Manual only. Removes every vanilla hauling-forbidden flag "
+                "Manual only. Removes every vanilla Forbidden flag "
                 + "currently found on a loose material pile or storable object. "
                 + "This includes quality objects, Intelligent Recycling "
                 + "targets, and mind-associated objects. It does not create or "
                 + "cancel a task, change a reservation, or alter either mod's "
-                + "settings. Warning: removing the flag can allow vanilla or "
-                + "other mods to process the object afterward.");
+                + "settings or clear Stardeus's unreachable-pile marker. "
+                + "Warning: Forbidden now blocks more than hauling. Removing "
+                + "it can also allow construction, crafting, eating, equipment "
+                + "use, or processing by other mods where applicable.");
             if (system.LastManualAllowTick > 0) {
                 context.AddInfo(
                     IconId.CCheck,
@@ -332,7 +335,10 @@ namespace Game.Systems.AutoHauling {
                 + "with Stardeus and other registered mod shortcuts. Pressing "
                 + "the assigned key immediately removes every detected loose "
                 + "Forbidden flag, including quality, special-target, and "
-                + "mind-associated objects.");
+                + "mind-associated objects. Warning: this also permits "
+                + "construction, crafting, eating, equipment use, or other "
+                + "mod processing where applicable; it does not clear "
+                + "Stardeus's unreachable-pile marker.");
             context.AddButton(
                 allowForbiddenShortcut.IsCapturing
                     ? IconId.CStop
