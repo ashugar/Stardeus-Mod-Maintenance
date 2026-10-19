@@ -21,9 +21,9 @@ using Newtonsoft.Json.Linq;
 
 namespace TraitAndClothingCompatibility {
     internal static class TraitCatalog {
-        internal const string TestedCoreVersion = "v0.15.0-rc324.3201";
-        internal const string TestedGameHash = "8B8FB232CB23F0D91433270BB015F1B328C82C7877B37A1F398BC61753E19FFB";
-        internal const string TestedConstantsHash = "568103B1C72E0ADA8645FD57E83478A4E7B335969798CDE48B53BEFA602EEB2B";
+        internal const string TestedCoreVersion = "v0.15.0-rc337.3219";
+        internal const string TestedGameHash = "38985F083AF23E557664230BC835BBF8BED3A4256F4F346C32E8428D68B33FA4";
+        internal const string TestedConstantsHash = "F49F4FAEF233ED15DEA4BB3061E196ACD1C16E193FC49B3FB20C6F3A5F599909";
         internal static readonly HashSet<string> ShippedIds = new HashSet<string>(new[] {
             "Ablutophobic", "AlwaysHungry", "Antisocial", "Astrophile", "Astrophobe", "BadAppetite",
             "Beautiful", "Bookworm", "BWaveResistent", "Carnivore", "CatPerson", "Charismatic",
@@ -31,8 +31,8 @@ namespace TraitAndClothingCompatibility {
             "Fastidious", "FastMetabolism", "Gigolo", "Handsome", "Hooker", "Insomniac", "Lazy",
             "LongSleeper", "Minimalist", "OpenEyedSleeper", "Optimist", "Pacifist", "Paranoid",
             "Pessimist", "Psychopath", "Sedentary", "ShadowDweller", "ShortSleeper", "Showerer",
-            "Shy", "Slow", "SlowMetabolism", "SlowPooper", "Sociopath", "Stalker", "Technophile",
-            "Technophobe", "Thrifty", "Ugly", "Vegan", "Workaholic"
+            "Shy", "Slow", "SlowMetabolism", "SlowPooper", "Sociopath", "Stalker", "Stoic", "Technophile",
+            "Technophobe", "Thrifty", "Ugly", "Vegan", "Wimp", "Workaholic"
         }, StringComparer.Ordinal);
 
         // Exact optional-mod hooks reviewed by version and module MVID. Rebuilt or changed
@@ -46,7 +46,14 @@ namespace TraitAndClothingCompatibility {
             "Game.Systems.AI.AIActionFindBestEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): prefix / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Prefix / e7abb8be-08ae-47a0-92bb-626504e51949 / priority=400 / before= / after=",
             "Game.Systems.AI.AIActionFindEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): finalizer / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Finalizer / e7abb8be-08ae-47a0-92bb-626504e51949 / priority=400 / before= / after=",
             "Game.Systems.AI.AIActionFindEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): prefix / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Prefix / e7abb8be-08ae-47a0-92bb-626504e51949 / priority=400 / before= / after=",
-            "Game.Systems.Items.InventoryItemSlot.Game.Systems.Items.ObjData BetterItem(Game.Systems.Items.ObjData, Game.Systems.Items.ObjData): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.MinimalistEquipmentPatch.Prefix / 9dc01d16-8daa-4e5f-a1be-a5b5be1b9858 / priority=400 / before= / after="
+            "Game.Systems.AI.AIActionFindBestEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): finalizer / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Finalizer / 5eb2c05e-1725-4d0b-ae5c-6768b6f15319 / priority=400 / before= / after=",
+            "Game.Systems.AI.AIActionFindBestEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): prefix / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Prefix / 5eb2c05e-1725-4d0b-ae5c-6768b6f15319 / priority=400 / before= / after=",
+            "Game.Systems.AI.AIActionFindEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): finalizer / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Finalizer / 5eb2c05e-1725-4d0b-ae5c-6768b6f15319 / priority=400 / before= / after=",
+            "Game.Systems.AI.AIActionFindEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): prefix / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Prefix / 5eb2c05e-1725-4d0b-ae5c-6768b6f15319 / priority=400 / before= / after=",
+            "Game.Systems.Items.InventoryItemSlot.Game.Systems.Items.ObjData BetterItem(Game.Systems.Items.ObjData, Game.Systems.Items.ObjData): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.MinimalistEquipmentPatch.Prefix / 9dc01d16-8daa-4e5f-a1be-a5b5be1b9858 / priority=400 / before= / after=",
+            "Game.Systems.Mental.MentalHealth.Void AddEffect(Game.Data.GameState, Game.Systems.Mental.MentalEffect, Single, Boolean): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.SleepMoodSeverityPatch.Prefix / 9dc01d16-8daa-4e5f-a1be-a5b5be1b9858 / priority=400 / before= / after=",
+            "Game.Systems.Items.InventoryItemSlot.Game.Systems.Items.ObjData BetterItem(Game.Systems.Items.ObjData, Game.Systems.Items.ObjData): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.MinimalistEquipmentPatch.Prefix / 95e164e0-26dd-451e-984e-11e28c262fd0 / priority=400 / before= / after=",
+            "Game.Systems.Mental.MentalHealth.Void AddEffect(Game.Data.GameState, Game.Systems.Mental.MentalEffect, Single, Boolean): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.SleepMoodSeverityPatch.Prefix / 95e164e0-26dd-451e-984e-11e28c262fd0 / priority=400 / before= / after="
         }, StringComparer.Ordinal);
 
         private static readonly string[] Fields = {
@@ -235,7 +242,7 @@ namespace TraitAndClothingCompatibility {
                     AccessTools.Method(typeof(InventoryItemSlot), nameof(InventoryItemSlot.BetterItem)),
                     AccessTools.Method(typeof(AIActionFindEquipment), nameof(AIActionFindEquipment.Execute)),
                     AccessTools.Method(typeof(AIActionFindBestEquipment), nameof(AIActionFindBestEquipment.Execute)),
-                    AccessTools.PropertyGetter(typeof(StorableObjComp), nameof(StorableObjComp.IsHaulingForbidden)),
+                    AccessTools.PropertyGetter(typeof(StorableObjComp), nameof(StorableObjComp.IsForbidden)),
                     AccessTools.PropertyGetter(typeof(ObjData), "IsTattered")
                 });
         }
