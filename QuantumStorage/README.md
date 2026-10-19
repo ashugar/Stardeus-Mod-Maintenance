@@ -4,14 +4,15 @@ Quantum Storage provides ten compact late-game storage endpoints. Matching endpo
 
 The first endpoint supplies a fixed initial capacity. Each additional endpoint of the same type doubles the network total.
 
-## Current update — 1.3.6 Core rc337 material-panel compatibility
+## Current release — 1.3.6 Core rc337 material-panel compatibility
 
 - Restores material-panel row reuse for reviewed Core v0.15.0-rc337.3219 after the compatibility guard correctly fell back to the complete native panel.
 - Reviews the contents builder and all three native action callbacks, preserving Core's current general forbidden-item policy after individual ejection.
 - Keeps the full list, immediate quantities, sorting, tooltips, filters, Eject All and Relay offline controls. No refresh throttling, inventory, save-schema, capacity or gameplay changes.
-- Fresh startup, panel interaction and an open/closed FPS comparison on the new binary remain pending player testing. Workshop publication of 1.3.6 is not yet confirmed.
+- Player-confirmed on 2026-10-19: opening the Quantum Storage Unit panel caused only a slight initial FPS dip, then performance recovered to its starting level with the panel open. The sustained open-panel slowdown is resolved in that observed test; no controlled numeric benchmark or blanket gameplay acceptance is claimed.
+- A fresh rc337.3219 log confirms 1.3.6 loading, with no matched Quantum Storage exception or material-panel fallback warning. The player also confirmed Workshop publication of 1.3.6 on 2026-10-19.
 
-See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) for the current contract and regression checklist.
+The narrow panel compatibility fix is accepted and published. Detailed panel controls, object-Hive transfers, Relay transitions and save/reload edge cases remain separately tracked, not reported defects. See [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md) and [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md). This documentation closeout retains version 1.3.6 and its tested DLL unchanged.
 
 ## Previous release — 1.3.5 Core rc335 hauling and panel compatibility
 
@@ -219,7 +220,8 @@ When a Being withdraws a stored object, Quantum Storage resolves the nearest saf
 
 - Rebaseline the existing fail-closed panel guard after reviewing the builder and all three action callbacks against rc337.3219.
 - Preserve Core's general forbidden-item handling and inventory notification for ejected piles; retain complete immediate UI updates and native structural rebuilds.
-- No stock, reservations, saved ownership, Relay behavior, research, recipes or capacities changed. Fresh startup and in-game performance acceptance remain pending.
+- No stock, reservations, saved ownership, Relay behavior, research, recipes or capacities changed.
+- On 2026-10-19, the player confirmed the sustained panel slowdown was resolved, with only a slight opening dip before FPS recovered, and confirmed Workshop publication. Fresh rc337.3219 load evidence has no matched Quantum Storage exception or panel-fallback warning. Detailed gameplay regression checks remain separately tracked; the documentation closeout does not change the version or DLL.
 
 ### 1.3.5 — Core rc335 object-Hive and material-panel compatibility
 
