@@ -11,7 +11,8 @@ namespace TraitAndClothingCompatibility {
     // Optional integrations remain dormant unless the exact reviewed mod data is loaded.
     internal static class OptionalTraitCompatibility {
         internal const string ExpandedTraitsAssembly = "ExpandedTraitsMod";
-        internal const string ExpandedTraitsDllHash = "FB8C13C813F491B980402BB416806C1139E23525AA8028D4B9E1280973DC1130";
+        internal const string ExpandedTraits013DllHash = "FB8C13C813F491B980402BB416806C1139E23525AA8028D4B9E1280973DC1130";
+        internal const string ExpandedTraits014DllHash = "5A9ACA692F52B41D845DECACFAE9EE4CF0886B2D155D0247616C1D2A0BADC46F";
         internal const string ExpandedTraitsDefinitionsHash = "94A39E354BE0C29C0A3B9EF31B6DB12C27D644A8C4F3B3107CA144177F690DE2";
         internal const string GeneratedPetPrefix = "ExpandedTraits.PetAffinity.";
 
@@ -57,7 +58,7 @@ namespace TraitAndClothingCompatibility {
                 Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a =>
                     string.Equals(a.GetName().Name, ExpandedTraitsAssembly, StringComparison.Ordinal));
                 if (assembly == null || string.IsNullOrEmpty(assembly.Location)
-                        || FileHash(assembly.Location) != ExpandedTraitsDllHash) return false;
+                        || !IsReviewedExpandedTraitsDllHash(FileHash(assembly.Location))) return false;
                 string root = Directory.GetParent(Path.GetDirectoryName(assembly.Location))?.FullName;
                 string definitions = root == null ? null : Path.Combine(root, "Config", "Traits", "Defs");
                 return DefinitionHash(definitions) == ExpandedTraitsDefinitionsHash;
@@ -65,6 +66,10 @@ namespace TraitAndClothingCompatibility {
                 return false;
             }
         }
+
+        internal static bool IsReviewedExpandedTraitsDllHash(string hash) =>
+            string.Equals(hash, ExpandedTraits013DllHash, StringComparison.Ordinal)
+            || string.Equals(hash, ExpandedTraits014DllHash, StringComparison.Ordinal);
 
         private static bool ValidGeneratedPet(string id, string snapshot,
                 IDictionary<string, string> current) {

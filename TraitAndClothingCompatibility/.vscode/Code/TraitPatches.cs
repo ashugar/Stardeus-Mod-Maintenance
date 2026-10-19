@@ -46,7 +46,7 @@ namespace TraitAndClothingCompatibility {
         }
     }
 
-    [HarmonyPatch(typeof(StorableObjComp), nameof(StorableObjComp.IsHaulingForbidden), MethodType.Getter)]
+    [HarmonyPatch(typeof(StorableObjComp), nameof(StorableObjComp.IsForbidden), MethodType.Getter)]
     internal static class EquipmentSearchForbiddenGetterPatch {
         private static void Postfix(ref bool __result) {
             if (EquipmentSearchScopePatch.AllowsForbidden) __result = false;
@@ -157,7 +157,7 @@ namespace TraitAndClothingCompatibility {
                     int count = s.Query.FindCompatibleEquipment.Ask(agent, entry.Key, result, rejected, null);
                     if (count == 0 || result[0] == null) break;
                     ObjData candidate = result[0];
-                    if (allowForbidden || candidate.Obj?.StorableObj?.IsHaulingForbidden != true) return true;
+                    if (allowForbidden || candidate.Obj?.StorableObj?.IsForbidden != true) return true;
                     if (!rejected.Add(candidate.Id)) break;
                 }
             }

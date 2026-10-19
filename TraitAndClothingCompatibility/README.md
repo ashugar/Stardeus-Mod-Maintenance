@@ -1,8 +1,8 @@
 # Trait and Clothing Compatibility Mod (TACC)
 
-Version **1.1.3** — clothing automation and Washing Machine build for Stardeus **v0.15.0-rc324.3201**. Requires AUMF **1.4.0**.
+Version **1.1.4** — clothing automation and Washing Machine build for Stardeus **v0.15.0-rc337.3219**. Requires AUMF **1.4.0**.
 
-**Validation status:** The 1.1.3 compatibility review is complete for Core rc324.3201, Quantum Storage 1.3.0, and optional Expanded Traits 0.1.3. All 50 Core trait snapshots and 12 equipment values remain unchanged; clean production/test builds and 90 automated checks pass. A fully restarted in-game diagnostic clear is still required before accepting 1.1.3 at runtime. The user-confirmed 1.1.1 behavior remains the prior gameplay baseline.
+**Validation status:** The 1.1.4 source and binary review is complete for Core rc337.3219, Quantum Storage 1.3.5, and optional Expanded Traits 0.1.3/0.1.4. The reviewed Core catalog now has 52 traits: 49 match the prior reference, Stoic and Wimp are new, and Enlightened has changed breakdown thresholds. All 12 equipment values remain unchanged. The production build passes with no warnings or errors, and the public optional-reference harness passes all 187 assertions. A fully restarted in-game diagnostic clear and gameplay check are still required before accepting 1.1.4 at runtime. The user-confirmed 1.1.1 behavior remains the prior gameplay baseline.
 
 TACC configures each living player colonist's clothing policy from their traits. It uses Stardeus's existing equipment-policy and replacement system, but ranks eligible clothing by the total mood result for that wearer before Core's ordinary item comparison. Its Washing Machine can replace the **Taken from the dead** origin with **Second-hand** after a completed wash job. TACC does not change clothing mood formulas or item quality.
 
@@ -33,7 +33,7 @@ Tattered clothing has quality at or below Core's `TatteredQualityThreshold` (40%
 
 ## Reviewed clothing effects
 
-Base mood for one affected item, rechecked against Core **v0.15.0-rc302.3178**:
+Base mood for one affected item, rechecked against Core **v0.15.0-rc337.3219**:
 
 | Wearer | Second-hand | Corpse-origin | Tattered |
 |---|---:|---:|---:|
@@ -63,9 +63,9 @@ The log displays:
 
 It records newly discovered, modified, or removed trait definitions; colonists gaining/losing traits; manual overrides; policy-range conflicts; and detected Core/clothing-patch changes. Changed definition entries include changed field names and compact before/after values. New trait entries include their current name and description. Entries are also written to Player.log with `[TACC]` prefixes.
 
-Every comparison uses the **50-trait validated Core reference catalog shipped inside TACC**, the checked equipment-effect values, and the checked Core assembly identities. A save's last-seen catalog is never treated as approval. Translation/name changes can generate entries as well.
+Every comparison uses the **52-trait validated Core reference catalog shipped inside TACC**, the checked equipment-effect values, and the checked Core assembly identities. A save's last-seen catalog is never treated as approval. Translation/name changes can generate entries as well.
 
-Expanded Traits remains optional. When the exact reviewed Expanded Traits 0.1.3 DLL and its 13 trait-definition files are loaded, TACC recognizes those static traits, the species-driven `ExpandedTraits.PetAffinity.*` family, and the reviewed Cat Person/Dog Person rarity normalization. An installation without Expanded Traits receives no missing-trait warning. A changed DLL, definition set, static trait field, generated-trait structure, pet-family rarity, or Minimalist equipment patch becomes unvalidated again.
+Expanded Traits remains optional. When either exact reviewed Expanded Traits 0.1.3 or 0.1.4 DLL and the unchanged reviewed set of 13 trait-definition files are loaded, TACC recognizes those static traits, the species-driven `ExpandedTraits.PetAffinity.*` family, and the reviewed Cat Person/Dog Person rarity normalization. An installation without Expanded Traits receives no missing-trait warning. A changed DLL, definition set, static trait field, generated-trait structure, pet-family rarity, Minimalist equipment patch, or sleep-mood patch becomes unvalidated again.
 
 The optional static reference stores fingerprints of decoded string values rather than their authored text. Numeric reference values and JSON structure retain the existing comparison rules. This repository privacy change does not refresh the reviewed Core or optional-mod fingerprints.
 
@@ -75,7 +75,7 @@ Core's `SerializableProperty.IsUsed` flag is excluded from the comparison becaus
 
 The scrolling log shows **current unvalidated findings** first, separately from history. Unchanged scans keep each finding visible without repeatedly writing it to Player.log. Clearing or loading reports current findings again; old duplicate copies are replaced. The newest **200 history entries** survive save/load. Current findings remain visible even when that history limit is reached. If a change is removed or the checked value restored, its warning leaves the current list and remains only in history. Copy includes both sections and their status.
 
-Unknown trait behavior is not inferred from its name or tooltip. Known rules continue to apply; the log explicitly labels unfamiliar entries as unknown to TACC. Equipment comparisons cover reflected constants in ItemOwnership/WornItemMood, including the count cap, and clothing tunables including the complete `WornGear` family and the tattered cutoff. The reviewed equipment catalog has twelve entries: eight mood tunables, the count cap, the quality cutoff, and two provenance trade-price multipliers. Patch checks cover ownership methods (including the grouping/pricing helpers), worn-item mood methods, equipment-need methods, equipment-policy filtering, Core's best-item comparison, both equipment-search actions, the forbidden-marker getter, the tattered property, and the inspected mental-effect creation/application methods. This release recognizes only the exact reviewed Quantum Storage 1.1.12/1.3.0 routing hooks and Expanded Traits 0.1.3 Minimalist ranking hook; other external patches remain flagged. Changed assembly fingerprints request a review; they do not prove a clothing formula changed. TACC cannot identify every possible equipment effect implemented by arbitrary code elsewhere in another mod.
+Unknown trait behavior is not inferred from its name or tooltip. Known rules continue to apply; the log explicitly labels unfamiliar entries as unknown to TACC. Equipment comparisons cover reflected constants in ItemOwnership/WornItemMood, including the count cap, and clothing tunables including the complete `WornGear` family and the tattered cutoff. The reviewed equipment catalog has twelve entries: eight mood tunables, the count cap, the quality cutoff, and two provenance trade-price multipliers. Patch checks cover ownership methods (including the grouping/pricing helpers), worn-item mood methods, equipment-need methods, equipment-policy filtering, Core's best-item comparison, both equipment-search actions, the forbidden-marker getter, the tattered property, and the inspected mental-effect creation/application methods. This release recognizes only the exact reviewed Quantum Storage 1.1.12/1.3.0/1.3.5 routing hooks and Expanded Traits 0.1.3/0.1.4 Minimalist and sleep-mood hooks; other external patches remain flagged. Changed assembly fingerprints request a review; they do not prove a clothing formula changed. TACC cannot identify every possible equipment effect implemented by arbitrary code elsewhere in another mod.
 
 Core rc294.3170 adds `TradeSecondHandPriceMul = 0.5` and `TradeDeadMansPriceMul = 0.25`. These multiply the trade price for the applicable clothing-origin category; they are not mood values or trait modifiers. New/untracked items use a multiplier of 1, and corpse-origin takes precedence over second-hand when assigning the category. Other pricing factors still apply. TACC observes these values because its ownership-term scan includes them, but does not change prices or use them to choose a clothing policy. Future changes to either value remain unvalidated after clearing or reloading.
 
@@ -110,7 +110,7 @@ Thrifty colonists can choose second-hand clothing ahead of new clothing when the
 
 ## Installation and removal
 
-Requires the separately installed **Auto Utilities Mod Framework 1.4.0**. TACC declares the dependency and uses the four-argument compatibility handshake with its own version **1.1.3** and tested framework level **1.4.0**. Expanded Traits and Quantum Storage are optional. No AUMF, Core, Unity, Harmony, Newtonsoft, Expanded Traits, or Quantum Storage DLL is bundled.
+Requires the separately installed **Auto Utilities Mod Framework 1.4.0**. TACC declares the dependency and uses the four-argument compatibility handshake with its own version **1.1.4** and tested framework level **1.4.0**. Expanded Traits and Quantum Storage are optional. No AUMF, Core, Unity, Harmony, Newtonsoft, Expanded Traits, or Quantum Storage DLL is bundled.
 
 The installed framework's [API usage guide](../AutoUtilitiesModFramework/USAGE.md) and [theme guide](../AutoUtilitiesModFramework/THEME_TESTING.md) confirm that these existing helpers retain their signatures and need no consumer UI migration. TACC does not call the new optional custom theme bindings or state-card APIs, so no new feature gate is needed. Its native pooled controls should not receive extra theme bindings.
 
@@ -124,7 +124,7 @@ TACC stores its settings, originals, ownership snapshots, and diagnostic history
 
 ## Source/build and validation
 
-Source project: `.vscode/mod.csproj`; source: `.vscode/Code`; embedded validated references: `.vscode/Resources/BaselineTraits.json`, `BaselineExpandedTraits.json`, and `BaselineEquipment.json`; runtime library: `Libraries/TraitAndClothingCompatibility.dll`. All source required for the live distribution is under `.vscode`. Automated checks and their generated outputs are development-only files kept in the staging workspace; the live mod and Workshop package intentionally omit the entire `Tests` folder.
+Source project: `.vscode/mod.csproj`; source: `.vscode/Code`; embedded validated references: `.vscode/Resources/BaselineTraits.json`, `BaselineExpandedTraits.json`, and `BaselineEquipment.json`; runtime library: `Libraries/TraitAndClothingCompatibility.dll`. Source and automated checks remain repository development data. The curated Workshop package excludes `.vscode`, `Tests`, and generated build outputs.
 
 Build with the installed Stardeus managed assemblies and the exact installed AUMF DLL. `StardeusManagedPath` and `AumfDll` MSBuild properties can override reference locations. Build-only references use `Private=False`.
 
@@ -152,7 +152,18 @@ On **2026-10-03**, the **1.1.2** review checked Core rc316.3193 and Quantum Stor
 
 On **2026-10-10**, the **1.1.3** review checked Core rc324.3201, Quantum Storage 1.3.0, and optional Expanded Traits 0.1.3. The 50 Core traits, 12 equipment values, and eleven targeted clothing/equipment types remain unchanged from rc316; only the two reviewed Core assembly identities advance. Quantum Storage's equipment hooks retain their scoped nearest-endpoint behavior while adding Storage Relay support elsewhere. TACC now recognizes the exact reviewed Expanded Traits catalog only when that DLL and definition set are present, including dynamic pet affinities and pet-family rarity normalization. TACC's mood-first comparison explicitly runs before Expanded Traits' Minimalist ranking. Clean production/test builds and **90 automated checks** passed. In-game diagnostic-clear validation remains pending. See `COMPATIBILITY-REVIEW-rc324.3201.md`.
 
+On **2026-10-19**, the **1.1.4** review checked Core rc337.3219, Quantum Storage 1.3.5, and optional Expanded Traits 0.1.4 while retaining the exact reviewed 0.1.3 compatibility route. Core renamed the loose-item forbidden property from `IsHaulingForbidden` to `IsForbidden`; TACC now patches and reads that current property while keeping the same equipment-search-only override. Initialization after the AUMF handshake publishes the system only after successful setup. On failure it clears the active instance and attempts listener, UI, and Harmony cleanup independently before rethrowing the original error. The Core reference now includes Stoic and Wimp and the reviewed Enlightened threshold changes; its other 49 trait snapshots and all 12 equipment values are unchanged. The production build passed with **0 warnings and 0 errors**, and the public optional-reference harness passed **187 assertions**. Fresh startup, diagnostic-clear, and gameplay validation remain pending. See `COMPATIBILITY-REVIEW-rc337.3219.md`.
+
 ## Changelog
+
+### 1.1.4
+
+- Updated the forbidden loose-equipment integration for Core's current `StorableObjComp.IsForbidden` property without clearing the marker or changing ordinary hauling.
+- Guarded post-handshake initialization: publish the system after successful setup, clear its handles on failure, and attempt every cleanup independently while preserving the original error.
+- Reviewed all 52 Core traits against Core v0.15.0-rc337.3219: added Stoic and Wimp and updated Enlightened breakdown thresholds. The other 49 traits and all 12 equipment values match the prior reference; clothing policy defaults are unchanged.
+- Added exact recognition for Quantum Storage 1.3.5 while retaining its reviewed 1.1.12 and 1.3.0 snapshots.
+- Added exact optional recognition for Expanded Traits 0.1.4 while retaining 0.1.3, including both versions' reviewed Minimalist and sleep-mood hooks. Missing Expanded Traits remains a clean optional path; unknown builds still warn.
+- Passed a clean production build and all 187 public optional-reference assertions. Fresh runtime validation remains pending.
 
 ### 1.1.3
 

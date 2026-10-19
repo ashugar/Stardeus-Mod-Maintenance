@@ -47,6 +47,12 @@ internal static class Program {
         try { OptionalTraitFingerprint.Project(new JValue(new string((char)0xd800, 1))); }
         catch (EncoderFallbackException) { refused = true; }
         Assert(refused, "unpaired surrogate refused");
+        Assert(OptionalTraitCompatibility.IsReviewedExpandedTraitsDllHash(
+            OptionalTraitCompatibility.ExpandedTraits013DllHash), "reviewed Expanded Traits 0.1.3 DLL hash accepted");
+        Assert(OptionalTraitCompatibility.IsReviewedExpandedTraitsDllHash(
+            OptionalTraitCompatibility.ExpandedTraits014DllHash), "reviewed Expanded Traits 0.1.4 DLL hash accepted");
+        Assert(!OptionalTraitCompatibility.IsReviewedExpandedTraitsDllHash(
+            new string('0', 64)), "unknown Expanded Traits DLL hash refused");
 
         string[] staticIds = { "AnimalPerson", "Cautious", "Claustrophobic", "ColdAdapted", "Daredevil", "Empath", "Extrovert", "HeatAdapted", "HeavySleeper", "Introvert", "IronStomach", "LightSleeper", "SensitiveStomach" };
         JObject resource = JObject.Parse(File.ReadAllText(referencePath));
