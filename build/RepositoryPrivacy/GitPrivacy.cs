@@ -11,10 +11,7 @@ internal static partial class Program
 {
     private const int MaximumGitEntries = 2_000_000;
     // Fixed reviewed legacy boundary. There is intentionally no CLI or environment override.
-    private const string WorkshopLegacyBaseline = "da428c1970a229c9c109eb462a736373abfd4a76";
-    // Reviewed private rewrite maps the pre-policy baseline to this exact clean commit.
-    // Retire the original boundary through a follow-up PR immediately after the rewrite.
-    private const string WorkshopRewrittenBaseline = "ac3cfb513490cadd23d00c3040e7d23791340687";
+    private const string WorkshopLegacyBaseline = "ac3cfb513490cadd23d00c3040e7d23791340687";
     private static readonly Regex HighConfidenceSecret = new(
         @"-----BEGIN (?:RSA |EC |OPENSSH |DSA |ENCRYPTED )?PRIVATE KEY-----|\bgh[pousr]_[A-Za-z0-9]{36}\b|\bgithub_pat_[A-Za-z0-9_]{70,255}\b|\bxox[baprs]-[A-Za-z0-9-]{20,255}\b|\bAIza[A-Za-z0-9_-]{35}\b|\bsk-(?:proj-|svcacct-)[A-Za-z0-9_-]{40,255}\b|https?://[^\s/:@]+:[^\s/@]{4,}@(?!example\.invalid(?=[:/?#\s]|$))[^\s/]+",
         RegexOptions.CultureInvariant, TimeSpan.FromSeconds(2));
@@ -235,8 +232,6 @@ internal static partial class Program
         // A graph without that baseline receives no exemptions, including side branches.
         Queue<string> queue = new();
         if (commits.ContainsKey(legacyBaseline)) queue.Enqueue(legacyBaseline);
-        if (legacyBaseline == WorkshopLegacyBaseline && commits.ContainsKey(WorkshopRewrittenBaseline))
-            queue.Enqueue(WorkshopRewrittenBaseline);
         while (queue.TryDequeue(out string? id))
             if (exempt.Add(id)) foreach (string parent in commits[id].Parents) queue.Enqueue(parent);
         HashSet<string> roots = new(StringComparer.Ordinal);

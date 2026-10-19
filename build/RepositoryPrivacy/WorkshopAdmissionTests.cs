@@ -127,6 +127,19 @@ internal static partial class Program
         Check(MainCaptured(["scan-workshop", "--repo", root, "--ref", clean, "--baseline-ref", clean]).Code == 2);
         Check(Invoke("scan-workshop", root, "HEAD").Code == 2);
         Check(MainCaptured(["scan-workshop", "--repo", root]).Code == 2);
+        // An old unfiltered side parent must not regain an exemption after the rewrite,
+        // even when the same merge graph also contains the fixed clean boundary.
+        string obsoleteBoundary = "da428c1970a229c9c109eb462a736373abfd4a76";
+        Dictionary<string, GitCommit> reintroduced = new(StringComparer.Ordinal) {
+            [obsoleteBoundary] = new("old-unpublished-tree", []),
+            [WorkshopLegacyBaseline] = new("reviewed-clean-tree", []),
+            [clean] = new("public-tip-tree", [WorkshopLegacyBaseline, obsoleteBoundary])
+        };
+        HashSet<string> admittedTrees = GetWorkshopRoots(reintroduced,
+            new Dictionary<string, string>(StringComparer.Ordinal), [clean], WorkshopLegacyBaseline);
+        Check(admittedTrees.Contains("old-unpublished-tree"));
+        Check(admittedTrees.Contains("public-tip-tree"));
+        Check(!admittedTrees.Contains("reviewed-clean-tree"));
         return checks;
 
         void Check(bool value)
