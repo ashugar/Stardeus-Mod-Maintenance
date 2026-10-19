@@ -1,6 +1,6 @@
 # Repository automation
 
-Develop in the checkout, submit a PR, review its current commit, and let the required checks finish. These tools do not install mods, run Stardeus, or publish to Workshop. The live mod folders remain a separate deployment step under the active user's authorization.
+Develop in the checkout, submit a PR, review its current commit, and let the required checks finish. Release preparation uses reviewed committed artifacts. Local installation is an explicit reviewed-plan operation under the active user's authorization; no workflow installs live mods, runs Stardeus or publishes to Workshop.
 
 ## Install local privacy prevention
 
@@ -77,3 +77,8 @@ Commit both generated outputs with the change. CI checks freshness without writi
 After each PR check run, a separate default-branch workflow reads GitHub PR file metadata and adds labels for affected mods and shared repository automation. It uses the trusted default-branch map, verifies the current PR head, and never checks out PR code, downloads candidate artifacts, approves or merges. Manual labels remain intact; labels are added only, so an old mod label can remain after a later change removes that mod from the PR.
 
 Repository labels are precreated to keep the workflow token limited to reading contents and labeling PRs. For a new mod, add its generated map through a normal PR and create the corresponding `mod:<folder>` repository label through repository settings. Its first PR may not receive the new label until the trusted map is merged; subsequent PRs are automatic. The workflow does not use `pull_request_target` or change its event policy.
+## Per-mod release preparation and local installation
+
+[Release and installation instructions](build/ModMaintenance/README.md) cover the local one-mod preparation command, trusted-main artifact workflow, and private plan/apply/recover installer. Both tools use the same reviewed Git payload and explicit recipe. Release preparation checks source privacy, known version surfaces and extracted ZIP hashes, then produces checksums and factual notes. It uses curated committed DLLs; game-dependent builds and runtime acceptance remain separate prerequisites when a mod changes.
+
+The installer is an explicit local Windows command. Review its private destination/file plan and digest, then apply that exact plan. It rechecks source and destination, requires Stardeus closed, verifies rollback copies before replacement, preserves existing configurable defaults and unrelated files, and verifies copied hashes. Recovery refuses to overwrite later edits. Hosted tests use temporary fake mod roots; no scheduled workflow or runner deploys to live folders.
