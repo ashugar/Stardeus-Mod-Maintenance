@@ -24,7 +24,7 @@ namespace TraitAndClothingCompatibility {
         public const string SysId = "TraitAndClothingCompatibilitySys";
         public const string ConsumerId = "TraitAndClothingCompatibility";
         public const string DisplayName = "Trait and Clothing Compatibility Mod (TACC)";
-        public const string ModVersion = "1.1.3";
+        public const string ModVersion = "1.1.4";
         public const string RequiredUtilitiesVersion = "1.4.0";
         internal const string HarmonyId = "TraitAndClothingCompatibility.Notifications";
         internal const int LogLimit = 200;
@@ -70,18 +70,42 @@ namespace TraitAndClothingCompatibility {
 
         protected override void OnInitialize() {
             if (!AutoUtilitiesApi.TryRegisterConsumer(ConsumerId, DisplayName, ModVersion, RequiredUtilitiesVersion)) return;
-            Instance = this;
-            harmony = new Harmony(HarmonyId);
-            harmony.PatchAll(typeof(TaccSystem).Assembly);
-            panel = new TaccPanel(this);
-            widget = AutoUtilitiesApi.RegisterTopBarWidget(new TopBarWidgetRegistration {
-                Id = ConsumerId + ".Controls", Icon = () => IconId.CClothing,
-                Tint = () => Failure != null ? Color.yellow : State.Enabled ? Color.green : Color.gray,
-                Tooltip = () => "TACC — " + (State.Enabled ? "Enabled" : "Disabled")
-                    + "\n" + rows.Count(r => r.Managed) + " beings managed\nClick for policies, traits, and diagnostic log.",
-                OnClick = () => panel.Toggle(), Width = 32f, Order = 320
-            });
-            S.Sig.AfterLoadState.AddListener(OnAfterLoad);
+            bool afterLoadListenerAdded = false;
+            try {
+                harmony = new Harmony(HarmonyId);
+                harmony.PatchAll(typeof(TaccSystem).Assembly);
+                panel = new TaccPanel(this);
+                widget = AutoUtilitiesApi.RegisterTopBarWidget(new TopBarWidgetRegistration {
+                    Id = ConsumerId + ".Controls", Icon = () => IconId.CClothing,
+                    Tint = () => Failure != null ? Color.yellow : State.Enabled ? Color.green : Color.gray,
+                    Tooltip = () => "TACC — " + (State.Enabled ? "Enabled" : "Disabled")
+                        + "\n" + rows.Count(r => r.Managed) + " beings managed\nClick for policies, traits, and diagnostic log.",
+                    OnClick = () => panel.Toggle(), Width = 32f, Order = 320
+                });
+                afterLoadListenerAdded = true;
+                S.Sig.AfterLoadState.AddListener(OnAfterLoad);
+                Instance = this;
+            } catch {
+                ITopBarWidgetHandle failedWidget = widget;
+                TaccPanel failedPanel = panel;
+                Harmony failedHarmony = harmony;
+                widget = null; panel = null; harmony = null;
+                if (ReferenceEquals(Instance, this)) Instance = null;
+                if (afterLoadListenerAdded) CleanupInitialization(() => S?.Sig.AfterLoadState.RemoveListener(OnAfterLoad));
+                CleanupInitialization(() => failedWidget?.Dispose());
+                CleanupInitialization(() => failedPanel?.Dispose());
+                CleanupInitialization(() => failedHarmony?.UnpatchAll(HarmonyId));
+                throw;
+            }
+        }
+
+        private static void CleanupInitialization(Action cleanup) {
+            try { cleanup(); }
+            catch (Exception error) {
+                // Attempt every cleanup and preserve the original initialization failure.
+                try { D.Log("[TACC] Initialization cleanup failed: {0}", error); }
+                catch { }
+            }
         }
 
         private void OnAfterLoad(GameState state) {
