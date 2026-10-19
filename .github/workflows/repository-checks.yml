@@ -148,10 +148,29 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "Isolated harness failed: $name" }
           }
 
+  maintenance:
+    name: Maintenance tooling
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Check generated catalog and test maintenance metadata
+        run: |
+          $ErrorActionPreference = 'Stop'
+          ./build/ModMaintenance/Update-ModCatalog.ps1 -Check
+          if ($LASTEXITCODE -ne 0) { throw 'Generated mod catalog is stale.' }
+          ./build/ModMaintenance/Tests/Test-ModCatalog.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Catalog tests failed.' }
+          node ./build/ModMaintenance/Tests/Test-PrLabels.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Label workflow tests failed.' }
+
   required:
     name: Repository validation
     if: ${{ always() }}
-    needs: [privacy, metadata, isolated-logic]
+    needs: [privacy, metadata, isolated-logic, maintenance]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: {}
@@ -161,9 +180,10 @@ jobs:
           PRIVACY_RESULT: ${{ needs.privacy.result }}
           METADATA_RESULT: ${{ needs.metadata.result }}
           ISOLATED_LOGIC_RESULT: ${{ needs.isolated-logic.result }}
+          MAINTENANCE_RESULT: ${{ needs.maintenance.result }}
         run: |
-          $results = @($env:PRIVACY_RESULT, $env:METADATA_RESULT, $env:ISOLATED_LOGIC_RESULT)
-          if ($results.Count -ne 3 -or @($results | Where-Object { $_ -cne 'success' }).Count -ne 0) {
+          $results = @($env:PRIVACY_RESULT, $env:METADATA_RESULT, $env:ISOLATED_LOGIC_RESULT, $env:MAINTENANCE_RESULT)
+          if ($results.Count -ne 4 -or @($results | Where-Object { $_ -cne 'success' }).Count -ne 0) {
             throw 'A required validation job failed, was cancelled, or did not run.'
           }
           Write-Output 'PASS all repository validation jobs succeeded.'
