@@ -274,8 +274,11 @@ function Get-ModReleaseSnapshot {
         $xmlSettings = [Xml.XmlReaderSettings]::new()
         $xmlSettings.DtdProcessing = [Xml.DtdProcessing]::Prohibit
         $xmlSettings.XmlResolver = $null
-        $reader = [Xml.XmlReader]::Create([IO.StringReader]::new($script:ModUtf8.GetString((Get-ModBlob $root $tree ($prefix + $selected.Project)))), $xmlSettings)
-        try { $xml = [Xml.XmlDocument]::new(); $xml.Load($reader) } finally { $reader.Dispose() }
+        $projectStream = [IO.MemoryStream]::new((Get-ModBlob $root $tree ($prefix + $selected.Project)), $false)
+        try {
+            $reader = [Xml.XmlReader]::Create($projectStream, $xmlSettings)
+            try { $xml = [Xml.XmlDocument]::new(); $xml.Load($reader) } finally { $reader.Dispose() }
+        } finally { $projectStream.Dispose() }
         $found = 0
         $projectSurfaces = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
         foreach ($node in $xml.SelectNodes('/Project/PropertyGroup/*')) {

@@ -57,6 +57,8 @@ try {
     Write-Fixture 'Fixture/SteamWorkshopItemId' '123456789'
     Write-Fixture 'Fixture/Definitions/Example.json' '{"Value":1}'
     Write-Fixture 'Fixture/.vscode/mod.csproj' '<Project><PropertyGroup><GenerateAssemblyInfo>false</GenerateAssemblyInfo><VersionPrefix>1.2.3.0</VersionPrefix></PropertyGroup></Project>'
+    $bomProject = Join-Path $repo 'Fixture/.vscode/mod.csproj'
+    [IO.File]::WriteAllBytes($bomProject, ([byte[]]@(0xef, 0xbb, 0xbf) + [IO.File]::ReadAllBytes($bomProject)))
     Write-Fixture 'Fixture/Code/AssemblyInfo.cs' @'
 using System.Reflection;
 [assembly: AssemblyVersion("1.2.3.0")]
@@ -96,6 +98,7 @@ class VersionHolder {
     Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Value -ceq '1.2.3-test' }).Count -eq 2) 'informational-suffix'
     Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Value -ceq '9.0.0' }).Count -eq 0) 'dependency-version-distinct'
     Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Surface -ceq '.vscode/mod.csproj:InformationalVersion' -and $_.Status -ceq 'not-present' -and $null -eq $_.Value }).Count -eq 1) 'optional-project-property-omission-recorded'
+    Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Surface -ceq '.vscode/mod.csproj:VersionPrefix' -and $_.Status -ceq 'observed' -and $_.Value -ceq '1.2.3.0' }).Count -eq 1) 'utf8-bom-project-version-observed'
     Assert-Test (@($snapshot.Files | Where-Object RelativePath -CLike 'Code/*').Count -eq 0) 'source-excluded'
     $data = Get-ModReleaseSnapshot $repo $sha 'Data(Folder)'
     Assert-Test ($data.Files.Count -eq 2 -and $null -eq $data.WorkshopItemId) 'data-only-no-project-or-workshop'
