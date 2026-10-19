@@ -167,10 +167,36 @@ jobs:
           node ./build/ModMaintenance/Tests/Test-PrLabels.cjs
           if ($LASTEXITCODE -ne 0) { throw 'Label workflow tests failed.' }
 
+  release-tools:
+    name: Mod maintenance (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Set up fixture and privacy checker SDK
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Test release tooling and Windows installation safety
+        run: |
+          & pwsh -NoProfile -File ./build/ModMaintenance/Tests/Test-ModRelease.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Release fixture tests failed.' }
+          if ($IsWindows) {
+            & pwsh -NoProfile -File ./build/ModMaintenance/Tests/Test-ModInstall.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'Windows installer fixture tests failed.' }
+          }
+
   required:
     name: Repository validation
     if: ${{ always() }}
-    needs: [privacy, metadata, isolated-logic, maintenance]
+    needs: [privacy, metadata, isolated-logic, maintenance, release-tools]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: {}
@@ -181,9 +207,10 @@ jobs:
           METADATA_RESULT: ${{ needs.metadata.result }}
           ISOLATED_LOGIC_RESULT: ${{ needs.isolated-logic.result }}
           MAINTENANCE_RESULT: ${{ needs.maintenance.result }}
+          RELEASE_TOOLS_RESULT: ${{ needs.release-tools.result }}
         run: |
-          $results = @($env:PRIVACY_RESULT, $env:METADATA_RESULT, $env:ISOLATED_LOGIC_RESULT, $env:MAINTENANCE_RESULT)
-          if ($results.Count -ne 4 -or @($results | Where-Object { $_ -cne 'success' }).Count -ne 0) {
+          $results = @($env:PRIVACY_RESULT, $env:METADATA_RESULT, $env:ISOLATED_LOGIC_RESULT, $env:MAINTENANCE_RESULT, $env:RELEASE_TOOLS_RESULT)
+          if ($results.Count -ne 5 -or @($results | Where-Object { $_ -cne 'success' }).Count -ne 0) {
             throw 'A required validation job failed, was cancelled, or did not run.'
           }
           Write-Output 'PASS all repository validation jobs succeeded.'
