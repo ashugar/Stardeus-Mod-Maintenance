@@ -1,0 +1,852 @@
+{
+  "SchemaVersion": 1,
+  "Mods": [
+    {
+      "Folder": "AggressiveAutoConnectUpgrade",
+      "Id": "AggressiveAutoConnectUpgrade",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "AggressiveAutoConnectUpgrade.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "CompleteGridReconnect.jpg",
+        "ModCover.jpg",
+        "ModDisabled.jpg",
+        "ModEnabled.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": ".vscode/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "AutoFactory",
+      "Id": "AutoFactory",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "AutoFactory.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "AutoFactoryOff.jpg",
+        "AutoFactoryOn.jpg",
+        "ModCover.jpg",
+        "NFabLog.jpg",
+        "NFabProd.jpg",
+        "NFabRefill.jpg",
+        "NFabScope.jpg",
+        "NFabUpgrades.jpg",
+        "NFoundLog.jpg",
+        "NFoundProd.jpg",
+        "ProductionGoals.jpg",
+        "ProductionGoalsSearch.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Definitions",
+        "Graphics",
+        "Patches",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "AutoHauling",
+      "Id": "AutoHauling",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "AutoHauling.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "Controls.jpg",
+        "Failures.jpg",
+        "Items.jpg",
+        "ModCover.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": ".vscode/Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        },
+        {
+          "Path": ".vscode/Code/AutoHaulingSys.cs",
+          "Kind": "constant",
+          "Name": "ModVersion"
+        }
+      ]
+    },
+    {
+      "Folder": "AutoUtilitiesModFramework",
+      "Id": "AutoUtilitiesModFramework",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "AutoUtilitiesModFramework.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "README.md",
+        "SteamWorkshopItemId",
+        "USAGE.md"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        },
+        {
+          "Path": "Code/AutoUtilitiesApi.cs",
+          "Kind": "constant",
+          "Name": "FrameworkVersion"
+        }
+      ]
+    },
+    {
+      "Folder": "BetterStorageMod(v0.15Update)",
+      "Id": "BetterStorageMod(v0.15Update)",
+      "Project": null,
+      "Dlls": [],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "BotAutoHack",
+      "Id": "BotAutoHack",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "BotAutoHack.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "Off.jpg",
+        "On.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        },
+        {
+          "Path": "Code/BotAutoHackSys.cs",
+          "Kind": "constant",
+          "Name": "ModVersion"
+        }
+      ]
+    },
+    {
+      "Folder": "Chromanite(v0.15Update)",
+      "Id": "Chromanite(v0.15Update)",
+      "Project": null,
+      "Dlls": [],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Config",
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "ChromaniteDoors(v0.15Update)",
+      "Id": "ChromaniteDoors(v0.15Update)",
+      "Project": null,
+      "Dlls": [],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "ChromaniteGlitterPower(v0.15Update)",
+      "Id": "ChromaniteGlitterPower(v0.15Update)",
+      "Project": null,
+      "Dlls": [],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "SteamWorkshopItemId",
+        "Untitled.png"
+      ],
+      "IncludeDirectories": [
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "ChromaniteWalls(v0.15Update)",
+      "Id": "ChromaniteWalls(v0.15Update)",
+      "Project": null,
+      "Dlls": [],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "ColonistAndBotsAutoUpgrade",
+      "Id": "ColonistAndBotsAutoUpgrade",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "ColonistAndBotsAutoUpgrade.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "CARAUOverviewImage.png",
+        "DebugTab.png",
+        "MainTab.png",
+        "ModCover.jpg",
+        "QualityTab.png",
+        "README.md",
+        "SettingsTab.png",
+        "SlotsTab.png",
+        "SteamWorkshopItemId",
+        "TrackedOperations1.jpg",
+        "TrackedOperations2.jpg"
+      ],
+      "IncludeDirectories": [
+        "Graphics"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "ExpandedTraitsMod",
+      "Id": "ExpandedTraitsMod",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "ExpandedTraitsMod.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "README.md"
+      ],
+      "IncludeDirectories": [
+        "Config",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": ".vscode/Code/ExpandedTraitsSystem.cs",
+          "Kind": "constant",
+          "Name": "Version"
+        }
+      ]
+    },
+    {
+      "Folder": "ImprovedShipPathing",
+      "Id": "ImprovedShipPathing",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "ImprovedShipPathing.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "README.md"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        },
+        {
+          "Path": "Code/ImprovedShipPathingSys.cs",
+          "Kind": "constant",
+          "Name": "ModVersion"
+        }
+      ]
+    },
+    {
+      "Folder": "IntelligentRecycling",
+      "Id": "IntelligentRecycling",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "IntelligentRecycling.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "API.md",
+        "MainTab.jpg",
+        "ModCover.jpg",
+        "README.md",
+        "SettingsTab1.jpg",
+        "SettingsTab2.jpg",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": ".vscode/Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        },
+        {
+          "Path": ".vscode/Code/IntelligentRecyclingSys.cs",
+          "Kind": "constant",
+          "Name": "ModVersion"
+        }
+      ]
+    },
+    {
+      "Folder": "LocalLogMod",
+      "Id": "LocalLogMod",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "LocalLogMod.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "README.md",
+        "Settings.json"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [
+        "Settings.json"
+      ],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "MarketBalancing",
+      "Id": "MarketBalancing",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "MarketBalancing.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "README.md"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "MetalHuskRevisited(v0.15Update)",
+      "Id": "MetalHusksRevisited(v0.15Update)",
+      "Project": null,
+      "Dlls": [],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "MissileOverhaul",
+      "Id": "MissileOverhaul",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "MissileOverhaul.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "README.md"
+      ],
+      "IncludeDirectories": [
+        "Config",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        },
+        {
+          "Path": "Code/MissileOverhaulSys.cs",
+          "Kind": "constant",
+          "Name": "ModVersion"
+        }
+      ]
+    },
+    {
+      "Folder": "MolecularAssemblerFixed(v0.15Update)",
+      "Id": "MolecularAssemblerFixed(v0.15Update)",
+      "Project": null,
+      "Dlls": [],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Config",
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "OptimizationMod",
+      "Id": "OptimizationMod",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "OptimizationMod.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "README.md",
+        "Diagnostics.json"
+      ],
+      "IncludeDirectories": [
+        "Translations"
+      ],
+      "CreateOnlyFiles": [
+        "Diagnostics.json"
+      ],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "OrbotronUpgrade(v0.15Update)",
+      "Id": "OrbotronUpgrade(v0.15Update)",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "OrbotronUpgrade.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "CHANGELOG.md",
+        "ModCover.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Patches"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "PartRestorationUnit",
+      "Id": "PartRestorationUnit",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "PartRestorationUnit.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "API.md",
+        "ModCover.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "PlanningOverhaul",
+      "Id": "PlanningOverhaul",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "PlanningOverhaul.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "Blueprints.jpg",
+        "Build.jpg",
+        "Finished.jpg",
+        "ModCover.jpg",
+        "PulseWave.jpg",
+        "README.md",
+        "Rooms.jpg",
+        "Staging.jpg",
+        "Starting.jpg",
+        "SteamWorkshopItemId",
+        "Upgrade.jpg"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "Prosthetics&AndroidsExpanded(v0.15Update)",
+      "Id": "Prosthetics&AndroidsExpanded(v0.15Update)",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "ProstheticsAndroidsExpanded.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "CHANGELOG.md",
+        "ModCover.jpg",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Config",
+        "Definitions",
+        "Graphics",
+        "Patches",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": []
+    },
+    {
+      "Folder": "QuantumStorage",
+      "Id": "QuantumStorage",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "QuantumStorage.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "QuestRequestPreview",
+      "Id": "QuestRequestPreview",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "QuestRequestPreview.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "CloseOption.png",
+        "ModCover.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "ReconnectTeleporterConnections",
+      "Id": "ReconnectTeleporterConnections",
+      "Project": null,
+      "Dlls": [
+        "ReconnectTeleporterConnections.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "History.jpg",
+        "ModCover.jpg",
+        "README.md",
+        "Recovery.jpg",
+        "SteamWorkshopItemId",
+        "TeleporterMain.jpg"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "RememberFacilityUpgrades",
+      "Id": "RememberFacilityUpgrades",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "RememberFacilityUpgrades.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "SkillCapMod",
+      "Id": "SkillCapMod",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "SkillCapMod.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "README.md"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "StockMarketAutoInvestor",
+      "Id": "StockMarketAutoInvestor",
+      "Project": "mod.csproj",
+      "Dlls": [
+        "StockMarketAutoInvestor.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "README.md"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "SuperCleaning",
+      "Id": "SuperCleaning",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "SuperCleaning.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "README.md",
+        "Settings.jpg",
+        "SteamWorkshopItemId",
+        "Tasks.jpg"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "TractorBeamAutoConnect",
+      "Id": "TractorBeamAutoConnect",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "TractorBeamAutoConnect.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "ModOff.png",
+        "ModOn.png",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        }
+      ]
+    },
+    {
+      "Folder": "TractorBeamOverhaul",
+      "Id": "TractorBeamOverhaul",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "TractorBeamOverhaul.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "ModCover.jpg",
+        "README.md",
+        "SteamWorkshopItemId"
+      ],
+      "IncludeDirectories": [],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": "Code/AssemblyInfo.cs",
+          "Kind": "assembly-attributes",
+          "Name": ""
+        },
+        {
+          "Path": "Code/TractorBeamOverhaulSys.cs",
+          "Kind": "constant",
+          "Name": "ModVersion"
+        }
+      ]
+    },
+    {
+      "Folder": "TraitAndClothingCompatibility",
+      "Id": "TraitAndClothingCompatibility",
+      "Project": ".vscode/mod.csproj",
+      "Dlls": [
+        "TraitAndClothingCompatibility.dll"
+      ],
+      "IncludeFiles": [
+        "ModInfo.json",
+        "Colonists.jpg",
+        "ModCover.jpg",
+        "Policies.jpg",
+        "README.md",
+        "SteamWorkshopItemId",
+        "TraitsAndLog.jpg",
+        "Widget.jpg"
+      ],
+      "IncludeDirectories": [
+        "Definitions",
+        "Graphics",
+        "Translations"
+      ],
+      "CreateOnlyFiles": [],
+      "VersionSources": [
+        {
+          "Path": ".vscode/Code/TaccSystem.cs",
+          "Kind": "constant",
+          "Name": "ModVersion"
+        }
+      ]
+    }
+  ]
+}

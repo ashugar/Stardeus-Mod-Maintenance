@@ -59,3 +59,7 @@ This workflow cleans current files. Earlier Git commits retain their original sn
 ## Automated checks
 
 Install the per-checkout privacy guard and follow [AUTOMATION.md](AUTOMATION.md) before publishing a branch. Hosted PR checks run five game-independent logic harnesses and repository privacy/configuration checks. They do not replace game-dependent builds or runtime acceptance for a mod change, and never copy files to live installations.
+
+## Release preparation
+
+After a mod's applicable build and review, use the [shared release tools](build/ModMaintenance/README.md) to prepare its exact committed payload, version evidence, notes and checksums. Packages exclude source, harnesses, caches and external game/framework dependencies. The explicit recipe must be reviewed when payload ownership or release-version declarations change. Packaging curated DLLs does not rebuild them or recertify compatibility. The optional local installer applies only a reviewed private file plan with rollback; no hosted workflow copies to live mods.
