@@ -133,6 +133,8 @@ inherit the saved Intelligent Recycling threshold when construction completes.
 
 ## 1.3.3
 
+Status: accepted and closed on 2026-10-19; maintenance mode.
+
 - Restored compatibility with Stardeus 0.15.0-rc337.3219 after Core renamed
   `StorableObjComp.IsHaulingForbidden` to `IsForbidden`.
 - Uses Core's current forbidden-state contract for both recycling eligibility
@@ -140,6 +142,11 @@ inherit the saved Intelligent Recycling threshold when construction completes.
   forbidden objects and the API's established `Forbidden` meaning.
 - Auto Utilities Mod Framework feature level 1.4.0, save schema 13, and
   read-only API contract 1 are unchanged.
+- Fresh runtime log review confirmed 1.3.3 loading and successful automation
+  initialization on rc337.3219, with no Intelligent Recycling missing-method,
+  initialization, or `OnTick` failures in the captured session.
+- Further work is on demand for reported issues or compatibility changes.
+  Workshop publication remains a separate maintainer action.
 
 ## 1.3.2
 
