@@ -4,13 +4,21 @@ Quantum Storage provides ten compact late-game storage endpoints. Matching endpo
 
 The first endpoint supplies a fixed initial capacity. Each additional endpoint of the same type doubles the network total.
 
-## Current release — 1.3.7 Core rc341 material-panel compatibility
+## Current release — 1.3.8 material-panel contract guard
+
+- Keeps material-panel row reuse enabled across harmless metadata-token renumbering. The startup guard compares resolved instructions, member identities, signatures, locals, exception handling and the fields used by the optimization; it does not target a game version or whole Core DLL hash.
+- Reviews the current Core v0.15.0-rc342.3224 panel builder and all three action callbacks. Changed or unresolvable inspected contracts retain the complete native panel. This finite check does not establish arbitrary semantic equivalence or inspect every native helper, prefab or other mod.
+- Preserves the existing row cache and native list, quantities, sorting, tooltips, ejection, filters and lifetimes. No per-refresh hashing, refresh delay, inventory, save-schema, hauling, Relay, recipe, research or capacity change.
+
+Fresh 1.3.8 startup, sustained open-panel FPS and affected controls require user-run validation. No new FPS improvement or Workshop publication is claimed. Historical unconfirmed scenarios remain coverage limits. See [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md) and [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
+
+## Previous release — 1.3.7 Core rc341 material-panel compatibility
 
 - Restores material-panel row reuse for reviewed Core v0.15.0-rc341.3223 after its changed fingerprints caused 1.3.6 to use the complete native panel.
 - Re-reviews the native contents builder and all three action callbacks. Core retains the full list, current quantities, sorting, tooltips, ejection, filters and panel lifetimes; unknown contracts still use the complete native panel.
 - Changes only the four reviewed fingerprints and release metadata. No row-cache algorithm, inventory, reservations, saved ownership, Relay rules, recipes, research or capacities change.
 
-Fresh startup, the sustained open-panel FPS result and affected controls require user-run validation of 1.3.7. No new FPS improvement or Workshop publication is claimed. Historical unconfirmed scenarios remain coverage limits. See [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md) and [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
+The subsequent user test still averaged about 30 FPS with the panel open, occasionally exceeding 50 FPS. Its fresh log loaded 1.3.7 on the newer rc342.3224 and recorded native-panel fallback. All four raw hashes changed while the captured resolved builder/callback instructions and body settings matched rc341. No enabled-optimization FPS result or Workshop publication of 1.3.7 is established.
 
 ## Previous release — 1.3.6 Core rc337 material-panel compatibility
 
@@ -74,7 +82,7 @@ The 1.3.1 Core compatibility repair is retained in restart-tested 1.3.3; it does
 
 ## Material networks
 
-Version 1.3.3 optimizes the **material contents panel only**, for both advanced Quantum endpoints and material Relays. Core still constructs every row and owns its click actions, quantity choices, tooltips and Eject All button. When the set of material types is unchanged, the mod updates changed quantity labels and moves existing rows into Core's current sort order instead of recreating the whole list. New/removed types, disposed rows, changed names/icons or a new panel lifetime use Core's full rebuild. There is no truncation, pagination or refresh delay; capacity/header, filter and priority bindings are unchanged. A reviewed Core method-body check disables only this optional optimization on an unrecognized UI implementation. An unexpected runtime failure also falls back to the complete native panel. Object-storage panels are not changed by this release. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
+Version 1.3.3 introduced the **material contents panel** optimization for both advanced Quantum endpoints and material Relays. Core still constructs every row and owns its click actions, quantity choices, tooltips and Eject All button. When the set of material types is unchanged, the mod updates changed quantity labels and moves existing rows into Core's current sort order instead of recreating the whole list. New/removed types, disposed rows, changed names/icons or a new panel lifetime use Core's full rebuild. There is no truncation, pagination or refresh delay; capacity/header, filter and priority bindings are unchanged. Version 1.3.8 checks the resolved panel contract once during startup, ignoring incidental metadata renumbering. An unknown inspected contract or unexpected runtime failure falls back to the complete native panel. Object-storage panels are unchanged. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
 
 | Endpoint | Accepted Core group | First endpoint capacity |
 | --- | --- | ---: |
@@ -202,7 +210,7 @@ The network identifier defines each pool. Common systems manage capacity and int
 
 ## Compatibility and save behavior
 
-Version 1.3.7 targets installed Core `v0.15.0-rc341.3223`. It retains 1.3.5's `IsBetterStorage` selection rather than treating regional distance as tile distance. Existing research, filter, power, range, task and reservation checks remain authoritative. Stored object identities, transfer cleanup, the save format and optional TACC/Part Restoration Unit coordination are unchanged. The material-panel compatibility guard checks the reviewed native builder and action callbacks, retaining complete native fallback on a mismatch. Older and later Core builds are not certified by this review.
+Version 1.3.8 reviews installed Core `v0.15.0-rc342.3224`. It retains 1.3.5's `IsBetterStorage` selection rather than treating regional distance as tile distance. Existing research, filter, power, range, task and reservation checks remain authoritative. Stored object identities, transfer cleanup, the save format and optional TACC/Part Restoration Unit coordination are unchanged. The material-panel guard compares the resolved native builder, action callbacks and consumed fields once at startup; harmless token renumbering is accepted, while an unverified inspected contract retains the complete native panel. This review does not certify every behavior in older or later Core builds.
 
 Version 1.3.1 targets installed Core `v0.15.0-rc327.3205`. Core extended the `SpawnRawMaterial(Mat, ...)` signature with `mergeIntoBlock`. Both Relay upgrade-recovery calls explicitly pass `false`, preserving normal nearby-pile merging without opting into block-wide deconstruction merging. The old binary could fail before the recovery method's early return, interrupting the Relay tick even in the main-menu demo. Save formats, inventories, capacities, reservations and network rules are unchanged. Restart after installing the rebuilt DLL; no save migration is required.
 
@@ -224,11 +232,17 @@ When a Being withdraws a stored object, Quantum Storage resolves the nearest saf
 
 ## Change Log
 
+### 1.3.8 — Material-panel contract guard
+
+- Replace raw-byte fingerprints with resolved-contract checks so harmless compiler metadata renumbering does not disable row reuse.
+- Review the current rc342 builder, complete action callback set, fields, locals and exception handling. Keep complete native fallback when verification fails.
+- Preserve the existing cache and native controls without per-refresh checks, gameplay or save changes. Fresh Mono startup, FPS/control acceptance and Workshop publication remain pending.
+
 ### 1.3.7 — Core rc341 material-panel compatibility
 
 - Rebaseline the existing fail-closed panel guard after reviewing the builder and all three action callbacks against rc341.3223.
 - Preserve native panel actions, full immediate contents and the existing row-reuse policy; unknown contracts retain the complete native panel.
-- No inventory, reservation, save, Relay, research, recipe or capacity changes. Fresh startup, panel FPS/control acceptance and Workshop publication remain unconfirmed for 1.3.7.
+- No inventory, reservation, save, Relay, research, recipe or capacity changes. The later rc342 session loaded 1.3.7 but fell back again; no enabled-optimization FPS/control acceptance or Workshop publication is established.
 
 ### 1.3.6 — Core rc337 material-panel compatibility
 

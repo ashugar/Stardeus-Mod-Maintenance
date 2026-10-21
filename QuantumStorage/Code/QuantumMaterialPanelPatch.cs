@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using Game.Components;
 using Game.Constants;
 using Game.Data;
@@ -20,31 +19,29 @@ namespace Game.Systems.QuantumStorage
     [HarmonyPatch(typeof(MatStorageTab), "BuildContentsList", new Type[] { })]
     internal static class QuantumMaterialPanelPatch
     {
-        // Reviewed against rc341.3223 Game.dll SHA256 683936E122494D60B13145E45A097F1D853FD8357A8146C3EB938075FE80DE32,
-        // including all generated BuildContentsList action callbacks:
-        // quantities are read at click time and callbacks no longer edit pooled rows
-        // after Eject. rc341 retains the native general forbidden-item policy, including
-        // its inventory notification. Keep callbacks and filter lifecycle untouched.
-        // A different root OR callback body must use the complete native panel until
-        // reviewed. The root IL alone does not change when a callback body changes.
-        internal const string ReviewedBodyHash = "C391AFEFF13F1ABF10B4E30385C5C58B5A43130DE619A10E115350592CDA149B";
+        // Reviewed native contract: rc342.3224. These are resolved-contract hashes,
+        // not a version gate or raw IL tokens: equivalent reference renumbering is
+        // accepted, but changed instructions/signatures/locals/EH/actions are not.
+        // Core retains current quantities, general forbidden-item notification,
+        // callbacks and filter lifetimes. Unknown contracts use the full native UI.
+        internal const string ReviewedBodyHash = "7BF9F70836798FDB76908C53D4A8E84DE046AB2632EF0A1CDAFF15C4F5272FF1";
         private const BindingFlags DeclaredMethods = BindingFlags.Public | BindingFlags.NonPublic |
             BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
         private static readonly Dictionary<string, string> ReviewedCallbackHashes = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             // Eject All: native DumpContents(true), then ReloadTab.
             { "Game.Systems.UIUX.MatStorageTab+<>c__DisplayClass22_0::<BuildContentsList>b__0",
-                "4F540FE39ACC8C9B9B03846CCD646FC80AD5E852E723076E90A13166DB0C3E9E" },
+                "1E6C7F0749C4D6C419B5BCEBCF078E31C2EACDAC450318AF7DFCF050F088232C" },
             // Row click: current contents, native quantity options/labels and menu.
             { "Game.Systems.UIUX.MatStorageTab+<>c__DisplayClass22_1::<BuildContentsList>b__1",
-                "7E8FDA50146981EE00E6FA88EBBE7E32D2009596D612833639BF62C118AA7BE0" },
+                "27C248DCB493928093B47AFB98B5AAD042670BF2CA8CD228EF693EDD832FD2B9" },
             // Quantity click: native eject and returned-pile policy; no row mutation.
             { "Game.Systems.UIUX.MatStorageTab+<>c__DisplayClass22_2::<BuildContentsList>b__2",
-                "B05C9D5A48D46DE9C42B6A55D4526BB0D7085248FFD6ABB0085113CB085FE613" }
+                "FE5A1FDBA00F454128265127B65792F3AC0C72122F3D35DEAE81A4F847771B39" }
         };
-        private static readonly FieldInfo Label = AccessTools.Field(typeof(WIconText), "lastText");
-        private static readonly FieldInfo Icon = AccessTools.Field(typeof(WIconText), "lastIcon");
-        private static readonly FieldInfo CountLabel = AccessTools.Field(typeof(WButtonIconText2), "lastText2");
+        private static FieldInfo Label;
+        private static FieldInfo Icon;
+        private static FieldInfo CountLabel;
         private static readonly ConditionalWeakTable<MatStorageTab, Panel> Panels = new ConditionalWeakTable<MatStorageTab, Panel>();
         private static bool disabled;
 
@@ -71,12 +68,49 @@ namespace Game.Systems.QuantumStorage
             try
             {
                 var method = AccessTools.DeclaredMethod(typeof(MatStorageTab), "BuildContentsList", Type.EmptyTypes);
-                reviewed = Label != null && Icon != null && CountLabel != null && IsReviewedContract(method);
+                var label = DeclaredField(typeof(WIconText), "lastText", typeof(string), FieldAttributes.Family);
+                var icon = DeclaredField(typeof(WIconText), "lastIcon", typeof(string), FieldAttributes.Family);
+                var countLabel = DeclaredField(typeof(WButtonIconText2), "lastText2", typeof(string), FieldAttributes.Family);
+                reviewed = label != null && icon != null && countLabel != null &&
+                    DeclaredField(typeof(MatStorageTab), "storage", typeof(MatStorageComp), FieldAttributes.Private) != null &&
+                    DeclaredField(typeof(MatStorageTab), "contentsBlock", typeof(WGroup), FieldAttributes.Private) != null &&
+                    DeclaredField(typeof(MatStorageTab), "contentsLifetime", typeof(Lifetime), FieldAttributes.Private) != null &&
+                    HasReviewedClosureFields() && IsReviewedContract(method);
+                if (reviewed) { Label = label; Icon = icon; CountLabel = countLabel; }
             }
             // An unavailable/refactored optional UI contract must not fail mod startup.
             catch (Exception) { reviewed = false; }
-            if (!reviewed) { D.Warn("Quantum Storage material-panel optimization disabled: Core UI changed; using the complete native panel."); }
+            if (!reviewed) { D.Warn("Quantum Storage material-panel optimization disabled: reviewed UI contract could not be verified; using the complete native panel."); }
             return reviewed;
+        }
+
+        internal static bool IsExpectedField(FieldInfo field, Type owner, Type fieldType, FieldAttributes access) =>
+            field != null && field.DeclaringType == owner && field.FieldType == fieldType &&
+            !field.IsStatic && !field.IsLiteral && !field.IsInitOnly &&
+            field.GetRequiredCustomModifiers().Length == 0 && field.GetOptionalCustomModifiers().Length == 0 &&
+            (field.Attributes & FieldAttributes.FieldAccessMask) == access;
+
+        private static FieldInfo DeclaredField(Type owner, string name, Type fieldType, FieldAttributes access)
+        {
+            var field = owner?.GetField(name, DeclaredMethods);
+            return IsExpectedField(field, owner, fieldType, access) ? field : null;
+        }
+
+        private static bool HasReviewedClosureFields()
+        {
+            var root = typeof(MatStorageTab);
+            var all = root.GetNestedType("<>c__DisplayClass22_0", BindingFlags.NonPublic);
+            var material = root.GetNestedType("<>c__DisplayClass22_1", BindingFlags.NonPublic);
+            var quantity = root.GetNestedType("<>c__DisplayClass22_2", BindingFlags.NonPublic);
+            return all != null && material != null && quantity != null &&
+                all.GetFields(DeclaredMethods).Length == 2 && material.GetFields(DeclaredMethods).Length == 2 &&
+                quantity.GetFields(DeclaredMethods).Length == 2 &&
+                DeclaredField(all, "comp", typeof(MatStorageComp), FieldAttributes.Public) != null &&
+                DeclaredField(all, "<>4__this", root, FieldAttributes.Public) != null &&
+                DeclaredField(material, "matType", typeof(MatType), FieldAttributes.Public) != null &&
+                DeclaredField(material, "CS$<>8__locals1", all, FieldAttributes.Public) != null &&
+                DeclaredField(quantity, "num", typeof(int), FieldAttributes.Public) != null &&
+                DeclaredField(quantity, "CS$<>8__locals2", material, FieldAttributes.Public) != null;
         }
 
         internal static bool IsReviewedBody(MethodInfo method) =>
@@ -120,12 +154,7 @@ namespace Game.Systems.QuantumStorage
             return seen.Count == ReviewedCallbackHashes.Count;
         }
 
-        internal static string BodyHash(MethodInfo method)
-        {
-            var body = method?.GetMethodBody()?.GetILAsByteArray();
-            if (body == null) { return null; }
-            using (var sha = SHA256.Create()) { return BitConverter.ToString(sha.ComputeHash(body)).Replace("-", ""); }
-        }
+        internal static string BodyHash(MethodInfo method) => MaterialPanelContractFingerprint.Hash(method);
 
         private static bool Managed(MatStorageComp storage)
         {
