@@ -13,6 +13,8 @@
     <OutputPath>Libraries</OutputPath>
     <VersionPrefix>1.3.7.0</VersionPrefix>
     <DebugType>embedded</DebugType>
+    <!-- Keep mapped source diagnostics without embedding checkout paths in SourceLink. -->
+    <EnableSourceLink>false</EnableSourceLink>
     <DebugSymbols>false</DebugSymbols>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <PreserveCompilationContext>false</PreserveCompilationContext>
