@@ -4,7 +4,15 @@ Quantum Storage provides ten compact late-game storage endpoints. Matching endpo
 
 The first endpoint supplies a fixed initial capacity. Each additional endpoint of the same type doubles the network total.
 
-## Current release — 1.3.6 Core rc337 material-panel compatibility
+## Current release — 1.3.7 Core rc341 material-panel compatibility
+
+- Restores material-panel row reuse for reviewed Core v0.15.0-rc341.3223 after its changed fingerprints caused 1.3.6 to use the complete native panel.
+- Re-reviews the native contents builder and all three action callbacks. Core retains the full list, current quantities, sorting, tooltips, ejection, filters and panel lifetimes; unknown contracts still use the complete native panel.
+- Changes only the four reviewed fingerprints and release metadata. No row-cache algorithm, inventory, reservations, saved ownership, Relay rules, recipes, research or capacities change.
+
+Fresh startup, the sustained open-panel FPS result and affected controls require user-run validation of 1.3.7. No new FPS improvement or Workshop publication is claimed. Historical unconfirmed scenarios remain coverage limits. See [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md) and [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
+
+## Previous release — 1.3.6 Core rc337 material-panel compatibility
 
 - Restores material-panel row reuse for reviewed Core v0.15.0-rc337.3219 after the compatibility guard correctly fell back to the complete native panel.
 - Reviews the contents builder and all three native action callbacks, preserving Core's current general forbidden-item policy after individual ejection.
@@ -194,7 +202,7 @@ The network identifier defines each pool. Common systems manage capacity and int
 
 ## Compatibility and save behavior
 
-Version 1.3.6 targets installed Core `v0.15.0-rc337.3219`. It retains 1.3.5's `IsBetterStorage` selection rather than treating regional distance as tile distance. Existing research, filter, power, range, task and reservation checks remain authoritative. Stored object identities, transfer cleanup, the save format and optional TACC/Part Restoration Unit coordination are unchanged. The material-panel compatibility guard checks the reviewed native builder and action callbacks, retaining complete native fallback on a mismatch. Older and later Core builds are not certified by this review.
+Version 1.3.7 targets installed Core `v0.15.0-rc341.3223`. It retains 1.3.5's `IsBetterStorage` selection rather than treating regional distance as tile distance. Existing research, filter, power, range, task and reservation checks remain authoritative. Stored object identities, transfer cleanup, the save format and optional TACC/Part Restoration Unit coordination are unchanged. The material-panel compatibility guard checks the reviewed native builder and action callbacks, retaining complete native fallback on a mismatch. Older and later Core builds are not certified by this review.
 
 Version 1.3.1 targets installed Core `v0.15.0-rc327.3205`. Core extended the `SpawnRawMaterial(Mat, ...)` signature with `mergeIntoBlock`. Both Relay upgrade-recovery calls explicitly pass `false`, preserving normal nearby-pile merging without opting into block-wide deconstruction merging. The old binary could fail before the recovery method's early return, interrupting the Relay tick even in the main-menu demo. Save formats, inventories, capacities, reservations and network rules are unchanged. Restart after installing the rebuilt DLL; no save migration is required.
 
@@ -215,6 +223,12 @@ Core serializes object contents once as individual records. Quantum object endpo
 When a Being withdraws a stored object, Quantum Storage resolves the nearest safe, reachable endpoint in that object's matching network. The object's serialized owner is left unchanged unless Core successfully removes it from storage. Equipment searches, device loading, and organic or robotic surgery all use the same resolver.
 
 ## Change Log
+
+### 1.3.7 — Core rc341 material-panel compatibility
+
+- Rebaseline the existing fail-closed panel guard after reviewing the builder and all three action callbacks against rc341.3223.
+- Preserve native panel actions, full immediate contents and the existing row-reuse policy; unknown contracts retain the complete native panel.
+- No inventory, reservation, save, Relay, research, recipe or capacity changes. Fresh startup, panel FPS/control acceptance and Workshop publication remain unconfirmed for 1.3.7.
 
 ### 1.3.6 — Core rc337 material-panel compatibility
 
