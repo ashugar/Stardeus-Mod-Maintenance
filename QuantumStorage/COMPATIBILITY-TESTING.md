@@ -1,12 +1,20 @@
-# Quantum Storage 1.3.8 — material-panel contract guard
+# Quantum Storage 1.3.9 — bounded panel diagnostics
 
-## Current 1.3.8 validation scope — 2026-10-21
+## Current 1.3.9 validation scope — 2026-10-21
+
+This diagnostic-only build targets the unresolved General Storage Unit panel slowdown on Core rc342.3224. The fresh 1.3.8 log confirms loading and native-panel fallback; the user reports about 75 FPS closed and 12–61 FPS open, averaging about 40, plus recurring line churn. The guard's first refusal and actual rebuild/key-change rates require a fresh diagnostic capture.
+
+Local opt-in adds separate bounded observation of guard stages, application frame intervals, inclusive native/skipped builder calls and raw key/quantity-change counts. It preserves the guard approvals, cache policy, storage notifications, native controls, inventory and save schema. The optional observer has its own Harmony owner and caught failure boundary. Its marker is local and excluded from release packages. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) for limits and capture steps.
+
+Build/metadata/recorder tests and an isolated installed-Harmony ordering/exception fixture cover static and synthetic contracts only. Actual Mono startup, sampler lifetime, runtime privacy/output, visible controls and measured FPS remain pending until the user runs the capture. No repair or Workshop publication is claimed. Accepted 1.3.6 history and unconfirmed unrelated scenarios retain their previous status.
+
+## Historical 1.3.8 validation scope — 2026-10-21
 
 Reviewed against Stardeus v0.15.0-rc342.3224. The new startup-only guard compares the resolved builder, complete three-callback set and consumed field shapes, ignoring incidental metadata-token renumbering, assembly versions and MVIDs. It checks instructions, signatures/generic arguments, scalar values, branches, locals, body settings and current exception clauses. It has no Core-version enabling condition and adds no per-refresh hashing. Unsupported or unverified inspected contracts retain the complete native panel.
 
 Core continues to own the full list, live quantity choices, ejection/policies, tooltips, sorting and filter lifetimes. The row cache and its structural/runtime fallback are unchanged. No inventory, save-schema, hauling, Relay, research, recipe or capacity changes are introduced. This finite contract is not an arbitrary semantic-equivalence check or a review of every transitive helper/prefab/other mod.
 
-Build and metadata-only tests exercise the actual compiled guard/cache, benign token changes, contract changes and refusal paths without invoking Core callbacks or Unity rendering. Fresh 1.3.8 startup, acceptance by the game's Mono runtime, sustained open-panel FPS and controls remain pending. Compare the same busy scene closed/open, then check quantities/sorting, add/remove/empty transitions, partial/full ejection, Eject All, filters and endpoint/tab close-reopen behavior. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
+Build and metadata-only tests exercise the actual compiled guard/cache, benign token changes, contract changes and refusal paths without invoking Core callbacks or Unity rendering. The subsequent fresh 1.3.8 log confirms loading and native-panel fallback. Acceptance by the game's Mono runtime and detailed controls remain unconfirmed; the reported FPS loss remains unresolved. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
 
 The remaining historical scenarios are coverage limits, not new failures or authorization for broader work. Accepted and published 1.3.6 remains recorded below. Keep a separate known-good save; no new FPS recovery or Workshop publication is claimed.
 

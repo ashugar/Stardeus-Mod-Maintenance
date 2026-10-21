@@ -15,6 +15,7 @@
 *.deps.json
 
 # Backups, temporary files, and generated diagnostics.
+/QuantumStorage/PanelDiagnostics.enabled
 **/.release*/
 *.bak
 *.bak.*

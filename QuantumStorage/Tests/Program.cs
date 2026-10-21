@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 
-// This process invokes only the optional guard and presentation-only row cache.
+// This process invokes only the optional guard, row cache and pure diagnostic recorder.
 // It never installs Harmony patches or invokes a Core/Unity gameplay callback.
 static partial class Program
 {
@@ -34,6 +34,7 @@ static partial class Program
             Console.WriteLine("QuantumStorage SHA256: " + Hash(assemblyPath));
             Console.WriteLine("Game SHA256: " + Hash(Path.Combine(Managed, "Game.dll")));
             MaterialPanelTests();
+            PanelDiagnosticsTests();
             Console.WriteLine($"PASS: {checks} panel checks. No Harmony detours, game callbacks, or rendering exercised.");
             return 0;
         }

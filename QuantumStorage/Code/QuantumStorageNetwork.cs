@@ -204,6 +204,7 @@ namespace Game.Systems.QuantumStorage
 
         public void SynchronizeContents()
         {
+            QuantumPanelDiagnostics.Synchronize();
             int usedCapacity = CalculateUsedCapacity();
             foreach (MatStorageComp storage in nodes.ToArray())
             {
