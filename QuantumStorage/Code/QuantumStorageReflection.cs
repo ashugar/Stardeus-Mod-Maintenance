@@ -48,6 +48,7 @@ namespace Game.Systems.QuantumStorage
 
         public static void RefreshDisplay(MatStorageComp storage)
         {
+            QuantumPanelDiagnostics.Notify(storage);
             UpdateProgressBarMethod.Invoke(storage, null);
             storage.OnChange.Invoke();
         }

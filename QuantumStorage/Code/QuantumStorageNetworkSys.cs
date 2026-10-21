@@ -49,6 +49,7 @@ namespace Game.Systems.QuantumStorage
 
         protected override void OnInitialize()
         {
+            QuantumPanelDiagnostics.Configure();
             try
             {
                 QuantumStorageReflection.Validate();
@@ -66,10 +67,12 @@ namespace Game.Systems.QuantumStorage
                 harmony = null;
                 D.LogEx(ex, "Quantum Storage initialization failed; shared storage remains inactive for this session.");
             }
+            QuantumPanelDiagnostics.Install();
         }
 
         public override void Unload()
         {
+            QuantumPanelDiagnostics.Unload();
             The.SysSig.AfterLoadSaveState.RemoveListener(OnAfterLoadSaveState);
             harmony?.UnpatchAll(HarmonyId);
             harmony = null;
@@ -85,6 +88,7 @@ namespace Game.Systems.QuantumStorage
         private static void OnAfterLoadSaveState(GameState state)
         {
             QuantumNanobotObjectHauling.AfterFullLoad(state);
+            QuantumPanelDiagnostics.AfterLoad();
         }
 
         public ComponentData Save()

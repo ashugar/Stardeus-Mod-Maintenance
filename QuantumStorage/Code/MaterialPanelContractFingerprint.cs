@@ -41,16 +41,111 @@ namespace Game.Systems.QuantumStorage
             internal object Operand;
         }
 
+        // Ordinary value fields only: optional reader/JIT failures must remain inside
+        // the caller's guarded boundary, even before this type finishes initialization.
+        internal struct DiagnosticResult
+        {
+            internal string Hash, Stage, Reason;
+            internal int IlBytes, MethodFlags, ImplementationFlags, MaxStack, Locals, Clauses;
+            internal bool HasBody, HasBodyFlags, HasExceptionClauses, InitLocals;
+            internal int Offset, TokenTable, SignatureDepth;
+            internal string ExceptionType, InnerType, InnerInnerType;
+            internal int ExceptionHResult, InnerHResult, InnerInnerHResult;
+        }
+
+        [ThreadStatic] private static bool tracing;
+        [ThreadStatic] private static DiagnosticResult diagnostic;
+
+        internal static DiagnosticResult HashDiagnostic(MethodInfo method)
+        {
+            bool previousTracing = tracing;
+            var previous = diagnostic;
+            tracing = true;
+            diagnostic = new DiagnosticResult { Stage = "entry", Reason = "unavailable", Offset = -1, TokenTable = -1 };
+            try
+            {
+                string hash = Hash(method);
+                var result = diagnostic;
+                result.Hash = hash;
+                if (hash != null) { result.Stage = "complete"; result.Reason = "hashed"; }
+                return result;
+            }
+            finally { diagnostic = previous; tracing = previousTracing; }
+        }
+
+        private static void Stage(string stage) { if (tracing) { diagnostic.Stage = stage; } }
+        private static void Refusal(string reason) { if (tracing) { diagnostic.Reason = reason; } }
+
+        private static string ExceptionKind(Exception ex)
+        {
+            if (ex is TypeInitializationException) { return "TypeInitializationException"; }
+            if (ex is TypeLoadException) { return "TypeLoadException"; }
+            if (ex is ReflectionTypeLoadException) { return "ReflectionTypeLoadException"; }
+            if (ex is FileNotFoundException) { return "FileNotFoundException"; }
+            if (ex is FileLoadException) { return "FileLoadException"; }
+            if (ex is BadImageFormatException) { return "BadImageFormatException"; }
+            if (ex is MissingMethodException) { return "MissingMethodException"; }
+            if (ex is MissingFieldException) { return "MissingFieldException"; }
+            if (ex is MissingMemberException) { return "MissingMemberException"; }
+            if (ex is TargetInvocationException) { return "TargetInvocationException"; }
+            if (ex is AmbiguousMatchException) { return "AmbiguousMatchException"; }
+            if (ex is MemberAccessException) { return "MemberAccessException"; }
+            if (ex is InvalidDataException) { return "InvalidDataException"; }
+            if (ex is EndOfStreamException) { return "EndOfStreamException"; }
+            if (ex is IOException) { return "IOException"; }
+            if (ex is UnauthorizedAccessException) { return "UnauthorizedAccessException"; }
+            if (ex is NotSupportedException) { return "NotSupportedException"; }
+            if (ex is NotImplementedException) { return "NotImplementedException"; }
+            if (ex is ArgumentException) { return "ArgumentException"; }
+            if (ex is InvalidOperationException) { return "InvalidOperationException"; }
+            if (ex is InvalidProgramException) { return "InvalidProgramException"; }
+            if (ex is NullReferenceException) { return "NullReferenceException"; }
+            if (ex is IndexOutOfRangeException) { return "IndexOutOfRangeException"; }
+            if (ex is FormatException) { return "FormatException"; }
+            if (ex is OutOfMemoryException) { return "OutOfMemoryException"; }
+            if (ex is System.Security.SecurityException) { return "SecurityException"; }
+            if (ex is CryptographicException) { return "CryptographicException"; }
+            if (ex is OverflowException) { return "OverflowException"; }
+            return "OtherException";
+        }
+
+        private static void ExceptionEvidence(Exception ex)
+        {
+            if (!tracing) { return; }
+            // Evidence collection must never replace the existing exception-to-null
+            // decision. No messages, stack traces, arbitrary type names or paths.
+            try
+            {
+                diagnostic.Reason = "exception";
+                diagnostic.ExceptionType = ExceptionKind(ex);
+                diagnostic.ExceptionHResult = ex.HResult;
+                var inner = ex.InnerException;
+                if (inner == null) { return; }
+                diagnostic.InnerType = ExceptionKind(inner);
+                diagnostic.InnerHResult = inner.HResult;
+                inner = inner.InnerException;
+                if (inner == null) { return; }
+                diagnostic.InnerInnerType = ExceptionKind(inner);
+                diagnostic.InnerInnerHResult = inner.HResult;
+            }
+            catch (Exception) { }
+        }
+
         internal static string Hash(MethodInfo method)
         {
             try
             {
-                if (method == null) { return null; }
+                if (method == null) { Refusal("missing-method"); return null; }
+                Stage("body");
                 var body = method.GetMethodBody();
                 var bytes = body?.GetILAsByteArray();
-                if (bytes == null || bytes.Length == 0) { return null; }
+                if (bytes == null || bytes.Length == 0) { Refusal("missing-or-empty-body"); return null; }
+                if (tracing) { diagnostic.HasBody = true; diagnostic.IlBytes = bytes.Length; }
+                Stage("method-signature");
                 CheckSignature(method.Module, method.MetadataToken);
+                Stage("local-signature");
                 if (body.LocalSignatureMetadataToken != 0) { CheckSignature(method.Module, body.LocalSignatureMetadataToken); }
+                Stage("decode");
                 var instructions = Decode(bytes);
                 var indices = instructions.Select((instruction, index) => new { instruction.Offset, Index = index })
                     .ToDictionary(item => item.Offset, item => item.Index);
@@ -58,12 +153,26 @@ namespace Game.Systems.QuantumStorage
                 using (var writer = new BinaryWriter(stream, new UTF8Encoding(false, true), true))
                 {
                     writer.Write("QuantumStorage.PanelContract/1");
+                    Stage("method-identity");
                     WriteMethod(writer, method);
-                    writer.Write((int)method.Attributes);
-                    writer.Write((int)method.GetMethodImplementationFlags());
-                    writer.Write(body.InitLocals);
-                    writer.Write(body.MaxStackSize);
-                    writer.Write(body.LocalVariables.Count);
+                    Stage("body-flags");
+                    int methodFlags = (int)method.Attributes;
+                    writer.Write(methodFlags);
+                    int implementationFlags = (int)method.GetMethodImplementationFlags();
+                    writer.Write(implementationFlags);
+                    bool initLocals = body.InitLocals;
+                    writer.Write(initLocals);
+                    int maxStack = body.MaxStackSize;
+                    writer.Write(maxStack);
+                    int locals = body.LocalVariables.Count;
+                    writer.Write(locals);
+                    if (tracing)
+                    {
+                        diagnostic.MethodFlags = methodFlags; diagnostic.ImplementationFlags = implementationFlags;
+                        diagnostic.InitLocals = initLocals; diagnostic.MaxStack = maxStack; diagnostic.Locals = locals;
+                        diagnostic.HasBodyFlags = true;
+                    }
+                    Stage("locals");
                     foreach (var local in body.LocalVariables)
                     {
                         writer.Write(local.LocalIndex);
@@ -73,10 +182,19 @@ namespace Game.Systems.QuantumStorage
                     writer.Write(instructions.Count);
                     foreach (var instruction in instructions)
                     {
+                        if (tracing) { diagnostic.Offset = instruction.Offset; diagnostic.TokenTable = -1; }
+                        Stage("operand");
                         writer.Write(unchecked((ushort)instruction.Opcode.Value));
                         WriteOperand(writer, method, instruction, indices);
                     }
-                    writer.Write(body.ExceptionHandlingClauses.Count);
+                    Stage("exception-clauses");
+                    int clauses = body.ExceptionHandlingClauses.Count;
+                    writer.Write(clauses);
+                    if (tracing)
+                    {
+                        diagnostic.Clauses = clauses; diagnostic.HasExceptionClauses = true;
+                        diagnostic.Offset = -1; diagnostic.TokenTable = -1;
+                    }
                     foreach (var clause in body.ExceptionHandlingClauses)
                     {
                         if (clause.TryLength <= 0 || clause.HandlerLength <= 0) { throw new InvalidDataException(); }
@@ -91,6 +209,7 @@ namespace Game.Systems.QuantumStorage
                         else if (clause.Flags != ExceptionHandlingClauseOptions.Finally && clause.Flags != ExceptionHandlingClauseOptions.Fault)
                         { throw new InvalidDataException(); }
                     }
+                    Stage("digest");
                     writer.Flush();
                     using (var sha = SHA256.Create())
                     { return BitConverter.ToString(sha.ComputeHash(stream.ToArray())).Replace("-", ""); }
@@ -98,7 +217,7 @@ namespace Game.Systems.QuantumStorage
             }
             // Missing metadata, unsupported IL or failed resolution is an unverified
             // contract. It must never produce a permissive or partial fingerprint.
-            catch (Exception) { return null; }
+            catch (Exception ex) { ExceptionEvidence(ex); return null; }
         }
 
         private static List<Instruction> Decode(byte[] bytes)
@@ -110,6 +229,7 @@ namespace Game.Systems.QuantumStorage
                 while (stream.Position < stream.Length)
                 {
                     int offset = checked((int)stream.Position);
+                    if (tracing) { diagnostic.Offset = offset; }
                     ushort code = reader.ReadByte();
                     if (code == 0xfe) { code = (ushort)(0xfe00 | reader.ReadByte()); }
                     if (!Opcodes.TryGetValue(code, out var opcode) || opcode.OpCodeType == OpCodeType.Nternal)
@@ -169,6 +289,10 @@ namespace Game.Systems.QuantumStorage
             var typeContext = method.DeclaringType?.GetGenericArguments();
             var methodContext = method.IsGenericMethod ? method.GetGenericArguments() : null;
             int Token() => (int)instruction.Operand;
+            if (tracing && (instruction.Opcode.OperandType == OperandType.InlineMethod ||
+                instruction.Opcode.OperandType == OperandType.InlineField || instruction.Opcode.OperandType == OperandType.InlineType ||
+                instruction.Opcode.OperandType == OperandType.InlineTok || instruction.Opcode.OperandType == OperandType.InlineString))
+            { diagnostic.TokenTable = (int)((uint)Token() >> 24); }
             switch (instruction.Opcode.OperandType)
             {
                 case OperandType.InlineNone: return;
@@ -187,19 +311,25 @@ namespace Game.Systems.QuantumStorage
                     writer.Write(targets.Length);
                     foreach (int target in targets) { writer.Write(Boundary(indices, -1, target, false)); }
                     return;
-                case OperandType.InlineString: writer.Write(method.Module.ResolveString(Token())); return;
+                case OperandType.InlineString:
+                    Stage("string-resolution");
+                    writer.Write(method.Module.ResolveString(Token())); return;
                 case OperandType.InlineMethod:
                     CheckSignature(method.Module, Token());
+                    Stage("method-resolution");
                     WriteMethod(writer, method.Module.ResolveMethod(Token(), typeContext, methodContext)); return;
                 case OperandType.InlineField:
                     CheckSignature(method.Module, Token());
+                    Stage("field-resolution");
                     WriteField(writer, method.Module.ResolveField(Token(), typeContext, methodContext)); return;
                 case OperandType.InlineType:
                     if ((Token() & unchecked((int)0xff000000)) == 0x1b000000) { CheckSignature(method.Module, Token()); }
+                    Stage("type-resolution");
                     WriteType(writer, method.Module.ResolveType(Token(), typeContext, methodContext)); return;
                 case OperandType.InlineTok:
                     int table = Token() & unchecked((int)0xff000000);
                     if (table != 0x01000000 && table != 0x02000000) { CheckSignature(method.Module, Token()); }
+                    Stage("member-resolution");
                     var member = method.Module.ResolveMember(Token(), typeContext, methodContext);
                     if (member is Type resolvedType) { writer.Write("type"); WriteType(writer, resolvedType); }
                     else if (member is MethodBase resolvedMethod) { writer.Write("method"); WriteMethod(writer, resolvedMethod); }
@@ -212,6 +342,7 @@ namespace Game.Systems.QuantumStorage
 
         private static void WriteMethod(BinaryWriter writer, MethodBase method)
         {
+            Stage("method-identity");
             if (method == null || method.DeclaringType == null) { throw new InvalidDataException(); }
             writer.Write(method is ConstructorInfo ? "constructor" : method is MethodInfo ? "method" : throw new InvalidDataException());
             WriteType(writer, method.DeclaringType);
@@ -241,12 +372,17 @@ namespace Game.Systems.QuantumStorage
         // them. This validates metadata only; no referenced method is invoked.
         private static void CheckSignature(Module module, int token, int depth = 0)
         {
+            Stage("signature-resolution");
+            if (tracing) { diagnostic.TokenTable = (int)((uint)token >> 24); diagnostic.SignatureDepth = depth; }
             if (depth > 64) { throw new InvalidDataException(); }
             int table = token & unchecked((int)0xff000000);
             int related = 0;
+            if (table == 0x2b000000 || table == 0x0a000000) { Stage("metadata-bridge"); }
             var signature = new Signature(module, table == 0x2b000000 || table == 0x0a000000 ?
                 ReadMetadataSignature(module, token, out related) : module.ResolveSignature(token), depth);
             if (related != 0) { CheckSignature(module, related, depth + 1); }
+            if (tracing) { diagnostic.TokenTable = (int)((uint)token >> 24); diagnostic.SignatureDepth = depth; }
+            Stage("signature-validation");
             if (table == 0x1b000000) { signature.Type(false); }
             else if (table == 0x2b000000)
             {
@@ -289,33 +425,42 @@ namespace Game.Systems.QuantumStorage
         private static byte[] ReadMetadataSignature(Module module, int token, out int related)
         {
             related = 0;
+            Stage("metadata-open");
             using (var stream = File.Open(module.FullyQualifiedName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
             using (var pe = new System.Reflection.PortableExecutable.PEReader(stream))
             {
+                Stage("metadata-reader");
                 var reader = System.Reflection.Metadata.PEReaderExtensions.GetMetadataReader(pe);
+                Stage("metadata-mvid");
                 if (reader.GetGuid(reader.GetModuleDefinition().Mvid) != module.ModuleVersionId)
                 { throw new InvalidDataException(); }
+                Stage("metadata-row");
                 int row = token & 0x00ffffff;
                 if (row == 0) { throw new InvalidDataException(); }
                 if ((token & unchecked((int)0xff000000)) == 0x2b000000)
                 {
                     if (row > System.Reflection.Metadata.Ecma335.MetadataReaderExtensions.GetTableRowCount(reader,
                         System.Reflection.Metadata.Ecma335.TableIndex.MethodSpec)) { throw new InvalidDataException(); }
+                    Stage("metadata-methodspec");
                     var specification = reader.GetMethodSpecification(System.Reflection.Metadata.Ecma335.MetadataTokens.MethodSpecificationHandle(row));
                     related = System.Reflection.Metadata.Ecma335.MetadataTokens.GetToken(specification.Method);
                     int targetTable = related & unchecked((int)0xff000000);
                     if (targetTable != 0x06000000 && targetTable != 0x0a000000) { throw new InvalidDataException(); }
+                    Stage("metadata-blob");
                     return reader.GetBlobBytes(specification.Signature);
                 }
                 if ((token & unchecked((int)0xff000000)) != 0x0a000000 ||
                     row > System.Reflection.Metadata.Ecma335.MetadataReaderExtensions.GetTableRowCount(reader,
                         System.Reflection.Metadata.Ecma335.TableIndex.MemberRef)) { throw new InvalidDataException(); }
+                Stage("metadata-memberref");
                 var member = reader.GetMemberReference(System.Reflection.Metadata.Ecma335.MetadataTokens.MemberReferenceHandle(row));
+                Stage("metadata-parent");
                 if (member.Parent.Kind == System.Reflection.Metadata.HandleKind.TypeSpecification)
                 { related = System.Reflection.Metadata.Ecma335.MetadataTokens.GetToken(member.Parent); }
                 else if (member.Parent.Kind != System.Reflection.Metadata.HandleKind.TypeDefinition &&
                     member.Parent.Kind != System.Reflection.Metadata.HandleKind.TypeReference)
                 { throw new InvalidDataException(); }
+                Stage("metadata-blob");
                 return reader.GetBlobBytes(member.Signature);
             }
         }
@@ -390,18 +535,23 @@ namespace Game.Systems.QuantumStorage
 
         private static void WriteField(BinaryWriter writer, FieldInfo field)
         {
+            Stage("field-identity");
             if (field == null || field.DeclaringType == null) { throw new InvalidDataException(); }
             WriteType(writer, field.DeclaringType);
             writer.Write(field.Name);
             WriteType(writer, field.FieldType);
             writer.Write((int)field.Attributes);
+            Stage("field-required-modifiers");
             WriteTypes(writer, field.GetRequiredCustomModifiers());
+            Stage("field-optional-modifiers");
             WriteTypes(writer, field.GetOptionalCustomModifiers());
         }
 
         private static void WriteModifiers(BinaryWriter writer, ParameterInfo parameter)
         {
+            Stage("required-modifiers");
             WriteTypes(writer, parameter.GetRequiredCustomModifiers());
+            Stage("optional-modifiers");
             WriteTypes(writer, parameter.GetOptionalCustomModifiers());
         }
 
@@ -413,6 +563,7 @@ namespace Game.Systems.QuantumStorage
 
         private static void WriteType(BinaryWriter writer, Type type)
         {
+            Stage("type-identity");
             if (type == null) { throw new InvalidDataException(); }
             if (type.IsByRef) { writer.Write("byref"); WriteType(writer, type.GetElementType()); }
             else if (type.IsPointer) { writer.Write("pointer"); WriteType(writer, type.GetElementType()); }
@@ -444,6 +595,7 @@ namespace Game.Systems.QuantumStorage
 
         private static void WriteScope(BinaryWriter writer, Type definition)
         {
+            Stage("type-scope");
             var assembly = definition.Assembly.GetName();
             string token = BitConverter.ToString(assembly.GetPublicKeyToken() ?? new byte[0]).Replace("-", "").ToLowerInvariant();
             // Explicit, signed forwarding pairs used by this contract. Do not alias

@@ -1,4 +1,18 @@
-# Material panel performance — 1.3.8
+# Material panel performance — 1.3.9
+
+## Bounded diagnostic capture — 2026-10-21
+
+The fresh 1.3.8 log loads that version on rc342.3224 and still records native-panel fallback. The user reports about 75 FPS closed and 12–61 FPS open, averaging about 40, with recurring additions/removals. No exclusive cause or successful optimized startup on Mono is established. Native storage-change notifications rebuild the list, including reservation-only changes; Quantum's notification fanout can also reach the selected endpoint twice along some mutation paths. These are inspected call paths, not measured rates or proof of FPS causality.
+
+Version 1.3.9 observes the existing behavior without changing the guard approvals, cache decisions or notifications. Diagnostics are off unless the local, unbundled `PanelDiagnostics.enabled` marker exists at startup. Only its existence is checked; its contents are never read or changed by the game. The separate optional Harmony owner can observe the complete native fallback even when the optimization's Prepare refuses. Its failure cannot disable the gameplay patch owner or replace a native exception.
+
+For an enabled capture, load the affected save and spend approximately 20 seconds with the panel closed, 60 seconds with the General Storage Unit material list open while the usual activity continues, 20 seconds closed, then reopen for the remaining time. Keep game speed and scene comparable; note pauses, manual actions and visible line churn. Capture ends automatically after 180 seconds of application wall time or unload. Arming expires after ten minutes; demo mode does not start capture. Remove the marker with the game closed after collecting evidence, before ordinary play.
+
+The `[QuantumPanelDiag/1]` records in Player.log provide startup stages/hashes and safe exception categories, application frame-interval bins, panel-call counts/inclusive timing, same-frame repeated calls, selected Quantum notifications and network synchronizations. Bounded snapshots compare the raw dictionary by material identity, retaining zero-count keys. Counters distinguish identical raw contents, quantity-only changes and key additions/removals. Gaps and storage/tab switches reset continuity. No sorted enumeration, material names, actual quantities, entity IDs, arbitrary exception messages, stack traces or PC paths enter these records.
+
+Limits per process: 2,048 completed observed calls, 512 raw samples, 4,096 keys per snapshot, 262,144 examined entries including comparisons, and two reusable snapshot dictionaries. Detailed snapshots retire after a measured probe exceeds 2 ms or their measured overhead exceeds 1% after two seconds. Coarse frame collection continues until the capture ends. Logging is batched no faster than five seconds, at most 36 two-line batches, with startup/terminal reserves within 96 lines of at most 2,048 characters each. Frame timing is application wall time, not CPU/GPU profiling; inclusive hook windows and measured probe overhead do not account for every detour/runtime cost. Native row order and widget allocation counts are unavailable. Logging uses the game's warning sink because its conditional info logger is absent in this player build; these bounded diagnostic warnings do increment its warning count.
+
+Static tests and isolated Harmony tests cannot establish actual Unity Mono hook acceptance, capture output, rendering or FPS cause. Those require the next user-run session. Keep Optimization Mod's broader diagnostics disabled. Historical detailed controls and save/Relay scenarios remain coverage limits, not additional repair scope.
 
 ## Current resolved-contract guard — 2026-10-21
 
@@ -16,7 +30,7 @@ External validation passed 10,450 compiled guard/cache/native-metadata assertion
 
 Four panel-like metadata fixture fingerprints matched under .NET 10 and legacy CLR4 using the same compiled helper. The legacy host required existing desktop-compatible memory dependencies for inspection only; none enters the payload. Exact native CLR4 body inspection is unavailable because that runtime does not support Core's default interface methods. The actual four native fingerprints were checked under .NET 10. These host checks are separate from the pending game's Mono startup and rendering tests.
 
-Fresh 1.3.8 load, guard acceptance and sustained FPS/control validation remain pending. In a fresh user-run session, compare the same busy scene with the material list closed/open. Check immediate quantities/sorting, added/removed/empty types, partial/full ejection, Eject All, filters, tab/storage switching and close/reopen. Relay power transitions and save/reload remain separate coverage checks. No FPS recovery or Workshop publication is claimed.
+The later fresh 1.3.8 log confirms loading and native-panel fallback. The user's sustained FPS report remains unresolved. Guard acceptance on Mono and detailed controls remain unconfirmed. Relay power transitions and save/reload remain separate coverage checks. No FPS recovery or Workshop publication is claimed.
 
 Use the exact private installation plan/journal for changed-file rollback with Stardeus closed. Restoring 1.3.7 on rc342 returns to native-panel fallback. No save migration is introduced.
 

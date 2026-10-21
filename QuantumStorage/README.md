@@ -4,13 +4,21 @@ Quantum Storage provides ten compact late-game storage endpoints. Matching endpo
 
 The first endpoint supplies a fixed initial capacity. Each additional endpoint of the same type doubles the network total.
 
-## Current release — 1.3.8 material-panel contract guard
+## Current release — 1.3.9 optional panel diagnostics
+
+Adds a default-off, bounded diagnostic capture for the sustained material-panel slowdown. The latest 1.3.8 log still records native-panel fallback on rc342.3224. The player reports about 75 FPS closed and 12–61 FPS open, averaging about 40, with recurring line additions/removals. Their frequency and cost have not yet been measured.
+
+An empty local `PanelDiagnostics.enabled` file in this mod's installed folder opts in on the next game start. It is excluded from the repository and release package. Diagnostics report safe guard stages, application frame intervals, inclusive panel-call timing, and bounded raw key/quantity-change counters. They never log material names, quantities, entity IDs, player data or PC paths. The capture starts after entering the first loaded game, ends after three minutes or unload, and cannot restart in that process. Detailed sampling also stops at its work/overhead limits. Remove the marker before the next ordinary session to disable it.
+
+The compatibility verdict, approval constants, row cache, native notifications and gameplay behavior are unchanged. This is an investigation build; no FPS fix, in-game capture result or Workshop publication is claimed. Follow [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) for the short capture sequence.
+
+## Previous release — 1.3.8 material-panel contract guard
 
 - Keeps material-panel row reuse enabled across harmless metadata-token renumbering. The startup guard compares resolved instructions, member identities, signatures, locals, exception handling and the fields used by the optimization; it does not target a game version or whole Core DLL hash.
 - Reviews the current Core v0.15.0-rc342.3224 panel builder and all three action callbacks. Changed or unresolvable inspected contracts retain the complete native panel. This finite check does not establish arbitrary semantic equivalence or inspect every native helper, prefab or other mod.
 - Preserves the existing row cache and native list, quantities, sorting, tooltips, ejection, filters and lifetimes. No per-refresh hashing, refresh delay, inventory, save-schema, hauling, Relay, recipe, research or capacity change.
 
-Fresh 1.3.8 startup, sustained open-panel FPS and affected controls require user-run validation. No new FPS improvement or Workshop publication is claimed. Historical unconfirmed scenarios remain coverage limits. See [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md) and [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
+The subsequent 1.3.8 log confirms loading and native-panel fallback. The reported sustained FPS drop remains unresolved. A successful optimized Mono startup and detailed affected controls remain unconfirmed; no Workshop publication is claimed. Historical unconfirmed scenarios remain coverage limits. See [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md) and [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
 
 ## Previous release — 1.3.7 Core rc341 material-panel compatibility
 
