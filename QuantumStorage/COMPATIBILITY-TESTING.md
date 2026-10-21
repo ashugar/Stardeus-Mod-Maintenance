@@ -1,6 +1,16 @@
-# Quantum Storage 1.3.7 — rc341 compatibility
+# Quantum Storage 1.3.8 — material-panel contract guard
 
-## Current 1.3.7 validation scope — 2026-10-21
+## Current 1.3.8 validation scope — 2026-10-21
+
+Reviewed against Stardeus v0.15.0-rc342.3224. The new startup-only guard compares the resolved builder, complete three-callback set and consumed field shapes, ignoring incidental metadata-token renumbering, assembly versions and MVIDs. It checks instructions, signatures/generic arguments, scalar values, branches, locals, body settings and current exception clauses. It has no Core-version enabling condition and adds no per-refresh hashing. Unsupported or unverified inspected contracts retain the complete native panel.
+
+Core continues to own the full list, live quantity choices, ejection/policies, tooltips, sorting and filter lifetimes. The row cache and its structural/runtime fallback are unchanged. No inventory, save-schema, hauling, Relay, research, recipe or capacity changes are introduced. This finite contract is not an arbitrary semantic-equivalence check or a review of every transitive helper/prefab/other mod.
+
+Build and metadata-only tests exercise the actual compiled guard/cache, benign token changes, contract changes and refusal paths without invoking Core callbacks or Unity rendering. Fresh 1.3.8 startup, acceptance by the game's Mono runtime, sustained open-panel FPS and controls remain pending. Compare the same busy scene closed/open, then check quantities/sorting, add/remove/empty transitions, partial/full ejection, Eject All, filters and endpoint/tab close-reopen behavior. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
+
+The remaining historical scenarios are coverage limits, not new failures or authorization for broader work. Accepted and published 1.3.6 remains recorded below. Keep a separate known-good save; no new FPS recovery or Workshop publication is claimed.
+
+## Historical 1.3.7 validation scope — 2026-10-21
 
 Target: Stardeus v0.15.0-rc341.3223. The player reports sustained 75–80 FPS with the General Storage Unit material list closed and 35–40 FPS open. The current log confirms that 1.3.6 rejected the changed Core panel contract and used the full native list. This establishes loss of the optional optimization, not a controlled measurement of its frame cost or proof of an exclusive cause.
 
@@ -8,7 +18,7 @@ Version 1.3.7 re-reviews the complete current builder and three native action ca
 
 The rc341 release build passed with zero warnings/errors. The focused harness passed 10,360 checks against the actual 1.3.7 guard and row cache, including rejection of changed/missing/extra/duplicate callbacks, sorting, structural fallback and native forbidden-item notification. No Harmony detours, Core gameplay callbacks or Unity rendering were exercised.
 
-Fresh 1.3.7 startup and gameplay acceptance remain pending. After installation, confirm the intended version loads without the material-panel fallback, compare the same busy scene with the material list closed/open, and check live quantity/sort changes, partial/full ejection, Eject All and filter/close-reopen behavior. External checks cannot establish Unity rendering or live control behavior. Keep a separate known-good save.
+A subsequent fresh log loaded 1.3.7 on rc342.3224 and recorded native-panel fallback. The user reported open-panel performance around 30 FPS, occasionally above 50 FPS. The four raw hashes changed despite matching captured resolved instructions and body settings. No enabled-optimization performance/control acceptance of 1.3.7 is established. External checks cannot establish Unity rendering or live control behavior.
 
 The remaining historical scenarios below are coverage limits, not newly reported failures or mandatory work for this narrow repair. The accepted 1.3.6 release and its publication remain recorded below; that acceptance does not certify 1.3.7 or rc341. Research/balance advisories remain deferred.
 

@@ -24,7 +24,7 @@ Versions and dependencies come from the current manifests. These entries do not 
 | [Part Restoration Unit](PartRestorationUnit/) | 1.1.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3792407697) |
 | [Planning Overhaul](PlanningOverhaul/) | 1.1.0 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3805289692) |
 | [Prosthetics &amp; Androids Expanded (v0.15 Update)](Prosthetics%26AndroidsExpanded%28v0.15Update%29/) | 2.3.3 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3746773189) |
-| [Quantum Storage](QuantumStorage/) | 1.3.7 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3794784281) |
+| [Quantum Storage](QuantumStorage/) | 1.3.8 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3794784281) |
 | [Quest Request Preview](QuestRequestPreview/) | 1.0.3 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3783715878) |
 | [Reconnect Teleporter Connections](ReconnectTeleporterConnections/) | 1.1.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3785027459) |
 | [Remember Facility Upgrades](RememberFacilityUpgrades/) | 1.1.0 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3791306246) |

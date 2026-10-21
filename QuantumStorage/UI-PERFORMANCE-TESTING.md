@@ -1,6 +1,26 @@
-# Material panel performance — 1.3.7
+# Material panel performance — 1.3.8
 
-## Current rc341 compatibility update — 2026-10-21
+## Current resolved-contract guard — 2026-10-21
+
+The user retested 1.3.7 and reported sustained open-panel performance around 30 FPS, occasionally above 50 FPS. The fresh log loaded that version on Core rc342.3224 and recorded native-panel fallback. All four raw method hashes had changed again. The captured rc341 and rc342 resolved instructions, method signatures, locals/body settings and inspected widget/lifetime code match; the old capture did not include exception tables, so their historical equivalence is unproven. This establishes another incidental fingerprint rejection, not a controlled measurement of exclusive FPS causality.
+
+Version 1.3.8 replaces raw method-byte hashing with a startup-only resolved-contract fingerprint. The builder and complete three-callback set retain exact identities, instructions, scalar values, member signatures and generic arguments, validated branch/switch targets, locals/pinning, body settings and current exception clauses. Injected fields, widget text caches and closure fields must retain their reviewed shapes. Metadata row numbers, assembly versions, MVIDs and file paths do not participate; explicit signed framework forwarding pairs are normalized by type. There is no game-version or whole-DLL enabling condition.
+
+The row-cache algorithm, native controls, whole-list structural rebuilds and runtime exception fallback are unchanged. Unknown, unsupported or unresolvable inspected contracts retain the full native panel. Benign instruction rewrites or generated callback renames can still cause conservative refusal. The finite guard does not inspect every native helper body, prefab, Harmony interaction or UI behavior.
+
+For signature details erased by Reflection, the guard uses the metadata reader already supplied with the game, without packaging another DLL. Its isolated access verifies the loaded module's MVID; unavailable readers or mismatched files refuse the optional optimization. Custom-modified signatures, explicit array bounds and function-pointer signatures are unsupported and refuse rather than silently matching.
+
+Reviewed Core: v0.15.0-rc342.3224. Game.dll SHA256: `2795EB508C3CA8B84663E8AF74B90D7B77392C2E546E48834C08B31B16653BF9`. The four canonical approvals are explicit in the production guard. Build, fixture, binary and cross-host evidence is recorded with the prepared artifact; none substitutes for the game's Mono runtime or actual Unity interaction.
+
+External validation passed 10,450 compiled guard/cache/native-metadata assertions, including 89 fingerprint/schema checks. The harness build had zero warnings/errors. The production build had zero errors and two MSB3277 dependency-version warnings: installed metadata/immutable version 8 references are selected, while a transitive game compiler reference requests version 9. No warning suppression or extra bundled DLL is used.
+
+Four panel-like metadata fixture fingerprints matched under .NET 10 and legacy CLR4 using the same compiled helper. The legacy host required existing desktop-compatible memory dependencies for inspection only; none enters the payload. Exact native CLR4 body inspection is unavailable because that runtime does not support Core's default interface methods. The actual four native fingerprints were checked under .NET 10. These host checks are separate from the pending game's Mono startup and rendering tests.
+
+Fresh 1.3.8 load, guard acceptance and sustained FPS/control validation remain pending. In a fresh user-run session, compare the same busy scene with the material list closed/open. Check immediate quantities/sorting, added/removed/empty types, partial/full ejection, Eject All, filters, tab/storage switching and close/reopen. Relay power transitions and save/reload remain separate coverage checks. No FPS recovery or Workshop publication is claimed.
+
+Use the exact private installation plan/journal for changed-file rollback with Stardeus closed. Restoring 1.3.7 on rc342 returns to native-panel fallback. No save migration is introduced.
+
+## Historical rc341 compatibility update — 2026-10-21
 
 The player reports sustained 75–80 FPS with the General Storage Unit material list closed and 35–40 FPS while open. The rc341.3223 log explicitly records 1.3.6's optional panel optimization being disabled because the native contract is unreviewed. Full native row rebuilding returns on storage changes, a strong explanation for the recurring overhead; its exact frame cost and exclusive causality were not profiled.
 
@@ -12,7 +32,7 @@ Target: Core v0.15.0-rc341.3223. All three reviewed callback fingerprints remain
 
 External evidence for 1.3.7: the release and harness builds passed with zero warnings/errors; 10,360 focused checks passed against the actual compiled guard/cache. The harness retained 1,000 rows through 10,000 quantity notifications with 10,000 changed-label writes and no row replacements in that scenario. These checks exercise neither Unity rendering nor live Harmony detours or button callbacks.
 
-Fresh 1.3.7 load evidence and user-run FPS/control acceptance remain pending. Compare the same busy scene with the material list closed/open, then check immediate quantities/sorting, partial/full ejection, Eject All, filters and close/reopen. No new FPS improvement or publication is claimed. Other checklist scenarios remain coverage limits.
+The later test loaded 1.3.7 on rc342 and fell back again, as recorded above. It does not establish enabled-optimization gameplay acceptance on rc341. No new FPS improvement or publication is claimed. Other checklist scenarios remain coverage limits.
 
 Use the exact private installation plan/journal for rollback with Stardeus closed. Restoring 1.3.6 on rc341 returns to the full native panel; no save migration is introduced.
 

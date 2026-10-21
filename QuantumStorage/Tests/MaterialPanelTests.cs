@@ -69,6 +69,9 @@ static partial class Program
         Check(!Matches(fingerprints.Append(new("unknown callback", fingerprints[0].Value))),
             "additional unreviewed action fails closed");
         Check(!Matches(fingerprints.Append(new(null, fingerprints[0].Value))), "invalid callback signature fails closed");
+        var unavailableBody = fingerprints.ToArray();
+        unavailableBody[0] = new(unavailableBody[0].Key, null);
+        Check(!Matches(unavailableBody), "unavailable callback body cannot match its approved fingerprint");
         Check(AccessTools.Method(patch, "CallbackKey").Invoke(null,
             new object[] { AccessTools.Method(typeof(Program), "PrintUiHash") }) == null,
             "static methods cannot masquerade as reviewed instance action callbacks");
@@ -77,6 +80,7 @@ static partial class Program
                 new object[] { typeof(UnreviewedCallbacks).GetMethod(name) }) == null,
                 "changed action signature fails closed: " + name);
         MaterialPanelCoreContractTests();
+        MaterialPanelContractFingerprintTests();
         Check((string)AccessTools.Method(patch, "BodyHash").Invoke(null, new object[] { AccessTools.Method(typeof(Program), "PrintUiHash") }) != reviewed,
             "unreviewed method body does not match UI gate");
 
