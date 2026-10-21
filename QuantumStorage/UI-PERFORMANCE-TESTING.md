@@ -1,6 +1,22 @@
-# Material panel performance — 1.3.6
+# Material panel performance — 1.3.7
 
-## Current rc337 compatibility update — 2026-10-19
+## Current rc341 compatibility update — 2026-10-21
+
+The player reports sustained 75–80 FPS with the General Storage Unit material list closed and 35–40 FPS while open. The rc341.3223 log explicitly records 1.3.6's optional panel optimization being disabled because the native contract is unreviewed. Full native row rebuilding returns on storage changes, a strong explanation for the recurring overhead; its exact frame cost and exclusive causality were not profiled.
+
+Version 1.3.7 updates the four reviewed root/callback fingerprints after inspecting the complete current binary contract. The existing row cache, native callbacks, filters, structural rebuilds and fail-closed safety fallback remain unchanged. Raw IL fingerprints include metadata-token operands; different hashes alone do not establish changed panel behavior. No archived rc337 Core binary was available for exact normalized rc337-to-rc341 equivalence.
+
+Reviewed Game.dll SHA256: `683936E122494D60B13145E45A097F1D853FD8357A8146C3EB938075FE80DE32`.
+Reviewed MatStorageTab.BuildContentsList body SHA256: `C391AFEFF13F1ABF10B4E30385C5C58B5A43130DE619A10E115350592CDA149B`.
+Target: Core v0.15.0-rc341.3223. All three reviewed callback fingerprints remain explicit in the production guard.
+
+External evidence for 1.3.7: the release and harness builds passed with zero warnings/errors; 10,360 focused checks passed against the actual compiled guard/cache. The harness retained 1,000 rows through 10,000 quantity notifications with 10,000 changed-label writes and no row replacements in that scenario. These checks exercise neither Unity rendering nor live Harmony detours or button callbacks.
+
+Fresh 1.3.7 load evidence and user-run FPS/control acceptance remain pending. Compare the same busy scene with the material list closed/open, then check immediate quantities/sorting, partial/full ejection, Eject All, filters and close/reopen. No new FPS improvement or publication is claimed. Other checklist scenarios remain coverage limits.
+
+Use the exact private installation plan/journal for rollback with Stardeus closed. Restoring 1.3.6 on rc341 returns to the full native panel; no save migration is introduced.
+
+## Historical rc337 compatibility update — 2026-10-19
 
 The player reported approximately 75 FPS with the material panel closed and 25–30 FPS open after Core updated. The rc337 log confirms 1.3.5 intentionally disabled its optional row-reuse optimization and used Core's complete native panel. That fallback explains the loss of the optimization; the reported FPS difference is not a controlled benchmark or proof of a sole cause.
 
