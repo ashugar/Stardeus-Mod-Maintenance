@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Game;
 using Game.CodeGen;
 using Game.Constants;
@@ -10,6 +11,7 @@ using Game.UI;
 using Game.Utils;
 using HarmonyLib;
 using KL.Utils;
+using UnityEngine;
 
 namespace Game.Systems.QuestRequestPreview {
     /// <summary>
@@ -35,11 +37,114 @@ namespace Game.Systems.QuestRequestPreview {
         /// Applies this assembly's Harmony patches when the mod system starts.
         /// </summary>
         protected override void OnInitialize() {
-            harmony = new Harmony(HarmonyId);
-            harmony.PatchAll(typeof(QuestRequestPreviewSys).Assembly);
-            var version = typeof(QuestRequestPreviewSys)
-                .Assembly.GetName().Version.ToString(3);
-            D.Warn("Quest Request Preview {0} initialized.", version);
+            Harmony localHarmony = null;
+            try {
+                localHarmony = new Harmony(HarmonyId);
+                ValidateCoreContracts();
+                localHarmony.PatchAll(typeof(QuestRequestPreviewSys).Assembly);
+                harmony = localHarmony;
+
+                var version = typeof(QuestRequestPreviewSys)
+                    .Assembly.GetName().Version.ToString(3);
+                D.Warn("Quest Request Preview {0} initialized.", version);
+            } catch (Exception initializationError) {
+                Exception cleanupError = null;
+                try {
+                    localHarmony?.UnpatchAll(HarmonyId);
+                } catch (Exception unpatchError) {
+                    cleanupError = unpatchError;
+                }
+
+                harmony = null;
+                var cleanupDetail = cleanupError == null
+                    ? string.Empty
+                    : " Cleanup also failed: " + cleanupError;
+                D.Err(
+                    "Quest Request Preview disabled because its required UI "
+                    + "contracts or Harmony patches are unavailable: "
+                    + initializationError
+                    + cleanupDetail);
+            }
+        }
+
+        /// <summary>
+        /// Verifies the exact public rc341 UI contracts used by patched code
+        /// before any Harmony patch is applied.
+        /// </summary>
+        private static void ValidateCoreContracts() {
+            var afterShowPopup = RequirePublicStaticVoid(
+                typeof(UIUtils),
+                nameof(UIUtils.AfterShowPopup),
+                typeof(RectTransform),
+                typeof(bool),
+                typeof(float),
+                typeof(bool),
+                typeof(bool),
+                typeof(bool));
+            var popupParameters = afterShowPopup.GetParameters();
+            RequireOptionalDefault(popupParameters[1], false);
+            RequireOptionalDefault(popupParameters[2], 1f);
+            RequireOptionalDefault(popupParameters[3], true);
+            RequireOptionalDefault(popupParameters[4], false);
+            RequireOptionalDefault(popupParameters[5], true);
+
+            RequirePublicStaticVoid(
+                typeof(QuestTrackerHandoff),
+                nameof(QuestTrackerHandoff.FocusTracker),
+                typeof(Quest));
+        }
+
+        /// <summary>
+        /// Resolves an exact public static void method or rejects the Core
+        /// contract without invoking it through reflection.
+        /// </summary>
+        /// <param name="declaringType">Type that must declare the method.</param>
+        /// <param name="methodName">Required method name.</param>
+        /// <param name="parameterTypes">Required parameter types in order.</param>
+        /// <returns>The validated method metadata.</returns>
+        private static MethodInfo RequirePublicStaticVoid(
+                Type declaringType,
+                string methodName,
+                params Type[] parameterTypes) {
+            var method = declaringType.GetMethod(
+                methodName,
+                BindingFlags.Public | BindingFlags.Static,
+                null,
+                parameterTypes,
+                null);
+            if (method == null
+                    || method.DeclaringType != declaringType
+                    || method.ReturnType != typeof(void)
+                    || method.IsGenericMethodDefinition) {
+                throw new MissingMethodException(
+                    declaringType.FullName,
+                    methodName);
+            }
+
+            return method;
+        }
+
+        /// <summary>
+        /// Requires an optional parameter to retain the compiler default used
+        /// by this mod's direct source call.
+        /// </summary>
+        /// <param name="parameter">Parameter metadata being validated.</param>
+        /// <param name="expectedDefault">Required default value.</param>
+        private static void RequireOptionalDefault(
+                ParameterInfo parameter,
+                object expectedDefault) {
+            if (!parameter.IsOptional
+                    || !parameter.HasDefaultValue
+                    || !Equals(parameter.DefaultValue, expectedDefault)) {
+                throw new MissingMethodException(
+                    "Required optional default is unavailable for "
+                    + parameter.Member.DeclaringType?.FullName
+                    + "."
+                    + parameter.Member.Name
+                    + " parameter "
+                    + parameter.Name
+                    + ".");
+            }
         }
 
         /// <summary>
@@ -262,7 +367,7 @@ namespace Game.Systems.QuestRequestPreview {
             UndecidedSignalPersistence.RemoveRegistration(state, quest);
             state.Query.AcceptQuest.Ask(quest);
             popupLifetime.Dispose();
-            state.UIQuery.ShowQuest.Ask(quest);
+            QuestTrackerHandoff.FocusTracker(quest);
 
             if (quest.Data.Provider is NPCShip ship) {
                 if (ship.IsInHyperspace) {

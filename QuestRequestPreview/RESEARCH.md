@@ -150,3 +150,42 @@ the same implementation that passed that check.
 - Static build inspection cannot prove pooled-UI layout, Escape routing, Signal
   state behavior, or repeated open/close lifecycle safety. Those require the
   runtime checklist in `README.md` and a fresh `Player.log` review.
+
+## 1.0.3 rc341 compatibility repair
+
+Repair date: 2026-10-21
+
+The Stardeus 0.15.0-rc341 installed contract was verified against `Game.dll`
+SHA-256 `683936E122494D60B13145E45A097F1D853FD8357A8146C3EB938075FE80DE32`
+and module MVID `7a8bdb5d-444b-4373-9b9b-afea5bd2e0d6`.
+
+rc341 exposes the public static method
+`UIUtils.AfterShowPopup(RectTransform, bool, float, bool, bool, bool)`. The last
+five parameters are optional with defaults `false`, `1f`, `true`, `false`, and
+`true`. Version 1.0.2's DLL still referenced the former five-parameter member,
+which is a binary incompatibility even though the unchanged two-argument source
+call remains valid. Rebuilding that source against rc341 emits the six-parameter
+reference and the explicit argument sequence `true`, `1f`, `true`, `false`,
+`true`.
+
+Core's current post-acceptance presentation seam is the public static
+`QuestTrackerHandoff.FocusTracker(Quest)` method. The 1.0.3 Accept helper uses
+that direct typed call in the same position formerly occupied by the stale
+`UIQuery.ShowQuest` call: after temporary Signal registration is removed, Core
+accepts the quest, and the popup lifetime is disposed, but before the existing
+NPC ship behavior is restored. Quest eligibility, persistence, recovery,
+explicit rejection, objectives, rewards, and save behavior are unchanged.
+
+Initialization now validates both exact public static void signatures before
+calling Harmony. It also verifies the popup parameters' optional metadata and
+defaults. A local Harmony instance is published to the system field only after
+`PatchAll` succeeds. Any validation or patching failure owner-unpatches
+`jleas.stardeus.questrequestpreview`, leaves the field null, logs one clear
+disabled error, and does not rethrow. This prevents a partially installed patch
+set from remaining active after Core contract drift.
+
+Source, exact-dependency build, and final-DLL inspection are the evidence for
+this compatibility repair. Fresh rc341 startup, popup layout, neutral close and
+Escape behavior, Accept tracker focus and NPC behavior, Signal save/load and
+rejection, personal-favor exclusion, and a fresh log review remain runtime
+pending.

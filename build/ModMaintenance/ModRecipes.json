@@ -486,8 +486,13 @@
       "IncludeFiles": [
         "ModInfo.json",
         "CloseOption.png",
+        "Code/AssemblyInfo.cs",
+        "Code/QuestRequestPreviewSys.cs",
         "ModCover.jpg",
+        "mod.csproj",
+        "QuestRequestPreview.sln",
         "README.md",
+        "RESEARCH.md",
         "SteamWorkshopItemId"
       ],
       "IncludeDirectories": [],
