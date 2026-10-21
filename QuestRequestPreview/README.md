@@ -6,9 +6,22 @@ or rejecting it.
 
 ## Release status
 
-Version 1.0.2 is the current public release. Its feature set is intentionally
-complete; future updates are expected to be limited to bug fixes and
-compatibility maintenance.
+Version 1.0.3 is the current compatibility build. Its feature set is
+intentionally complete; future updates are expected to be limited to bug fixes
+and compatibility maintenance. Source, build, and binary checks are complete;
+fresh rc341 startup and gameplay validation are pending.
+
+### 1.0.3
+
+- Rebuilt against Stardeus 0.15.0-rc341 so popup placement calls the current
+  six-parameter `UIUtils.AfterShowPopup` contract with Core's optional defaults.
+- Updated incoming Accept to use Core's current
+  `QuestTrackerHandoff.FocusTracker(Quest)` presentation handoff after quest
+  activation.
+- Added pre-patch contract checks and atomic Harmony cleanup so a future UI
+  contract change disables the mod's patches instead of leaving a partial set.
+- Static compatibility checks are complete; fresh startup and the runtime
+  checklist below remain pending for this binary.
 
 ### 1.0.2
 
@@ -71,7 +84,7 @@ closed-source binary.
 
 ## Compatibility boundary
 
-Version 1.0.2 patches these private Core methods:
+Version 1.0.3 patches these private Core methods:
 
 - `Game.Systems.UIUX.QuestsHandler.ShowNewQuest(Quest)`
 - `Game.Systems.UIUX.QuestsWidget.LoadQuestFooter(Lifetime, WBase, Quest)`
@@ -84,10 +97,19 @@ context without performing reflection every time a quest is opened:
 - `footLife`
 - `ctx`
 
-The incoming-popup patch intentionally mirrors the current Stardeus 0.15.0
-method so it can preserve the vanilla Accept path while changing only close and
-explicit rejection presentation. A Core update that changes either method or
-field must be reviewed before declaring compatibility.
+The incoming-popup patch intentionally mirrors Stardeus 0.15.0-rc341 so it can
+preserve the vanilla Accept path while changing only close and explicit
+rejection presentation. It directly uses and validates these public rc341 UI
+contracts before installing any patch:
+
+- `UIUtils.AfterShowPopup(RectTransform, bool, float, bool, bool, bool)`, whose
+  omitted defaults are `1f`, `true`, `false`, and `true`
+- `QuestTrackerHandoff.FocusTracker(Quest)`
+
+If either contract or the popup defaults change, initialization removes every
+patch owned by this mod and leaves the feature disabled. A Core update that
+changes those contracts, a patched method, or an injected field must be reviewed
+before declaring compatibility.
 
 ## Build
 
@@ -106,12 +128,13 @@ dotnet build .\QuestRequestPreview.sln -c Release -p:StardeusManagedPath="$env:S
 ## Runtime validation
 
 A full Stardeus restart is required after replacing the DLL.
+Version 1.0.3 has not yet completed this runtime checklist on rc341.
 
 1. Open an incoming NPC quest request, close it, reopen it, and verify the same
    quest remains undecided.
 2. Repeat with Escape.
-3. Accept an incoming NPC quest and verify the normal quest activation and NPC
-   behavior still occur.
+3. Accept an incoming NPC quest and verify normal activation, quest-tracker
+   focus, and NPC behavior still occur.
 4. Open an available main quest in the Quests window, use Close, reopen it, and
    verify it remains Available.
 5. Accept and reject available main quests and verify both vanilla actions still

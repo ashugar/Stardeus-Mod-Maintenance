@@ -17,6 +17,11 @@ function Assert-Refused([scriptblock]$Operation, [string]$Name) {
     try { $null = & $Operation } catch { $refused = $true }
     Assert-Test $refused $Name
 }
+function Assert-RefusedMessage([scriptblock]$Operation, [string]$Expected, [string]$Name) {
+    $message = $null
+    try { $null = & $Operation } catch { $message = $_.Exception.Message }
+    Assert-Test ($message -ceq $Expected) $Name
+}
 function Write-Fixture([string]$Relative, [string]$Text) {
     $path = Join-Path $repo $Relative
     $null = [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($path))
@@ -56,9 +61,10 @@ try {
     Write-Fixture 'Fixture/README.md' '# Fixture release'
     Write-Fixture 'Fixture/SteamWorkshopItemId' '123456789'
     Write-Fixture 'Fixture/Definitions/Example.json' '{"Value":1}'
-    Write-Fixture 'Fixture/.vscode/mod.csproj' '<Project><PropertyGroup><GenerateAssemblyInfo>false</GenerateAssemblyInfo><VersionPrefix>1.2.3.0</VersionPrefix></PropertyGroup></Project>'
-    $bomProject = Join-Path $repo 'Fixture/.vscode/mod.csproj'
+    Write-Fixture 'Fixture/mod.csproj' '<Project><PropertyGroup><GenerateAssemblyInfo>false</GenerateAssemblyInfo><VersionPrefix>1.2.3.0</VersionPrefix></PropertyGroup></Project>'
+    $bomProject = Join-Path $repo 'Fixture/mod.csproj'
     [IO.File]::WriteAllBytes($bomProject, ([byte[]]@(0xef, 0xbb, 0xbf) + [IO.File]::ReadAllBytes($bomProject)))
+    Write-Fixture 'Fixture/Fixture.sln' 'Microsoft Visual Studio Solution File, Format Version 12.00'
     Write-Fixture 'Fixture/Code/AssemblyInfo.cs' @'
 using System.Reflection;
 [assembly: AssemblyVersion("1.2.3.0")]
@@ -71,6 +77,10 @@ class VersionHolder {
  public const string RequiredUtilitiesVersion = "9.0.0";
 }
 '@
+    Write-Fixture 'Fixture/Tests/Selected.cs' 'class UnsafeTestPayload {}'
+    Write-Fixture 'Fixture/Code/Notes.md' 'Non-C# files remain unsafe beneath Code.'
+    Write-Fixture 'Fixture/unsafe.ps1' 'throw "unsafe payload"'
+    Write-Fixture 'Fixture/Other.csproj' '<Project />'
     Write-Fixture 'Data(Folder)/ModInfo.json' '{"Id":"Data.Public","Name":"Data Fixture","ModVersion":"2.0.0","GameVersion":"0.15.0"}'
     Write-Fixture 'Data(Folder)/Definitions/Data.json' '{}'
     Write-Fixture 'Data(Folder)/SteamWorkshopItemId' '234567890'
@@ -86,21 +96,24 @@ class VersionHolder {
     $null = Invoke-ModProcess -Program 'dotnet' -Arguments @('build', (Join-Path $binaryRoot 'Fixture.csproj'), '--configuration', 'Release', '--output', $binaryRun, '-noAutoResponse', '-p:ImportDirectoryBuildProps=false', '-p:ImportDirectoryBuildTargets=false', '-p:ImportDirectoryPackagesProps=false', ('-p:RestoreConfigFile=' + $neutralConfig)) -WorkingDirectory $binaryRoot
     [IO.File]::WriteAllBytes($dll, [IO.File]::ReadAllBytes((Join-Path $binaryRun 'Fixture.dll')))
     $recipes = [ordered]@{ SchemaVersion = 1; Mods = @(
-        [ordered]@{Folder='Fixture';Id='Fixture.Public';Project='.vscode/mod.csproj';Dlls=@('Fixture.dll');IncludeFiles=@('ModInfo.json','README.md','Settings.json','SteamWorkshopItemId');IncludeDirectories=@('Definitions');CreateOnlyFiles=@('Settings.json');VersionSources=@(@{Path='Code/AssemblyInfo.cs';Kind='assembly-attributes';Name=''},@{Path='Code/Version.cs';Kind='constant';Name='ModVersion'})},
+        [ordered]@{Folder='Fixture';Id='Fixture.Public';Project='mod.csproj';Dlls=@('Fixture.dll');IncludeFiles=@('ModInfo.json','README.md','Settings.json','SteamWorkshopItemId','Code/AssemblyInfo.cs','mod.csproj','Fixture.sln');IncludeDirectories=@('Definitions');CreateOnlyFiles=@('Settings.json');VersionSources=@(@{Path='Code/AssemblyInfo.cs';Kind='assembly-attributes';Name=''},@{Path='Code/Version.cs';Kind='constant';Name='ModVersion'})},
         [ordered]@{Folder='Data(Folder)';Id='Data.Public';Project=$null;Dlls=@();IncludeFiles=@('ModInfo.json','SteamWorkshopItemId');IncludeDirectories=@('Definitions');CreateOnlyFiles=@();VersionSources=@()}
     ) }
     Write-Recipes $recipes
     $sha = Commit-Fixture 'Initial fixture'
     $snapshot = Get-ModReleaseSnapshot $repo $sha 'Fixture'
+    $expectedFixturePaths = @('Code/AssemblyInfo.cs','Definitions/Example.json','Fixture.sln','Libraries/Fixture.dll','ModInfo.json','README.md','Settings.json','SteamWorkshopItemId','mod.csproj')
+    $transparencyPaths = @('Code/AssemblyInfo.cs','mod.csproj','Fixture.sln')
     Assert-Test ($snapshot.Id -ceq 'Fixture.Public' -and $snapshot.Folder -ceq 'Fixture') 'distinct-id-and-folder'
-    Assert-Test ($snapshot.Files.Count -eq 6) 'exact-payload-count'
+    Assert-Test ($snapshot.Files.Count -eq $expectedFixturePaths.Count -and @(Compare-Object $expectedFixturePaths @($snapshot.Files.RelativePath) -CaseSensitive).Count -eq 0) 'exact-payload-selection'
+    Assert-Test (@($snapshot.Files | Where-Object { $_.RelativePath -cin $transparencyPaths }).Count -eq $transparencyPaths.Count) 'explicit-transparency-files-selected'
     Assert-Test (@($snapshot.Files | Where-Object InstallPolicy -CEQ 'create-only').Count -eq 1) 'settings-create-only'
     Assert-Test ($snapshot.WorkshopItemId -ceq '123456789') 'workshop-identity'
     Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Value -ceq '1.2.3-test' }).Count -eq 2) 'informational-suffix'
     Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Value -ceq '9.0.0' }).Count -eq 0) 'dependency-version-distinct'
-    Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Surface -ceq '.vscode/mod.csproj:InformationalVersion' -and $_.Status -ceq 'not-present' -and $null -eq $_.Value }).Count -eq 1) 'optional-project-property-omission-recorded'
-    Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Surface -ceq '.vscode/mod.csproj:VersionPrefix' -and $_.Status -ceq 'observed' -and $_.Value -ceq '1.2.3.0' }).Count -eq 1) 'utf8-bom-project-version-observed'
-    Assert-Test (@($snapshot.Files | Where-Object RelativePath -CLike 'Code/*').Count -eq 0) 'source-excluded'
+    Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Surface -ceq 'mod.csproj:InformationalVersion' -and $_.Status -ceq 'not-present' -and $null -eq $_.Value }).Count -eq 1) 'optional-project-property-omission-recorded'
+    Assert-Test (@($snapshot.VersionEvidence | Where-Object { $_.Surface -ceq 'mod.csproj:VersionPrefix' -and $_.Status -ceq 'observed' -and $_.Value -ceq '1.2.3.0' }).Count -eq 1) 'utf8-bom-project-version-observed'
+    Assert-Test (@($snapshot.Files | Where-Object RelativePath -CEQ 'Code/Version.cs').Count -eq 0) 'unselected-version-source-excluded'
     $data = Get-ModReleaseSnapshot $repo $sha 'Data(Folder)'
     Assert-Test ($data.Files.Count -eq 3 -and $data.WorkshopItemId -ceq '234567890') 'data-only-with-workshop-marker'
     Assert-Test (@($data.VersionEvidence | Where-Object { $_.Surface -ceq 'ProductionProject' -and $_.Status -ceq 'no-project' -and $null -eq $_.Value }).Count -eq 1) 'data-only-project-omission-recorded'
@@ -116,10 +129,11 @@ class VersionHolder {
     Assert-Test ((Get-ModSha256 ([IO.File]::ReadAllBytes((Join-Path $first 'release.json')))) -ceq (Get-ModSha256 ([IO.File]::ReadAllBytes((Join-Path $second 'release.json'))))) 'deterministic-report'
     Assert-Test (-not [IO.File]::Exists((Join-Path $first 'INCOMPLETE.txt'))) 'successful-output-finalized'
     $report = Get-Content -LiteralPath (Join-Path $first 'release.json') -Raw | ConvertFrom-Json
-    Assert-Test ($report.ReviewedCommit -ceq $sha -and $report.Files.Count -eq 6) 'report-pins-reviewed-payload'
+    Assert-Test ($report.ReviewedCommit -ceq $sha -and $report.Files.Count -eq $expectedFixturePaths.Count) 'report-pins-reviewed-payload'
     Assert-Test ((Get-ModSha256 ([IO.File]::ReadAllBytes((Join-Path $first 'REPOSITORY-LICENSE')))) -ceq (Get-ModSha256 ([IO.File]::ReadAllBytes((Join-Path $repo 'LICENSE'))))) 'repository-license-sidecar-parity'
     Assert-Test ((Get-Content -LiteralPath (Join-Path $first 'SHA256SUMS')).Count -eq 4) 'sidecar-checksum-coverage'
     foreach ($file in $snapshot.Files) { Assert-Test ((Get-ModSha256 ([IO.File]::ReadAllBytes((Join-Path $first ('upload/Fixture/' + $file.RelativePath))))) -ceq $file.Sha256) 'upload-parity' }
+    Assert-Test (@($transparencyPaths | Where-Object { -not [IO.File]::Exists((Join-Path $first ('upload/Fixture/' + $_))) }).Count -eq 0) 'transparency-upload-parity'
     Assert-Refused { Invoke-Package $sha $first } 'existing-output-refused'
     Assert-Refused { Invoke-Package $sha (Join-Path $repo 'release-output') } 'source-overlap-refused'
     Assert-Refused { Get-ModReleaseSnapshot $repo ('0' * 40) 'Fixture' } 'wrong-reviewed-sha'
@@ -130,12 +144,39 @@ class VersionHolder {
     [IO.File]::WriteAllText($externalRunner, 'param([string]$Common,[string]$Root,[string]$Sha); $ErrorActionPreference="Stop"; . $Common; $null = Get-ModReleaseSnapshot -RepoRoot $Root -ReviewedCommit $Sha -Mod Fixture', $script:ModUtf8)
     Assert-Refused { Invoke-ModProcess -Program 'pwsh' -Arguments @('-NoProfile','-File',$externalRunner,'-Common',$staleCommon,'-Root',$repo,'-Sha',$sha) } 'external-stale-common-refused'
     foreach ($path in @('../other', '/absolute', 'one\two', 'one//two', 'a/CON.txt', 'a/COM¹.txt', 'trailing.', 'a:b', 'a/.git/config')) { Assert-Refused { Assert-ModSafeRelativePath $path } 'unsafe-path-refused' }
+    foreach ($path in @('Tests/Unsafe.cs','tools/Unsafe.cs','bin/Unsafe.cs','obj/Unsafe.cs','.vscode/Unsafe.cs','.git/Unsafe.cs','.release/Unsafe.cs','.release-cache/Unsafe.cs')) { Assert-Refused { Assert-ModReleasePayloadPath $path 'mod.csproj' } 'unsafe-development-payload-refused' }
+    $caseVariantPayloadPaths = @('code/Unsafe.cs','cOdE/Unsafe.cs','code/Notes.md','cOdE/Notes.md','tests/Notes.md','tEsTs/Notes.md','Tools/Notes.md','tOoLs/Notes.md','Bin/Notes.md','bIn/Notes.md','Obj/Notes.md','oBj/Notes.md','.VSCODE/Notes.md','.VsCoDe/Notes.md','.GIT/Notes.md','.GiT/Notes.md','.Release/Notes.md','.rElEaSe-cache/Notes.md')
+    foreach ($path in $caseVariantPayloadPaths) { Assert-Refused { Assert-ModReleasePayloadPath $path 'mod.csproj' } 'case-variant-development-payload-refused' }
+    foreach ($path in @('unsafe.cs','unsafe.pdb','unsafe.log','unsafe.bak','unsafe.tmp','unsafe.ps1','unsafe.exe','unsafe.zip','unsafe.7z','unsafe.rar')) { Assert-Refused { Assert-ModReleasePayloadPath $path 'mod.csproj' } 'unsafe-extension-payload-refused' }
+    Assert-Refused { Assert-ModReleasePayloadPath 'Code/Notes.md' 'mod.csproj' } 'non-csharp-code-payload-refused'
+    Assert-Refused { Assert-ModReleasePayloadPath 'Other.csproj' 'mod.csproj' } 'non-production-project-payload-refused'
     Assert-Refused { ConvertFrom-ModStrictJson $script:ModUtf8.GetBytes('{"Id":"a","id":"b"}') } 'duplicate-json-key-refused'
     $unsafeTree = [Collections.Generic.Dictionary[string, object]]::new([StringComparer]::Ordinal)
     $unsafeTree.Add('Fixture/README.md', [pscustomobject]@{Mode='120000';Type='blob';ObjectId=('0' * 40)})
     Assert-Refused { Get-ModBlob $repo $unsafeTree 'Fixture/README.md' } 'symlink-mode-refused'
     $unsafeTree['Fixture/README.md'] = [pscustomobject]@{Mode='160000';Type='commit';ObjectId=('0' * 40)}
     Assert-Refused { Get-ModBlob $repo $unsafeTree 'Fixture/README.md' } 'gitlink-mode-refused'
+    $safeIncludeFiles = @($recipes.Mods[0].IncludeFiles)
+    foreach ($path in @('Tests/Selected.cs','Code/Notes.md','unsafe.ps1','Other.csproj')) {
+        $recipes.Mods[0].IncludeFiles = @($safeIncludeFiles + $path)
+        Write-Recipes $recipes
+        $bad = Commit-Fixture ('Unsafe selected payload ' + $path)
+        Assert-Refused { Get-ModReleaseSnapshot $repo $bad 'Fixture' } 'unsafe-selected-payload-refused'
+    }
+    $recipes.Mods[0].IncludeFiles = $safeIncludeFiles
+    Write-Recipes $recipes
+    $sha = Commit-Fixture 'Restore safe transparency selection'
+    $caseVariantSelections = @('code/Selected.cs','cOdE/Notes.md','tests/Notes.md','Tools/Notes.md','Bin/Notes.md','oBj/Notes.md','.VSCODE/Notes.md','.GiT/Notes.md','.Release-cache/Notes.md')
+    foreach ($path in $caseVariantSelections) {
+        $recipes.Mods[0].IncludeFiles = @($safeIncludeFiles + $path)
+        Write-Recipes $recipes
+        $bad = Commit-Fixture ('Case-variant selected payload ' + $path)
+        $expectedRefusal = if ($path -ceq '.GiT/Notes.md') { 'unsafe-release-path' } else { 'development-or-unowned-payload-refused' }
+        Assert-RefusedMessage { Get-ModReleaseSnapshot $repo $bad 'Fixture' } $expectedRefusal 'case-variant-selected-payload-refused'
+    }
+    $recipes.Mods[0].IncludeFiles = $safeIncludeFiles
+    Write-Recipes $recipes
+    $sha = Commit-Fixture 'Restore canonical transparency selection'
     $caseRepo = Join-Path $fixtureRoot 'case-repository'
     $null = [IO.Directory]::CreateDirectory($caseRepo)
     $null = Invoke-ModGitBytes $caseRepo @('init', '--initial-branch=main')
@@ -156,11 +197,11 @@ class VersionHolder {
     Write-Fixture 'Fixture/README.md' 'changed tracked bytes'
     Assert-Refused { Get-ModReleaseSnapshot $repo $sha 'Fixture' } 'dirty-tracked-tree-refused'
     Write-Fixture 'Fixture/README.md' '# Fixture release'
-    $originalProject = [IO.File]::ReadAllBytes((Join-Path $repo 'Fixture/.vscode/mod.csproj'))
-    Write-Fixture 'Fixture/.vscode/mod.csproj' '<Project><PropertyGroup><VersionPrefix>1.2.4</VersionPrefix></PropertyGroup></Project>'
+    $originalProject = [IO.File]::ReadAllBytes((Join-Path $repo 'Fixture/mod.csproj'))
+    Write-Fixture 'Fixture/mod.csproj' '<Project><PropertyGroup><VersionPrefix>1.2.4</VersionPrefix></PropertyGroup></Project>'
     $bad = Commit-Fixture 'Fixture version mismatch'
     Assert-Refused { Get-ModReleaseSnapshot $repo $bad 'Fixture' } 'project-version-mismatch'
-    [IO.File]::WriteAllBytes((Join-Path $repo 'Fixture/.vscode/mod.csproj'), $originalProject)
+    [IO.File]::WriteAllBytes((Join-Path $repo 'Fixture/mod.csproj'), $originalProject)
     $sha = Commit-Fixture 'Restore fixture project'
     $recipes.Mods[0].Extra = 'unknown'
     Write-Recipes $recipes
@@ -184,6 +225,7 @@ class VersionHolder {
     Write-Recipes $recipes
     $sha = Commit-Fixture 'Restore own DLL selection'
     $recipes.Mods[0].Project = $null
+    $recipes.Mods[0].IncludeFiles = @($recipes.Mods[0].IncludeFiles | Where-Object { $_ -cne 'mod.csproj' })
     Write-Recipes $recipes
     $originalAttributes = [IO.File]::ReadAllBytes((Join-Path $repo 'Fixture/Code/AssemblyInfo.cs'))
     Write-Fixture 'Fixture/Code/AssemblyInfo.cs' "using System.Reflection;`n[assembly: AssemblyVersion(`"1.2.3.0`")]`n[assembly: AssemblyFileVersion(`"1.2.3.0`")]`n"
@@ -192,7 +234,8 @@ class VersionHolder {
     Assert-Test (@($withoutProject.VersionEvidence | Where-Object { $_.Surface -ceq 'ProductionProject' -and $_.Status -ceq 'no-project' }).Count -eq 1) 'compiled-project-omission-recorded'
     Assert-Test (@($withoutProject.VersionEvidence | Where-Object { $_.Surface -ceq 'Code/AssemblyInfo.cs:AssemblyInformationalVersion' -and $_.Status -ceq 'not-present' -and $null -eq $_.Value }).Count -eq 1) 'optional-assembly-attribute-omission-recorded'
     Assert-Test (@($withoutProject.VersionEvidence | Where-Object { $_.Surface -ceq 'Libraries/Fixture.dll:ProductVersion' -and $_.Status -ceq 'observed' }).Count -eq 1) 'binary-observation-retained-with-source-omission'
-    $recipes.Mods[0].Project = '.vscode/mod.csproj'
+    $recipes.Mods[0].Project = 'mod.csproj'
+    $recipes.Mods[0].IncludeFiles = $safeIncludeFiles
     Write-Recipes $recipes
     [IO.File]::WriteAllBytes((Join-Path $repo 'Fixture/Code/AssemblyInfo.cs'), $originalAttributes)
     $sha = Commit-Fixture 'Restore compiled fixture project and metadata'

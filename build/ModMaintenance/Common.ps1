@@ -202,6 +202,24 @@ function Assert-ModVersionValue {
     $Evidence.Add([pscustomobject]@{ Surface = $Surface; Status = 'observed'; Value = $Value })
 }
 
+function Assert-ModReleasePayloadPath {
+    param([Parameter(Mandatory)][string]$Path, [AllowNull()][string]$Project)
+    $isRootFile = -not $Path.Contains('/')
+    $hasCodeSegment = $Path -match '(^|/)Code(?:/|$)'
+    $isCodeSource = $Path.StartsWith('Code/', [StringComparison]::Ordinal) -and
+        [IO.Path]::GetExtension($Path) -ceq '.cs'
+    $isProductionProject = $isRootFile -and $Project -and $Path -ceq $Project -and
+        [IO.Path]::GetExtension($Path) -ceq '.csproj'
+    $isRootSolution = $isRootFile -and [IO.Path]::GetExtension($Path) -ceq '.sln'
+
+    if ($Path -match '(^|/)(?:Tests|tools|bin|obj|\.vscode|\.git|\.release[^/]*)(?:/|$)' -or
+        ($hasCodeSegment -and -not $isCodeSource) -or
+        ($Path -match '(?i)\.(?:cs|csproj|sln|ps1|pdb|log|bak|tmp|exe|zip|7z|rar)$' -and
+            -not ($isCodeSource -or $isProductionProject -or $isRootSolution))) {
+        throw 'development-or-unowned-payload-refused'
+    }
+}
+
 function Invoke-ModReleasePrivacy {
     param([Parameter(Mandatory)][string]$RepoRoot, [Parameter(Mandatory)][string]$ReviewedCommit, [Parameter(Mandatory)]$Tree)
     $key = $RepoRoot + '|' + $ReviewedCommit
@@ -336,9 +354,9 @@ function Get-ModReleaseSnapshot {
     $ordered = [string[]]@($paths)
     [Array]::Sort($ordered, [StringComparer]::Ordinal)
     foreach ($path in $ordered) {
-        if ($path -cmatch '(^|/)(?:Code|Tests|tools|bin|obj|\.vscode|\.git|\.release[^/]*)(?:/|$)' -or
-            $path -match '(?i)\.(?:cs|csproj|sln|ps1|pdb|log|bak|tmp|exe|zip|7z|rar)$' -or
-            ($path.StartsWith('Libraries/', [StringComparison]::Ordinal) -and $path.Substring(10) -cnotin $selected.Dlls)) { throw 'development-or-unowned-payload-refused' }
+        Assert-ModReleasePayloadPath $path $selected.Project
+        if ($path.StartsWith('Libraries/', [StringComparison]::Ordinal) -and
+            $path.Substring(10) -cnotin $selected.Dlls) { throw 'development-or-unowned-payload-refused' }
         $bytes = Get-ModBlob $root $tree ($prefix + $path)
         $files.Add([pscustomobject]@{ RelativePath = $path; Bytes = $bytes; Length = $bytes.LongLength; Sha256 = Get-ModSha256 $bytes; InstallPolicy = $(if ($createOnly.Contains($path)) { 'create-only' } else { 'replace' }) })
     }

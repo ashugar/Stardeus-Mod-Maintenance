@@ -11,7 +11,7 @@
     <RootNamespace>Game.Systems.QuestRequestPreview</RootNamespace>
     <AssemblyName>QuestRequestPreview</AssemblyName>
     <OutputPath>Libraries</OutputPath>
-    <VersionPrefix>1.0.2.0</VersionPrefix>
+    <VersionPrefix>1.0.3.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <GenerateDependencyFile>false</GenerateDependencyFile>
