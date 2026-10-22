@@ -24,7 +24,7 @@ namespace Game.Systems.QuantumStorage
     {
         internal const string Marker = "PanelDiagnostics.enabled";
         internal const string Owner = "jleas.quantumstorage.panel-diagnostics";
-        private static bool configured, enabled, spent, running, loaded;
+        private static bool configured, enabled, spent, running, loaded, guardRefusalReported;
         private static long armedAt, startedAt, lastFrame, lastFlush;
         private static int lines, startupLines, periodicBatches, faults;
         private static Harmony observer;
@@ -49,11 +49,13 @@ namespace Game.Systems.QuantumStorage
             configured = true;
             try
             {
-                enabled = ModRegistry.IsModType(typeof(QuantumStorageNetworkSys), out var mod) &&
-                    File.Exists(mod.ModFilePath(Marker, false, false));
+                // Core clears its transient type registry during CoreDefs. The
+                // loader's discovered mod metadata survives until system startup.
+                var mod = The.ModLoader?.FindModById("QuantumStorage");
+                enabled = mod != null && File.Exists(mod.ModFilePath(Marker, false, false));
                 if (!enabled) { return; }
                 armedAt = Now;
-                Guard("state=armed schema=1 capture_s=180 call_cap=2048 raw_cap=512 key_cap=4096 line_cap=96 warnings_are_diagnostic");
+                Guard("state=armed schema=1 build=1.3.10 capture_s=180 call_cap=2048 raw_cap=512 key_cap=4096 line_cap=96 warnings_are_diagnostic");
             }
             catch (Exception) { enabled = false; }
         }
@@ -75,6 +77,20 @@ namespace Game.Systems.QuantumStorage
         internal static void GuardException(string fixedStage, Exception ex)
         {
             try { Guard("guard stage=" + fixedStage + " exception=" + ExceptionCode(ex)); }
+            catch (Exception) { }
+        }
+
+        // Repeated successful Prepare calls can exhaust startup detail before
+        // loading a save. Preserve one later refusal stage without resetting
+        // any budget or bypassing the global nonterminal/terminal line caps.
+        internal static void GuardRefusal(string fixedStage)
+        {
+            try
+            {
+                if (!Enabled || guardRefusalReported) { return; }
+                guardRefusalReported = true;
+                Write("guard first_refusal=" + fixedStage, false);
+            }
             catch (Exception) { }
         }
 

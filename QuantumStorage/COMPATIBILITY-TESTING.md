@@ -1,6 +1,18 @@
-# Quantum Storage 1.3.9 — bounded panel diagnostics
+# Quantum Storage 1.3.10 — Mono material-panel guard repair
 
-## Current 1.3.9 validation scope — 2026-10-21
+## Current 1.3.10 validation scope — 2026-10-22
+
+Reviewed against Stardeus `v0.15.0-rc343.3225`. The repair reads valid signature tokens rejected by Mono through module-identity-checked metadata, validates their table rows, and fingerprints authored method flags. Exact method attributes remain required; only Mono's exact runtime-added `NoInlining` implementation flag is allowed. Authored flag changes, other runtime differences, changed instructions/schema and missing or invalid metadata still refuse the optional optimization. All four contract approvals remain unchanged and independent of the game version. The local activation fix uses `FindModById` to resolve Quantum Storage.
+
+Independent source/binary review, compiled guard/cache/diagnostic tests and exact-runtime offline Mono/Harmony probes cover signature-provider failures, authored/runtime flag differences, patch/unpatch/repatch stability and unchanged native-contract approvals. The accepted local repair build passed with zero errors and two established MSB3277 dependency-version warnings. The offline probes do not execute production save loading or Unity widgets.
+
+Separate runtime evidence on `1.3.9 / local-loadguard-1` confirms a fresh rc343.3225 load, guard acceptance, the intended optimization hooks after loading the save and actual row reuse: 566 of 598 observed calls (94.6%) reused rows, with 32 native builds and zero recorded call exceptions. No guard refusal or disable warning was recorded. These are calls, including repeated calls in the same frame, rather than distinct frames. The player accepted the result after reporting approximate same-speed FPS averages of 76 closed, 74 open and 77 closed again.
+
+That capture tracked about 12.16 seconds of open-panel lifetime. Detailed raw sampling retired before obtaining a sample, so no actual membership/quantity-churn result is established. The observation supports recovery in that run, not a controlled 180-second benchmark, exclusive CPU/GPU attribution or universal performance guarantee. Repeated real save loads, detailed ejection/filter/Relay controls, hauling and save edge cases remain coverage limits, not new defects or additional work authorized by this closeout.
+
+The temporary local diagnostic marker has been removed. Bounded opt-in diagnostic source remains; without the marker at startup, no recorder, sampler or diagnostic observer is created. The guard's single bounded later-refusal stage is retained for future authorized captures. No cache, notification, inventory, save-schema, hauling, Relay or balance behavior changes. A fresh startup of the final version-only 1.3.10 release remains pending; its runtime acceptance must be distinguished from the accepted local test build. No Workshop publication of 1.3.10 has occurred. Accepted and published 1.3.6 history remains below.
+
+## Historical 1.3.9 validation scope — 2026-10-21
 
 This diagnostic-only build targets the unresolved General Storage Unit panel slowdown on Core rc342.3224. The fresh 1.3.8 log confirms loading and native-panel fallback; the user reports about 75 FPS closed and 12–61 FPS open, averaging about 40, plus recurring line churn. The guard's first refusal and actual rebuild/key-change rates require a fresh diagnostic capture.
 
@@ -62,7 +74,7 @@ A fresh rc335.3217 log reviewed during release preparation confirms 1.3.5 loadin
 
 ## Material panels
 
-The observed 1.3.6 panel-performance result is accepted above. Detailed checks in [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) remain individually unconfirmed, including live quantity/type/sort changes, partial/full ejection, Eject All, filters, endpoint/tab changes, disposal/reopening and Relay power transitions. Retain every row and immediate updates. A controlled comparison of the same busy scene with the panel closed/open and the previous build would be needed to quantify an FPS gain.
+The observed 1.3.6 panel-performance result and the later local repair's row-reuse/FPS observation are accepted above for their stated builds. Detailed checks in [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) remain individually unconfirmed, including live quantity/type/sort changes, partial/full ejection, Eject All, filters, endpoint/tab changes, disposal/reopening and Relay power transitions. Retain every row and immediate updates. A controlled comparison of the same busy scene with the panel closed/open and the previous build would be needed to quantify an FPS gain.
 
 ## Evidence boundaries and recovery
 
@@ -70,4 +82,4 @@ External policy, metadata and callback-guard tests do not execute Unity widgets,
 
 Inspect a fresh Player.log for Quantum Storage initialization errors, missing methods, object-hauling session-disable messages and material-panel fallback. A future unreviewed panel contract should retain the complete native panel, not disable inventory.
 
-Use the exact update's private installation plan and rollback journal to restore only its changed files, with Stardeus closed. Restoring 1.3.6 on rc341 restores its complete-native-panel fallback; rollback is not a repair for this performance regression. Retain the older 1.3.6 transaction separately. Do not overwrite the only known-good save during testing.
+Use the exact update's private installation plan and rollback journal to restore only its changed files, with Stardeus closed. Preserve any later edits and the separate historical 1.3.6 transaction. The current repair introduces no save migration; restoring an earlier guard can restore its native-panel fallback. Do not overwrite the only known-good save during testing.

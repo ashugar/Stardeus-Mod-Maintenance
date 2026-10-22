@@ -120,7 +120,12 @@ namespace Game.Systems.QuantumStorage
                 }
             }
             catch (Exception) { }
-            if (!reviewed) { D.Warn("Quantum Storage material-panel optimization disabled: reviewed UI contract could not be verified; using the complete native panel."); }
+            if (!reviewed)
+            {
+                try { QuantumPanelDiagnostics.GuardRefusal(firstFailure ?? guardStage ?? "prepare"); }
+                catch (Exception) { }
+                D.Warn("Quantum Storage material-panel optimization disabled: reviewed UI contract could not be verified; using the complete native panel.");
+            }
             return reviewed;
         }
 

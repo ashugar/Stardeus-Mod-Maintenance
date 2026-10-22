@@ -158,7 +158,8 @@ namespace Game.Systems.QuantumStorage
                     Stage("body-flags");
                     int methodFlags = (int)method.Attributes;
                     writer.Write(methodFlags);
-                    int implementationFlags = (int)method.GetMethodImplementationFlags();
+                    int implementationFlags = ReadImplementationFlags(method);
+                    Stage("body-flags");
                     writer.Write(implementationFlags);
                     bool initLocals = body.InitLocals;
                     writer.Write(initLocals);
@@ -377,9 +378,21 @@ namespace Game.Systems.QuantumStorage
             if (depth > 64) { throw new InvalidDataException(); }
             int table = token & unchecked((int)0xff000000);
             int related = 0;
-            if (table == 0x2b000000 || table == 0x0a000000) { Stage("metadata-bridge"); }
-            var signature = new Signature(module, table == 0x2b000000 || table == 0x0a000000 ?
-                ReadMetadataSignature(module, token, out related) : module.ResolveSignature(token), depth);
+            byte[] bytes;
+            switch (table)
+            {
+                case 0x04000000:
+                case 0x06000000:
+                case 0x0a000000:
+                case 0x1b000000:
+                case 0x2b000000:
+                    Stage("metadata-bridge");
+                    bytes = ReadMetadataSignature(module, token, out related);
+                    break;
+                case 0x11000000: bytes = module.ResolveSignature(token); break;
+                default: throw new InvalidDataException();
+            }
+            var signature = new Signature(module, bytes, depth);
             if (related != 0) { CheckSignature(module, related, depth + 1); }
             if (tracing) { diagnostic.TokenTable = (int)((uint)token >> 24); diagnostic.SignatureDepth = depth; }
             Stage("signature-validation");
@@ -418,9 +431,42 @@ namespace Game.Systems.QuantumStorage
             if (!signature.AtEnd) { throw new InvalidDataException(); }
         }
 
-        // Reflection does not expose MethodSpec blobs or MemberRef owner TypeSpecs.
-        // Use the game's public metadata reader. Keep its types behind a non-inlined
-        // call so a missing reader is caught by Hash, leaving the native UI usable.
+        // Harmony adds NoInlining to Mono's live method metadata, even after
+        // unpatching. Keep authored flags in the contract and permit only that
+        // exact additive runtime change; other differences remain unverified.
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static int ReadImplementationFlags(MethodInfo method)
+        {
+            Stage("implementation-metadata");
+            var module = method.Module;
+            int token = method.MetadataToken;
+            int row = token & 0x00ffffff;
+            if ((token & unchecked((int)0xff000000)) != 0x06000000 || row == 0)
+            { throw new InvalidDataException(); }
+            using (var stream = File.Open(module.FullyQualifiedName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+            using (var pe = new System.Reflection.PortableExecutable.PEReader(stream))
+            {
+                var reader = System.Reflection.Metadata.PEReaderExtensions.GetMetadataReader(pe);
+                if (reader.GetGuid(reader.GetModuleDefinition().Mvid) != module.ModuleVersionId ||
+                    row > System.Reflection.Metadata.Ecma335.MetadataReaderExtensions.GetTableRowCount(reader,
+                        System.Reflection.Metadata.Ecma335.TableIndex.MethodDef))
+                { throw new InvalidDataException(); }
+                var definition = reader.GetMethodDefinition(System.Reflection.Metadata.Ecma335.MetadataTokens.MethodDefinitionHandle(row));
+                int authored = (int)definition.ImplAttributes;
+                int runtime = (int)method.GetMethodImplementationFlags();
+                if (definition.Attributes != method.Attributes ||
+                    (runtime != authored && (typeof(object).Assembly.GetType("Mono.Runtime", false) == null ||
+                        runtime != (authored | (int)MethodImplAttributes.NoInlining))))
+                { throw new InvalidDataException(); }
+                return authored;
+            }
+        }
+
+        // Unity Mono's ResolveSignature supports only StandAloneSig tokens. Read
+        // the other supported blobs with the game's public metadata reader, also
+        // retaining MethodSpec targets and MemberRef owner TypeSpecs for validation.
+        // Keep reader types behind a non-inlined call so a missing reader is caught
+        // by Hash, leaving the native UI usable.
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static byte[] ReadMetadataSignature(Module module, int token, out int related)
         {
@@ -437,6 +483,27 @@ namespace Game.Systems.QuantumStorage
                 Stage("metadata-row");
                 int row = token & 0x00ffffff;
                 if (row == 0) { throw new InvalidDataException(); }
+                switch (token & unchecked((int)0xff000000))
+                {
+                    case 0x04000000:
+                        if (row > System.Reflection.Metadata.Ecma335.MetadataReaderExtensions.GetTableRowCount(reader,
+                            System.Reflection.Metadata.Ecma335.TableIndex.Field)) { throw new InvalidDataException(); }
+                        Stage("metadata-fielddef");
+                        return reader.GetBlobBytes(reader.GetFieldDefinition(
+                            System.Reflection.Metadata.Ecma335.MetadataTokens.FieldDefinitionHandle(row)).Signature);
+                    case 0x06000000:
+                        if (row > System.Reflection.Metadata.Ecma335.MetadataReaderExtensions.GetTableRowCount(reader,
+                            System.Reflection.Metadata.Ecma335.TableIndex.MethodDef)) { throw new InvalidDataException(); }
+                        Stage("metadata-methoddef");
+                        return reader.GetBlobBytes(reader.GetMethodDefinition(
+                            System.Reflection.Metadata.Ecma335.MetadataTokens.MethodDefinitionHandle(row)).Signature);
+                    case 0x1b000000:
+                        if (row > System.Reflection.Metadata.Ecma335.MetadataReaderExtensions.GetTableRowCount(reader,
+                            System.Reflection.Metadata.Ecma335.TableIndex.TypeSpec)) { throw new InvalidDataException(); }
+                        Stage("metadata-typespec");
+                        return reader.GetBlobBytes(reader.GetTypeSpecification(
+                            System.Reflection.Metadata.Ecma335.MetadataTokens.TypeSpecificationHandle(row)).Signature);
+                }
                 if ((token & unchecked((int)0xff000000)) == 0x2b000000)
                 {
                     if (row > System.Reflection.Metadata.Ecma335.MetadataReaderExtensions.GetTableRowCount(reader,

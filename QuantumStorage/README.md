@@ -4,7 +4,17 @@ Quantum Storage provides ten compact late-game storage endpoints. Matching endpo
 
 The first endpoint supplies a fixed initial capacity. Each additional endpoint of the same type doubles the network total.
 
-## Current release — 1.3.9 optional panel diagnostics
+## Current release — 1.3.10 Mono material-panel guard repair
+
+Restores the reviewed material-panel optimization on Core `v0.15.0-rc343.3225` across Mono startup and save-loading patch preparation. Mono rejects some valid signature tokens through `ResolveSignature`; the guard now reads those signatures from module-identity-checked metadata with validated table rows. It also fingerprints authored method flags, allowing only Mono's exact runtime-added `NoInlining` flag while requiring every other inspected flag to match. Harmony can leave that runtime flag set after unpatching. The four reviewed contract approvals are unchanged; changed native code, authored flags, schemas or unsupported metadata still retain the complete native panel.
+
+The accepted local test build (`1.3.9 / local-loadguard-1`) loaded on rc343.3225, retained the optimization hooks after loading the save, and reused rows on 566 of 598 observed calls (94.6%), with 32 native builds, zero recorded call exceptions and no guard-disable warning. At the same game speed, the player reported approximate average FPS of 76 closed, 74 open and 77 closed again, and accepted the result. The large sustained drop appears resolved in that observed run. The capture tracked about 12.16 seconds of open-panel lifetime and collected no raw membership samples; it is not a controlled 180-second benchmark or proof of exclusive CPU cost or actual material-type churn.
+
+Temporary diagnostics are off for normal play: the local `PanelDiagnostics.enabled` marker has been removed. The default-off bounded diagnostic source remains available for future authorized investigation; without the startup marker, no recorder, sampler or diagnostic observer is created. The guard retains one bounded later-refusal stage record when diagnostics are enabled.
+
+The row cache, native notifications, full list and controls, inventory, save schema, hauling, Relay rules and balance are unchanged. A fresh startup of the final version-only 1.3.10 release is still pending; the accepted runtime evidence belongs to the local test build. Repeated real save loads, detailed native controls and broader gameplay scenarios remain coverage limits. Workshop publication of 1.3.10 has not been performed. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) and [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md).
+
+## Previous release — 1.3.9 optional panel diagnostics
 
 Adds a default-off, bounded diagnostic capture for the sustained material-panel slowdown. The latest 1.3.8 log still records native-panel fallback on rc342.3224. The player reports about 75 FPS closed and 12–61 FPS open, averaging about 40, with recurring line additions/removals. Their frequency and cost have not yet been measured.
 
@@ -90,7 +100,7 @@ The 1.3.1 Core compatibility repair is retained in restart-tested 1.3.3; it does
 
 ## Material networks
 
-Version 1.3.3 introduced the **material contents panel** optimization for both advanced Quantum endpoints and material Relays. Core still constructs every row and owns its click actions, quantity choices, tooltips and Eject All button. When the set of material types is unchanged, the mod updates changed quantity labels and moves existing rows into Core's current sort order instead of recreating the whole list. New/removed types, disposed rows, changed names/icons or a new panel lifetime use Core's full rebuild. There is no truncation, pagination or refresh delay; capacity/header, filter and priority bindings are unchanged. Version 1.3.8 checks the resolved panel contract once during startup, ignoring incidental metadata renumbering. An unknown inspected contract or unexpected runtime failure falls back to the complete native panel. Object-storage panels are unchanged. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
+Version 1.3.3 introduced the **material contents panel** optimization for both advanced Quantum endpoints and material Relays. Core still constructs every row and owns its click actions, quantity choices, tooltips and Eject All button. When the set of material types is unchanged, the mod updates changed quantity labels and moves existing rows into Core's current sort order instead of recreating the whole list. New/removed types, disposed rows, changed names/icons or a new panel lifetime use Core's full rebuild. There is no truncation, pagination or refresh delay; capacity/header, filter and priority bindings are unchanged. The resolved panel guard introduced in 1.3.8 runs during patch preparation, ignoring incidental metadata renumbering; 1.3.10 preserves those approvals while handling Mono signature access and Harmony's runtime-added method flag. An unknown inspected contract or unexpected runtime failure falls back to the complete native panel. Object-storage panels are unchanged. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md).
 
 | Endpoint | Accepted Core group | First endpoint capacity |
 | --- | --- | ---: |
@@ -218,7 +228,7 @@ The network identifier defines each pool. Common systems manage capacity and int
 
 ## Compatibility and save behavior
 
-Version 1.3.8 reviews installed Core `v0.15.0-rc342.3224`. It retains 1.3.5's `IsBetterStorage` selection rather than treating regional distance as tile distance. Existing research, filter, power, range, task and reservation checks remain authoritative. Stored object identities, transfer cleanup, the save format and optional TACC/Part Restoration Unit coordination are unchanged. The material-panel guard compares the resolved native builder, action callbacks and consumed fields once at startup; harmless token renumbering is accepted, while an unverified inspected contract retains the complete native panel. This review does not certify every behavior in older or later Core builds.
+Version 1.3.10 reviews installed Core `v0.15.0-rc343.3225`. It retains 1.3.5's `IsBetterStorage` selection rather than treating regional distance as tile distance. Existing research, filter, power, range, task and reservation checks remain authoritative. Stored object identities, transfer cleanup, the save format and optional TACC/Part Restoration Unit coordination are unchanged. The material-panel guard compares the resolved native builder, action callbacks and consumed fields during patch preparation; harmless token renumbering and Mono's exact runtime-added `NoInlining` flag are accepted, while authored flag changes and an unverified inspected contract retain the complete native panel. This review does not certify every behavior in older or later Core builds.
 
 Version 1.3.1 targets installed Core `v0.15.0-rc327.3205`. Core extended the `SpawnRawMaterial(Mat, ...)` signature with `mergeIntoBlock`. Both Relay upgrade-recovery calls explicitly pass `false`, preserving normal nearby-pile merging without opting into block-wide deconstruction merging. The old binary could fail before the recovery method's early return, interrupting the Relay tick even in the main-menu demo. Save formats, inventories, capacities, reservations and network rules are unchanged. Restart after installing the rebuilt DLL; no save migration is required.
 
@@ -239,6 +249,18 @@ Core serializes object contents once as individual records. Quantum object endpo
 When a Being withdraws a stored object, Quantum Storage resolves the nearest safe, reachable endpoint in that object's matching network. The object's serialized owner is left unchanged unless Core successfully removes it from storage. Equipment searches, device loading, and organic or robotic surgery all use the same resolver.
 
 ## Change Log
+
+### 1.3.10 — Mono material-panel guard repair
+
+- Read Mono-incompatible signature tokens from module-identity-checked metadata with validated table rows. Fingerprint authored method flags, requiring exact method attributes and allowing only Mono's exact runtime-added `NoInlining` implementation flag after Harmony patching.
+- Retain all four version-independent contract approvals and refusal of changed native code, authored flags, schemas or unsupported metadata. Preserve the full native fallback, row cache, controls, notifications, inventory, saves, hauling, Relay rules and balance.
+- Retain the local `FindModById` diagnostic activation fix and one bounded later-refusal stage record. Remove the temporary local marker for normal play while keeping bounded diagnostic source default-off.
+- The accepted `1.3.9 / local-loadguard-1` test on rc343.3225 confirmed 566 row reuses in 598 calls (94.6%) and approximate same-speed FPS averages of 76 closed / 74 open / 77 closed. Capture limits and separate untested controls remain documented. Fresh startup of final 1.3.10 and Workshop publication remain pending.
+
+### 1.3.9 — Optional bounded panel diagnostics
+
+- Add a local startup-marker opt-in for bounded guard, frame, inclusive panel-call and raw-content observations without changing approvals, cache decisions, notifications or gameplay.
+- Keep diagnostics separate from the gameplay Harmony owner, exclude the local marker from releases and bound capture lifetime, work, overhead and sanitized output. This release prepared evidence gathering; the later local repair and accepted result are recorded under 1.3.10.
 
 ### 1.3.8 — Material-panel contract guard
 
