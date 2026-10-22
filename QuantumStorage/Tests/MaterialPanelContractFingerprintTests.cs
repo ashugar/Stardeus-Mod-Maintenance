@@ -54,7 +54,10 @@ static partial class Program
         try
         {
             var baseline = Fixture("baseline");
+            MaterialPanelSignatureProviderTests(baseline.Method.Module);
             string reviewed = Fingerprint(baseline.Method);
+            MaterialPanelImplementationFlagsTests(baseline.Method,
+                Fixture("authored-noinline", (_, m) => m.ImplAttributes |= C.MethodImplAttributes.NoInlining).Method);
             Check(reviewed != null && reviewed.Length == 64 && reviewed.All(c => "0123456789ABCDEF".Contains(c)),
                 "supported fixture produces an uppercase SHA256 fingerprint");
             var shifted = Fixture("shifted", shifted: true);

@@ -52,6 +52,7 @@ static partial class Program
         PanelDiagnosticExceptionTests();
         PanelDiagnosticOutcomeScopeTests();
         PanelDiagnosticSinkFaultTests();
+        PanelDiagnosticRefusalBudgetTests();
         Console.WriteLine($"PASS: {checks-first} diagnostic checks; compiled recorder identity deltas, caps, timing buckets, privacy and isolated sink-fault guard parity. No Unity callbacks or diagnostic hooks executed.");
     }
 
@@ -295,8 +296,70 @@ static partial class Program
             for (int i = 0; i < 20; i++) { diagnosticsType.GetMethod("Guard", DiagnosticStatic).Invoke(null, new object[] { "fixture=bounded" }); }
             Check((int)diagnosticsType.GetField("startupLines", DiagnosticStatic).GetValue(null) == 8,
                 "regular startup attempts cap at eight even on sink failure, reserving two records for actual capture census and state");
+            diagnosticsType.GetMethod("GuardRefusal", DiagnosticStatic).Invoke(null, new object[] { "root-digest" });
+            diagnosticsType.GetMethod("GuardRefusal", DiagnosticStatic).Invoke(null, new object[] { "root-digest" });
+            Check((bool)diagnosticsType.GetField("guardRefusalReported", DiagnosticStatic).GetValue(null) &&
+                (int)diagnosticsType.GetField("startupLines", DiagnosticStatic).GetValue(null) == 8,
+                "first refusal contains a throwing sink and consumes its separate allowance once");
             Check(DiagnosticMessageTrap.MessageReads == 0,
                 "guard fault isolation never reads arbitrary nested exception messages");
+        }
+        finally { context.Unload(); }
+    }
+
+    static void PanelDiagnosticRefusalBudgetTests()
+    {
+        // Keep the compiled Write budget/privacy checks; replace only its final
+        // external log sink in a private COPY, so no Unity logger is invoked.
+        string root = Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "PanelRefusal-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        string fixturePath = Path.Combine(root, "QuantumStorage.dll");
+        var context = new AssemblyLoadContext("PanelRefusal-" + Guid.NewGuid().ToString("N"), isCollectible: true);
+        try
+        {
+            using (var module = C.ModuleDefinition.ReadModule(ModAssembly.Location))
+            {
+                var diagnostics = module.Types.Single(t => t.FullName == "Game.Systems.QuantumStorage.QuantumPanelDiagnostics");
+                var write = diagnostics.Methods.Single(m => m.Name == "Write");
+                var call = write.Body.Instructions.Single(i => i.Operand is C.MethodReference m && m.Name == "Warn");
+                var original = (C.MethodReference)call.Operand;
+                var sink = new C.MethodDefinition("FixtureSink", C.MethodAttributes.Private | C.MethodAttributes.Static, module.TypeSystem.Void);
+                foreach (var parameter in original.Parameters)
+                    sink.Parameters.Add(new C.ParameterDefinition(parameter.ParameterType));
+                var count = diagnostics.Fields.Single(f => f.Name == "faults");
+                sink.Body.Instructions.Add(IL.Instruction.Create(IL.OpCodes.Ldsfld, count));
+                sink.Body.Instructions.Add(IL.Instruction.Create(IL.OpCodes.Ldc_I4_1));
+                sink.Body.Instructions.Add(IL.Instruction.Create(IL.OpCodes.Add));
+                sink.Body.Instructions.Add(IL.Instruction.Create(IL.OpCodes.Stsfld, count));
+                sink.Body.Instructions.Add(IL.Instruction.Create(IL.OpCodes.Ret));
+                diagnostics.Methods.Add(sink);
+                call.Operand = sink;
+                module.Write(fixturePath);
+            }
+            context.Resolving += (_, name) => AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == name.Name);
+            var diagnosticsType = context.LoadFromAssemblyPath(fixturePath).GetType("Game.Systems.QuantumStorage.QuantumPanelDiagnostics", true);
+            void Set(string name, object value) => diagnosticsType.GetField(name, DiagnosticStatic).SetValue(null, value);
+            T Get<T>(string name) => (T)diagnosticsType.GetField(name, DiagnosticStatic).GetValue(null);
+            void Refuse() => diagnosticsType.GetMethod("GuardRefusal", DiagnosticStatic).Invoke(null, new object[] { "root-digest" });
+            Set("startupLines", 8); Set("lines", 91);
+            Refuse();
+            Check(!Get<bool>("guardRefusalReported") && Get<int>("lines") == 91 && Get<int>("faults") == 0,
+                "diagnostic marker off emits no refusal record");
+            Set("enabled", true);
+            Refuse();
+            Check(Get<bool>("guardRefusalReported") && Get<int>("lines") == 92 && Get<int>("faults") == 1 && Get<int>("startupLines") == 8,
+                "one later refusal survives startup exhaustion within the global nonterminal cap");
+            for (int i = 0; i < 100; i++) Refuse();
+            Check(Get<int>("lines") == 92 && Get<int>("faults") == 1,
+                "repeated preparation cannot repeat or reset the refusal allowance");
+            Set("guardRefusalReported", false);
+            Refuse();
+            Check(Get<int>("lines") == 92 && Get<int>("faults") == 1,
+                "refusal record cannot bypass the global nonterminal line limit");
+            Set("guardRefusalReported", false); Set("spent", true); Set("lines", 0);
+            Refuse();
+            Check(!Get<bool>("guardRefusalReported") && Get<int>("lines") == 0,
+                "spent capture cannot emit a refusal record");
         }
         finally { context.Unload(); }
     }

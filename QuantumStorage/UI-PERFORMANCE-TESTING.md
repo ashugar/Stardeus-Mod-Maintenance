@@ -1,6 +1,24 @@
-# Material panel performance — 1.3.9
+# Material panel performance — 1.3.10
 
-## Bounded diagnostic capture — 2026-10-21
+## Accepted local repair observation — 2026-10-22
+
+The local repair build `1.3.9 / local-loadguard-1` ran on Core `v0.15.0-rc343.3225`. The fresh log records guard acceptance, the intended Quantum optimization hooks after the save loaded, and actual row reuse. Of 598 observed builder calls, 566 reused existing rows (94.6%) and 32 ran the native builder. The capture recorded zero call exceptions and no guard-refusal or disable warning. These totals include repeated calls within one frame; they are not a distinct-frame count or an explanation of why each native build occurred.
+
+The player reported the following approximate FPS at the same game speed and accepted the result:
+
+| Panel phase | Reported range | Approximate average |
+| --- | ---: | ---: |
+| Closed before | 73–82 | 76 |
+| Open | 59–81 | 74 |
+| Closed after | 70–82 | 77 |
+
+The large sustained open-panel drop appears resolved in that observed run. The 180-second capture tracked only about 12.16 seconds of open-panel lifetime; it does not verify the full requested open phase or establish a controlled 180-second benchmark. Initial untracked time included different game speeds. Raw sampling retired at its overhead limit before producing any samples, so the capture proves neither actual material membership/quantity churn nor the reason for every native build. Inclusive panel-call timing is not exclusive CPU/GPU cost, and no speedup percentage is claimed.
+
+Version 1.3.10 carries the accepted guard repair and release metadata. Mono rejects valid MethodDef, FieldDef and TypeSpec tokens through `ResolveSignature`; the guard reads these from module-identity-checked metadata with validated table rows. Harmony also adds a live `NoInlining` flag on Mono that can persist after unpatching. The guard now serializes authored method flags, requires exact method attributes, and permits only that exact Mono runtime addition. Authored flag changes, changed native code/schema, unknown runtime flags and invalid metadata still refuse. All four reviewed approvals, row-cache decisions, native actions/notifications and complete fallback remain unchanged. The retained local activation fix resolves Quantum Storage with `FindModById`.
+
+Temporary diagnostics are off for normal play because the local `PanelDiagnostics.enabled` marker has been removed. The default-off bounded source remains available for future authorized captures; without the marker at startup, no recorder, sampler or diagnostic observer is created. One bounded later-refusal stage record remains available when diagnostics are enabled. A fresh startup of the final version-only 1.3.10 release remains pending. Repeated real save loads, native ejection/filter controls, Relay transitions, hauling and save edge cases remain separate coverage limits. No Workshop publication of 1.3.10 has occurred.
+
+## Historical 1.3.9 bounded diagnostic capture preparation — 2026-10-21
 
 The fresh 1.3.8 log loads that version on rc342.3224 and still records native-panel fallback. The user reports about 75 FPS closed and 12–61 FPS open, averaging about 40, with recurring additions/removals. No exclusive cause or successful optimized startup on Mono is established. Native storage-change notifications rebuild the list, including reservation-only changes; Quantum's notification fanout can also reach the selected endpoint twice along some mutation paths. These are inspected call paths, not measured rates or proof of FPS causality.
 
@@ -12,9 +30,9 @@ The `[QuantumPanelDiag/1]` records in Player.log provide startup stages/hashes a
 
 Limits per process: 2,048 completed observed calls, 512 raw samples, 4,096 keys per snapshot, 262,144 examined entries including comparisons, and two reusable snapshot dictionaries. Detailed snapshots retire after a measured probe exceeds 2 ms or their measured overhead exceeds 1% after two seconds. Coarse frame collection continues until the capture ends. Logging is batched no faster than five seconds, at most 36 two-line batches, with startup/terminal reserves within 96 lines of at most 2,048 characters each. Frame timing is application wall time, not CPU/GPU profiling; inclusive hook windows and measured probe overhead do not account for every detour/runtime cost. Native row order and widget allocation counts are unavailable. Logging uses the game's warning sink because its conditional info logger is absent in this player build; these bounded diagnostic warnings do increment its warning count.
 
-Static tests and isolated Harmony tests cannot establish actual Unity Mono hook acceptance, capture output, rendering or FPS cause. Those require the next user-run session. Keep Optimization Mod's broader diagnostics disabled. Historical detailed controls and save/Relay scenarios remain coverage limits, not additional repair scope.
+At preparation time, static and isolated Harmony tests did not establish actual Unity Mono hook acceptance, capture output, rendering or FPS cause. The later accepted local repair observation is recorded above. Keep Optimization Mod's broader diagnostics disabled. Historical detailed controls and save/Relay scenarios remain coverage limits, not additional repair scope.
 
-## Current resolved-contract guard — 2026-10-21
+## Historical 1.3.8 resolved-contract guard — 2026-10-21
 
 The user retested 1.3.7 and reported sustained open-panel performance around 30 FPS, occasionally above 50 FPS. The fresh log loaded that version on Core rc342.3224 and recorded native-panel fallback. All four raw method hashes had changed again. The captured rc341 and rc342 resolved instructions, method signatures, locals/body settings and inspected widget/lifetime code match; the old capture did not include exception tables, so their historical equivalence is unproven. This establishes another incidental fingerprint rejection, not a controlled measurement of exclusive FPS causality.
 
@@ -108,7 +126,7 @@ Only presentation of material contents: Quantum Storage, Cabinet, Freezer, Fridg
 
 ## Targeted regression checklist
 
-The 1.3.6 open-panel performance observation is accepted above. The checklist remains available for future regressions and broader validation; a controlled FPS benchmark and the detailed interaction scenarios have not been individually confirmed. These are coverage limits, not reported failures.
+The 1.3.6 open-panel performance observation and the later local repair's row-reuse/FPS observation are accepted above for their stated builds. The checklist remains available for future regressions and broader validation; a controlled FPS benchmark and the detailed interaction scenarios have not been individually confirmed. These are coverage limits, not reported failures.
 
 1. Open a busy Quantum Storage material panel during deposits and withdrawals. Confirm all materials and live quantities remain visible, and compare FPS with the previous build under the same conditions.
 2. Test By Name, ascending quantity and descending quantity, including equal counts and changing order. Rows must still eject the material they display.
