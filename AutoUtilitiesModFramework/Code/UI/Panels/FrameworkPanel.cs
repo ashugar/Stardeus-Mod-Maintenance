@@ -121,7 +121,10 @@ public sealed class FrameworkPanel : IDisposable
         }
         else
         {
-            UIUtils.AfterShowPopup(widget.Rect, true, 1f, true, false);
+            // Explicitly opened panels may move under the cursor to stay on screen;
+            // only hover tooltips need Core's keep-off-mouse behavior.
+            UIUtils.AfterShowPopup(widget.Rect, true, 1f, true, false,
+                keepOffMouse: false);
         }
     }
 
