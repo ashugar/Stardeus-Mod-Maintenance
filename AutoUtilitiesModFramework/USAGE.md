@@ -172,6 +172,17 @@ public override void Unload()
 
 Dispose prevents callbacks and UI objects from surviving a mod reload.
 
+### Core popup compatibility maintenance
+
+The validated 1.4.0 maintenance repair for Stardeus `0.15.0-rc344.3226`
+updates AUMF's internal `FrameworkPanel.Show()` integration to Core's current
+six-parameter `AfterShowPopup` contract. Existing consumers continue calling
+`Show()` or `Toggle()` normally; no consumer workaround, rebuild, or framework
+version-declaration change is required for this repair. AUMF version numbers
+advance for new features, not bugfixes or compatibility maintenance.
+See the [README validation record](README.md#140---validated-popup-compatibility-repair-2026-10-24)
+for the accepted scope and build identity.
+
 ## 4. Inputs, tabs, flow layout, and scrolling
 
 `AddInput` commits once when Enter is pressed or the field loses focus:

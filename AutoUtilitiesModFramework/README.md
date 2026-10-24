@@ -2,6 +2,33 @@
 
 Shared infrastructure for compatible Stardeus mods.
 
+## 1.4.0 - validated popup compatibility repair (2026-10-24)
+
+The user confirmed that widgets open their panels correctly again, including
+CARAU, and accepted the fix. The reported panel-opening failure is closed.
+
+The previous DLL referenced a five-parameter `UIUtils.AfterShowPopup` method
+that is absent from the installed Stardeus `0.15.0-rc344.3226` Core. AUMF now
+uses Core's six-parameter call with `keepOffMouse: false`, allowing explicitly
+opened panels to move beneath the cursor when native screen-edge correction
+is needed. Initial centering, remembered geometry, and pooled cleanup are
+unchanged. See [repair PR #48](https://github.com/ashugar/Stardeus-Mod-Maintenance/pull/48).
+
+This is internal compatibility maintenance, not a new feature: AUMF remains
+`1.4.0` (assembly/file `1.4.0.0`). No consumer code, dependency declaration,
+public API, or test-UI setting change is required.
+
+The repair passed its installed-Core reference check, unchanged-public-API
+checks, compiled-reference checks for 16 consumers, and all 15 isolated
+pooled-input tests. The popup regression check also rejects the old DLL.
+The accepted DLL SHA-256 is
+`23A23397D8E23B714768E51645CC59261B7F08CE1D14B5CA9CD6C79BD67A68BD`.
+
+Runtime acceptance covers restored widget/panel opening, including CARAU; it
+does not imply an exhaustive retest of every consumer control or independently
+close the separate pooled-input test record below. Workshop publication
+remains a separate user action.
+
 ## 1.4.0 maintenance test - pooled input callbacks (2026-09-11)
 
 `PanelContentContext.AddInput` now removes its own end-edit listener when the
