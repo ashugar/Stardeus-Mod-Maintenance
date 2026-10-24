@@ -1,4 +1,4 @@
-# Orbotron Upgrades 2.2.0
+# Orbotron Upgrades 2.2.1
 
 This Stardeus v0.15 compatibility update preserves the original Orbotron mod's additional jobs and abilities. Full credit for the original mod belongs to its original author: https://steamcommunity.com/sharedfiles/filedetails/?id=3318634071. The existing Workshop identity and compatibility-update attribution remain in ModInfo.json.
 
@@ -7,6 +7,8 @@ This Stardeus v0.15 compatibility update preserves the original Orbotron mod's a
 Select one active, living player-owned **Orbotron mind**. If any job in its current configured starter list is absent, the native action bar offers **Restore jobs**. Review the listed missing jobs and choose **Restore** or **Cancel**.
 
 You can also select multiple Beings, including **Select all** in **Worker Robots**, and use the same **Restore jobs** action. One preview shows how many eligible Orbotron minds and missing job records will be restored. Other robots/beings and already-complete minds are counted and skipped. Eligibility follows the mind's species and player ownership, so another species' mind in an Orbotron frame is not a recovery target.
+
+**Restore jobs ×N** counts only eligible Orbotron minds with missing configured jobs when the action menu is built. The Beings panel and the preview's **Selected** total still describe the full selection, including skipped beings. A complete or ineligible mind does not contribute to the action badge. A selection with no eligible incomplete Orbotron minds has no Restore jobs action. Confirmation rechecks the captured targets before modification.
 
 The confirmation applies only to the displayed subset of the captured selection. Changing membership, losing the initiating action or changing the game invalidates it; sorting the same selected beings does not add targets. Every confirmed mind is checked before recovery starts, then each pending mind is checked again. Existing skill values and priorities can change naturally without recovery overwriting them.
 
@@ -25,9 +27,9 @@ After recovery, only newly available actions belonging to the restored jobs are 
 
 ## Compatibility and validation
 
-Recovery's native contracts are reviewed for **v0.15.0-rc344.3226**, Game module `bf5d4d92-ad65-4f59-a00e-14a764a9eceb`. Version 2.2.0 accepts this exact module. An unreviewed Core module disables the recovery action with one startup warning; it does not rewrite minds or silently approve the new contract. The per-mind recovery algorithm, two additive JSON patches and spawn/progression operation are unchanged.
+Recovery's native contracts are reviewed for **v0.15.0-rc344.3226**, Game module `bf5d4d92-ad65-4f59-a00e-14a764a9eceb`. Version 2.2.1 accepts this exact module. An unreviewed Core module disables the recovery action with one startup warning; it does not rewrite minds or silently approve the new contract. The per-mind recovery algorithm, two additive JSON patches and spawn/progression operation are unchanged.
 
-User gameplay validation of **2.1.1 on rc344.3226** confirmed restoration on an existing Orbotron mind in a separate save, preservation of existing skill values and job priorities, and persistence after saving and loading. Earlier 2.1.0 recovery was also accepted on rc335.3217. Those tests apply to the earlier binaries. **Fresh startup, mixed Worker Robots multi-selection, preview/cancel/restore, real optional UI/Harmony interaction, large-selection responsiveness and separate-save reload for 2.2.0 remain pending.**
+User gameplay validation of **2.1.1 on rc344.3226** confirmed restoration on an existing Orbotron mind in a separate save, preservation of existing skill values and job priorities, and persistence after saving and loading. Earlier 2.1.0 recovery was also accepted on rc335.3217. Those tests apply to the earlier binaries. **Fresh startup, the corrected count badge, mixed Worker Robots preview/cancel/restore, real optional UI/Harmony interaction, large-selection responsiveness and separate-save reload for 2.2.1 remain pending.**
 
 The portable harness source-links the actual production coordinator and checks selection snapshots/filtering/deduplication, stale/consumed confirmation, reentrancy, per-target revalidation, every recovery outcome and bounded summaries. Callback fixtures do not prove native eligibility or Unity behavior. Separate current-Core compiled checks cover missing-only restoration, unchanged existing records/priorities, restrictions, rollback, native synthetic persistence and action-cache preservation, with current Skill Cap 0.1.3 semantics and without that dependency. Synthetic native tests use a private managed substitute for Unity's native string-hash primitive and directly invoke the compiled new-slot setter integration; they do not exercise actual Harmony, the native interface or Skill Cap's full save component.
 
@@ -41,7 +43,7 @@ A precommit insertion failure removes only this operation's own new records. An 
 
 ## Source and build
 
-`Code/RecoveryService.cs` owns the narrow missing-only planner/transaction. `Code/RecoveryTarget.cs` checks native state/identity and refreshes the actual owning body. `Code/RecoveryBatch.cs` adapts native selection/eligibility to the transient coordinator in `Code/BatchRecovery.cs`; `Code/RecoveryResult.cs` shares the unchanged per-mind result types. `Code/OrbotronRecoveryAction.cs` registers the user-triggered native action. `Code/AssemblyInfo.cs` contains explicit 2.2.0 assembly/file/informational metadata. `Tests/` contains the portable source-linked harness and is not runtime payload.
+`Code/RecoveryService.cs` owns the narrow missing-only planner/transaction. `Code/RecoveryTarget.cs` checks native state/identity and refreshes the actual owning body. `Code/RecoveryBatch.cs` adapts native selection/eligibility to the transient coordinator in `Code/BatchRecovery.cs`; `Code/RecoveryResult.cs` shares the unchanged per-mind result types. `Code/OrbotronRecoveryAction.cs` registers the user-triggered native action. `Code/AssemblyInfo.cs` contains explicit 2.2.1 assembly/file/informational metadata. `Tests/` contains the portable source-linked harness and is not runtime payload.
 
 The runtime payload includes the DLL, definitions and public documentation. Maintained Code sources, project and build script are in the repository; legacy source/build files in a live installation are not selected by the runtime installer.
 
@@ -49,4 +51,4 @@ The runtime payload includes the DLL, definitions and public documentation. Main
 
 ## Changes
 
-2.2.0 adds one multi-selection recovery confirmation while preserving the existing per-mind recovery behavior on rc344.3226. Existing data upgrades, author attribution, Workshop identity, current native arrays/curves and spawn operation are preserved. Saved minds change only after explicit recovery confirmation. See CHANGELOG.md for release history.
+2.2.1 corrects the multi-selection action count while retaining the recovery introduced in 2.2.0 on rc344.3226. Existing data upgrades, author attribution, Workshop identity, current native arrays/curves and spawn operation are preserved. Saved minds change only after explicit recovery confirmation. See CHANGELOG.md for release history.

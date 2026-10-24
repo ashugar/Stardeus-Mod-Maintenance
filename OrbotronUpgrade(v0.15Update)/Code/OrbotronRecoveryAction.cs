@@ -22,11 +22,11 @@ namespace OrbotronUpgrade
         {
             if (!RecoveryContract.IsSupported)
             {
-                D.Warn("Orbotron Upgrades 2.2.0: missing-job recovery is unavailable on this unreviewed Core build. Existing JSON upgrades remain active.");
+                D.Warn("Orbotron Upgrades 2.2.1: missing-job recovery is unavailable on this unreviewed Core build. Existing JSON upgrades remain active.");
                 return;
             }
             RegisterAction(new OrbotronRecoveryAction());
-            D.Warn("Orbotron Upgrades 2.2.0: selected-mind recovery action registered for single and multiple selections. No minds were changed.");
+            D.Warn("Orbotron Upgrades 2.2.1: selected-mind recovery action registered for single and multiple selections. No minds were changed.");
         }
 
         protected override bool ApplyFor(GameState state, Being entity, out EntityActionData data)
@@ -42,12 +42,13 @@ namespace OrbotronUpgrade
             data = EntityActionData.Unavailable;
             if (entities == null || entities.Count < 2) return false;
             var selection = new SelectionSnapshot<Being>(entities);
-            if (!RecoveryBatch.HasMissing(state, selection)) return false;
-            data = new EntityActionData(this, (life, parent, index) => CreateBatchButton(state, selection, life, parent, index));
+            int count = RecoveryBatch.CountMissing(state, selection);
+            if (count == 0) return false;
+            data = new EntityActionData(this, (life, parent, index) => CreateBatchButton(state, selection, count, life, parent, index));
             return true;
         }
 
-        private WBase CreateBatchButton(GameState state, SelectionSnapshot<Being> selection, Lifetime life, RectTransform parent, int index)
+        private WBase CreateBatchButton(GameState state, SelectionSnapshot<Being> selection, int count, Lifetime life, RectTransform parent, int index)
         {
             var button = SpawnButtonMulti(life, true, parent, index);
             WPopupData popup = null;
@@ -58,7 +59,7 @@ namespace OrbotronUpgrade
                 var stalePopup = popup; popup = null;
                 if (stalePopup != null) Coroutines.OnNextFrame(() => stalePopup.Despawn());
             });
-            button.Load(IconId.CHammer, "Restore jobs", () =>
+            button.LoadMulti(count, IconId.CHammer, "Restore jobs", () =>
             {
                 if (RecoveryInvocation.IsActive || !RecoveryBatch.ScopeCurrent(state, selection, life)) return;
                 confirmation?.Cancel();

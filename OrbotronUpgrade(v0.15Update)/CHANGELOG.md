@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.2.1 — 2026-10-24
+
+- Fixed the multi-selection **Restore jobs ×N** badge: it now uses the native counted-button loader with the eligible incomplete Orbotron-mind count. The previous loader left the pooled badge unset, so a stale count could be displayed.
+- Counted the same native-eligible missing-job subset used by recovery; other minds and already-complete Orbotron minds do not contribute. The full selection total remains separate. No-target selections keep the action unavailable.
+- Retained and rechecked the existing Orbotron-mind-only modification guard, current selection/ownership checks, learned skills, priorities and per-mind transaction/refresh behavior. Native jobs/abilities/curves and spawn requirements are unchanged.
+- Added mixed-selection count and native compiled guard/binding regressions. Fresh corrected-badge UI and separate-save recovery/save-load acceptance remain pending.
+
 ## 2.2.0 — 2026-10-24
 
 - Added **Restore jobs** to multiple selected Beings. Selecting all Worker Robots offers one preview/confirmation for eligible, active, living player-owned **Orbotron minds** with missing configured jobs. Other selected beings and already-complete minds are skipped.
