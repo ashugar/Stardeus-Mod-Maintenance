@@ -274,12 +274,33 @@ namespace ProstheticsAndroidsExpanded.Systems
     }
 
     /// <summary>
-    /// CombatRaid contains both an explicit ForceHumans branch and a Human
-    /// emergency fallback. Only the second Species.Get(Human) call is changed.
+    /// RaiderPicker.DrawSpecies contains both an explicit force-Humans branch
+    /// and a Human emergency fallback. Only the second Species.Get(Human)
+    /// call is changed.
     /// </summary>
-    [HarmonyPatch(typeof(CombatRaid), "SpawnRaiders")]
+    [HarmonyPatch]
     internal static class AndroidCombatRaidFallbackPatch
     {
+        private static bool mismatchLogged;
+
+        private static MethodBase TargetMethod()
+        {
+            var target = AccessTools.DeclaredMethod(
+                typeof(RaiderPicker),
+                "DrawSpecies",
+                Type.EmptyTypes);
+            if (target == null ||
+                !target.IsPrivate ||
+                target.IsStatic ||
+                target.ReturnType != typeof(Species))
+            {
+                throw new MissingMethodException(
+                    typeof(RaiderPicker).FullName,
+                    "Species DrawSpecies()");
+            }
+            return target;
+        }
+
         private static IEnumerable<CodeInstruction> Transpiler(
             IEnumerable<CodeInstruction> instructions)
         {
@@ -292,32 +313,34 @@ namespace ProstheticsAndroidsExpanded.Systems
                 nameof(AndroidPopulationChoice.HumanOrAndroid),
                 new[] { typeof(int) });
             var codes = new List<CodeInstruction>(instructions);
-            var humanGetCount = 0;
-            var replacementCount = 0;
+            var humanGetIndexes = new List<int>();
 
             for (var i = 0; i < codes.Count; i++)
             {
-                var instruction = codes[i];
-                if (instruction.Calls(speciesGet) &&
+                if (codes[i].Calls(speciesGet) &&
                     i > 0 &&
                     codes[i - 1].LoadsConstant(Hashes.S("Human")))
                 {
-                    humanGetCount++;
-                    if (humanGetCount == 2)
-                    {
-                        instruction.opcode = OpCodes.Call;
-                        instruction.operand = replacement;
-                        replacementCount++;
-                    }
+                    humanGetIndexes.Add(i);
                 }
-                yield return instruction;
             }
-            if (replacementCount != 1)
+
+            if (humanGetIndexes.Count != 2)
             {
-                D.Err(
-                    "PAE expected one CombatRaid Human fallback replacement, found {0}",
-                    replacementCount);
+                if (!mismatchLogged)
+                {
+                    mismatchLogged = true;
+                    D.Err(
+                        "PAE expected two RaiderPicker.DrawSpecies Human lookups, found {0}; emergency Android fallback was not patched",
+                        humanGetIndexes.Count);
+                }
+                return codes;
             }
+
+            var fallback = codes[humanGetIndexes[1]];
+            fallback.opcode = OpCodes.Call;
+            fallback.operand = replacement;
+            return codes;
         }
     }
 
@@ -384,6 +407,10 @@ namespace ProstheticsAndroidsExpanded.Systems
                     continue;
                 }
                 if (!candidate.IsAvailable)
+                {
+                    continue;
+                }
+                if (candidate.Obj?.StorableObj?.IsForbidden == true)
                 {
                     continue;
                 }
