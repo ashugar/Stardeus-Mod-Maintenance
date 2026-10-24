@@ -21,11 +21,11 @@ namespace OrbotronUpgrade
         {
             if (!RecoveryContract.IsSupported)
             {
-                D.Warn("Orbotron Upgrades 2.1.0: missing-job recovery is unavailable on this unreviewed Core build. Existing JSON upgrades remain active.");
+                D.Warn("Orbotron Upgrades 2.1.1: missing-job recovery is unavailable on this unreviewed Core build. Existing JSON upgrades remain active.");
                 return;
             }
             RegisterAction(new OrbotronRecoveryAction());
-            D.Warn("Orbotron Upgrades 2.1.0: selected-mind recovery action registered. No minds were changed.");
+            D.Warn("Orbotron Upgrades 2.1.1: selected-mind recovery action registered. No minds were changed.");
         }
 
         protected override bool ApplyFor(GameState state, Being entity, out EntityActionData data)

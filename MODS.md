@@ -20,7 +20,7 @@ Versions and dependencies come from the current manifests. These entries do not 
 | [Intelligent Recycling](IntelligentRecycling/) | 1.3.3 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3775577154) |
 | [Metal Husks Revisited (v0.15 Update)](MetalHuskRevisited%28v0.15Update%29/) | 2.0.1 | 0.15.0 | - | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3749399478) |
 | [MolecularAssembler Fixed (v0.15 Update)](MolecularAssemblerFixed%28v0.15Update%29/) | 2.0.1 | 0.15.0 | - | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748810380) |
-| [Orbotron Upgrades (v0.15 Update)](OrbotronUpgrade%28v0.15Update%29/) | 2.1.0 | 0.15.0 | Core | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748954299) |
+| [Orbotron Upgrades (v0.15 Update)](OrbotronUpgrade%28v0.15Update%29/) | 2.1.1 | 0.15.0 | Core | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748954299) |
 | [Part Restoration Unit](PartRestorationUnit/) | 1.1.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3792407697) |
 | [Planning Overhaul](PlanningOverhaul/) | 1.1.0 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3805289692) |
 | [Prosthetics &amp; Androids Expanded (v0.15 Update)](Prosthetics%26AndroidsExpanded%28v0.15Update%29/) | 2.3.3 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3746773189) |
