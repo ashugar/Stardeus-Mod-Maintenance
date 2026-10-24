@@ -42,8 +42,7 @@ namespace OrbotronUpgrade
         private static bool Eligible(GameState state, Being entity, out string error)
         {
             error = "Select one active, living player-owned Orbotron mind in the current game.";
-            if (!RecoveryContract.IsSupported || !A.IsMainThread || !GameState.IsCurrent(state)
-                || !ReferenceEquals(A.S, state) || !state.IsLoaded || state.IsInconsistent || !Ready.Save) return false;
+            if (!StateReady(state)) return false;
             if (entity == null || !entity.IsActive || !ReferenceEquals(entity.S, state)) return false;
             var data = entity.Data;
             var mind = data?.Mind;
@@ -56,6 +55,12 @@ namespace OrbotronUpgrade
                 || !beings.Minds.TryGetValue(mind.Id, out var registeredMind) || !ReferenceEquals(mind, registeredMind)
                 || !beings.ActiveBeings.Contains(data)) return false;
             error = null; return true;
+        }
+
+        internal static bool StateReady(GameState state)
+        {
+            return RecoveryContract.IsSupported && A.IsMainThread && GameState.IsCurrent(state)
+                && ReferenceEquals(A.S, state) && state.IsLoaded && !state.IsInconsistent && Ready.Save;
         }
 
         private static bool ResolveConfiguration(Mind mind, out IList<JobType> configured, out string error)
@@ -75,10 +80,15 @@ namespace OrbotronUpgrade
 
         internal static bool StillSelected(RecoverySelection selection)
         {
+            if (!StillCurrent(selection)) return false;
+            var selected = selection.State.Query.GetSelectedBeings.Ask();
+            return selected != null && selected.Count == 1 && ReferenceEquals(selected[0], selection.Entity);
+        }
+
+        internal static bool StillCurrent(RecoverySelection selection)
+        {
             if (selection?.Lifetime == null || selection.Lifetime.IsDisposed) return false;
             if (!Eligible(selection.State, selection.Entity, out _)) return false;
-            var selected = selection.State.Query.GetSelectedBeings.Ask();
-            if (selected == null || selected.Count != 1 || !ReferenceEquals(selected[0], selection.Entity)) return false;
             var data = selection.Entity.Data;
             return ReferenceEquals(data, selection.Data) && data.Id == selection.DataId
                 && ReferenceEquals(data.Mind, selection.Mind) && data.Mind.Id == selection.MindId
@@ -87,14 +97,24 @@ namespace OrbotronUpgrade
 
         internal static RecoveryResult Restore(RecoverySelection selection, RecoveryPlan preview)
         {
-            if (!StillSelected(selection)) return new RecoveryResult(RecoveryStatus.Rejected, "The selection or game changed. Select the mind and try again.");
+            if (!RecoveryInvocation.TryEnter(out var lease))
+                return new RecoveryResult(RecoveryStatus.Rejected, "Another recovery is already running.");
+            using (lease) return RestoreInScope(selection, preview, () => StillSelected(selection));
+        }
+
+        // Only called inside an acquired invocation. Scope never replaces native
+        // target/ownership/plan validation; it supplies single or batch membership.
+        internal static RecoveryResult RestoreInScope(RecoverySelection selection, RecoveryPlan preview, Func<bool> scopeCurrent)
+        {
+            if (scopeCurrent == null || !scopeCurrent() || !StillCurrent(selection))
+                return new RecoveryResult(RecoveryStatus.Rejected, "The selection or game changed. Select the mind and try again.");
             if (!TryPreview(selection.State, selection.Entity, out var current, out var error))
                 return new RecoveryResult(RecoveryStatus.Rejected, error);
             if (!RecoveryService.Equivalent(preview, current))
                 return new RecoveryResult(RecoveryStatus.Rejected, "Jobs, parts or restrictions changed. Open recovery again.");
             return RecoveryService.Execute(current, new RecoveryCallbacks
             {
-                TargetStillValid = () => StillSelected(selection)
+                TargetStillValid = () => scopeCurrent() && StillCurrent(selection)
                     && TryPreview(selection.State, selection.Entity, out var latest, out _)
                     && RecoveryService.Equivalent(current, latest),
                 RefreshCommitted = (plan, slots) => Refresh(selection, slots, true),
