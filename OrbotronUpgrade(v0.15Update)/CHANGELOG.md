@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.1.1 — 2026-10-24
+
+- Revalidated the native recovery contracts for Stardeus v0.15.0-rc344.3226 and updated the exact supported Core identity so **Restore jobs** can register on this build. Other Core builds remain gated until reviewed.
+- Kept the recovery transaction unchanged: only missing configured jobs are added; existing skill records, learned values and priorities are not reset. Native restrictions, new-job defaults, additive action refresh and failure handling remain unchanged.
+- Rebuilt against the current installed assemblies. Current compiled preservation checks cover Skill Cap present and absent paths; fresh rc344 startup, UI recovery and separate-save save/load acceptance remain pending.
+- Preserved the two additive patches, native jobs/abilities/curves, authored spawn requirements, original attribution and Workshop identity.
+
 ## 2.1.0 — 2026-10-17
 
 - Added **Restore jobs** for one selected active, living, player-owned Orbotron mind. Preview and confirmation list only missing configured starter jobs.
