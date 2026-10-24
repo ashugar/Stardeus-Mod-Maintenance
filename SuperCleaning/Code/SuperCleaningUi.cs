@@ -320,9 +320,12 @@ internal sealed class SuperCleaningUi : IDisposable
             system.IdleAssistEnabled ? "On" : "Off",
             system.IdleAssistEnabled,
             system.SetIdleAssistEnabled,
-            "Idle Assist starts the same vanilla cleaning sweep as the manual Clean Now "
-            + "command. An otherwise available idle Cleaning Bot may clean safe, reachable "
-            + "dirt beyond its assigned dock's Work Radius. Other work is not interrupted.");
+            "Idle Assist applies only to Cleaning Bots. It intentionally bypasses "
+            + "the assigned Bot Dock's Work Radius > Range by using the same "
+            + "vanilla sweep as Clean Now, which does not consult the selected "
+            + "Range. Any finite Range may be exceeded; ∞ is already unrestricted. "
+            + "Normal dock-assigned tasks, including cleaning, still obey Range. "
+            + "Other work is not interrupted.");
         context.AddToggle(
             system.ColonistAssisted
                 ? "Icons/Color/Check"
