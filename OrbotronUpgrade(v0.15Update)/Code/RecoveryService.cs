@@ -42,17 +42,6 @@ namespace OrbotronUpgrade
         { Mind = mind; Jobs = jobs; ConfiguredJobs = configured; HasAbility = abilities; ExistingSlots = existing; Entries = entries.AsReadOnly(); }
     }
 
-    internal enum RecoveryStatus { Rejected, NoChanges, RolledBack, PartialFailure, Committed, CommittedRefreshFailed }
-
-    internal sealed class RecoveryResult
-    {
-        internal readonly RecoveryStatus Status;
-        internal readonly string Message;
-        internal readonly ReadOnlyCollection<string> AddedIds;
-        internal RecoveryResult(RecoveryStatus status, string message, IList<string> added = null)
-        { Status = status; Message = message; AddedIds = new List<string>(added ?? new string[0]).AsReadOnly(); }
-    }
-
     // Deliberately internal narrow execution seams. Production supplies native target/refresh
     // callbacks; the independent validator can inject a failure after a REAL native insertion.
     internal sealed class RecoveryCallbacks

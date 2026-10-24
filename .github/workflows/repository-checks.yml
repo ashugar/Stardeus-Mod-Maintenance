@@ -140,6 +140,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $projects = @(
             'PlanningOverhaul/Tests/HardeningTests.csproj'
+            'OrbotronUpgrade(v0.15Update)/Tests/BatchRecoveryTests.csproj'
           )
           foreach ($project in $projects) {
             $name = [IO.Path]::GetFileNameWithoutExtension($project)
