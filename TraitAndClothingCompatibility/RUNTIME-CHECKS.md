@@ -1,3 +1,21 @@
+# TACC 1.1.5: rc344 compatibility refresh — runtime pending
+
+Version **1.1.5** refreshes the reviewed references for **Core v0.15.0-rc344.3226** and the exact **Quantum Storage 1.3.10** equipment-routing hooks. It retains AUMF **1.4.0**, the existing trait/equipment resources, earlier optional identities, gameplay behavior and save schema. The current Core/Quantum semantic and binary review is recorded in `COMPATIBILITY-REVIEW-rc344.3226.md`.
+
+Fresh startup, combined runtime patch order, gameplay acceptance and Workshop publication for **1.1.5 remain pending**. The user accepted and published 1.1.4; those historical results do not transfer to this rebuilt DLL. No game launch, gameplay testing or Workshop upload is performed by this maintenance task.
+
+User-run acceptance for the exact installed 1.1.5 DLL:
+
+1. Start a fresh Stardeus process with the reviewed Core, TACC, AUMF and optional mods, then load the colony. Check Player.log for registration, Harmony or TACC errors and confirm the loaded versions.
+2. Open Traits & log and clear diagnostics once. The reviewed Core and Quantum identities should be recognized; any unrelated unknown finding must remain unknown. Observe the combined Harmony owners/order after optional bindings have initialized. Optional-dependency-absent execution remains a separate check where safely supported.
+3. Exercise ordinary and Thrifty clothing choices, mixed corpse-origin/second-hand/tattered categories, equal-mood fallback, opted-out beings, manual policies/slots and the forbidden-equipment switch. Confirm native eligibility and life-support restrictions still apply.
+4. Retrieve clothing from Quantum Storage and a Relay. Complete a wash and interrupt/cancel one; verify item identity, quality, provenance-on-completion and reservation ownership.
+5. Save/reload with existing policies, inventory, a pending haul and active washing. Confirm the same items and policies persist without duplication or lost reservations.
+
+The detailed historical behavior scenarios below remain available for regression testing. Their earlier acceptance dates are preserved.
+
+---
+
 # TACC 1.1.4: rc337 build repair and optional compatibility
 
 Version 1.1.4 targets **Core v0.15.0-rc337.3219** and **AUMF 1.4.0**. Core renamed `StorableObjComp.IsHaulingForbidden` to `IsForbidden`; TACC's equipment-search-only override and candidate probe now use the current property. Static comparison reviewed 52 Core traits: Stoic and Wimp are new, Enlightened has changed breakdown thresholds, and the other 49 traits match. The 12 equipment-effect values remain unchanged. The Core trait reference contains only those three reviewed snapshot changes; policy defaults are unchanged. TACC recognizes the exact reviewed Quantum Storage 1.1.12/1.3.0/1.3.5 routing hooks and the exact optional Expanded Traits 0.1.3/0.1.4 definition, Minimalist, and sleep-mood identities. The production build completed with 0 warnings and 0 errors, and the public optional-reference harness passed all 187 assertions.
