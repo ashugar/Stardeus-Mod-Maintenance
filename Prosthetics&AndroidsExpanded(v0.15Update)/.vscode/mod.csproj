@@ -8,7 +8,7 @@
     <RootNamespace>ProstheticsAndroidsExpanded</RootNamespace>
     <AssemblyName>ProstheticsAndroidsExpanded</AssemblyName>
     <OutputPath>../Libraries</OutputPath>
-    <VersionPrefix>2.3.3.0</VersionPrefix>
+    <VersionPrefix>2.3.4.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <GenerateDependencyFile>false</GenerateDependencyFile>
