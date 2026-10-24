@@ -9,11 +9,11 @@ namespace OrbotronUpgrade
     // Native adapter only: the tested coordinator owns snapshots and execution.
     internal static class RecoveryBatch
     {
-        internal static bool HasMissing(GameState state, SelectionSnapshot<Being> selection)
+        internal static int CountMissing(GameState state, SelectionSnapshot<Being> selection)
         {
-            foreach (var entity in selection.Members)
-                if (RecoveryTarget.TryPreview(state, entity, out var plan, out _) && plan.Entries.Count > 0) return true;
-            return false;
+            if (selection == null) return 0;
+            return selection.CountMatching(entity => RecoveryTarget.TryPreview(state, entity, out var plan, out _)
+                && plan.Entries.Count > 0);
         }
 
         internal static bool ScopeCurrent(GameState state, SelectionSnapshot<Being> selection, Lifetime lifetime)

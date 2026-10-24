@@ -65,6 +65,28 @@ internal static class Program
 
     private static void Main()
     {
+        Case("badge counts eligible incomplete subset of59, not selected rows or job records", () =>
+        {
+            var selected = Enumerable.Range(0, 59).Select(_ => new Node { Eligible = false }).ToList();
+            selected[1].Eligible = true; selected[20].Eligible = true;
+            selected[40].Eligible = true; selected[40].Complete = true;
+            selected[1].Missing.Add(new BatchJob("Mining", "Mining", false, false));
+            var snapshot = new SelectionSnapshot<Node>(selected);
+            int checks = 0;
+            int count = snapshot.CountMatching(node => { checks++; return node.Eligible && !node.Complete; });
+            var plan = Plan(selected);
+            Check(snapshot.Members.Count == 59 && count == 2 && checks == 59, "Badge must count every eligible incomplete mind, not59 or3job records.");
+            Check(plan.Targets.Count == count && plan.CompleteCount == 1 && plan.ExcludedCount == 56, "Badge subset and confirmation subset must agree.");
+            Check(selected.All(node => node.Calls == 0), "Badge calculation must never invoke restoration.");
+            selected.Add(selected[1]); selected.Add(null); selected.Add(null);
+            var repeated = new SelectionSnapshot<Node>(selected);
+            Check(repeated.CountMatching(node => node.Eligible && !node.Complete) == 2, "Duplicate/null rows cannot inflate badge.");
+            foreach (var node in snapshot.Members) node.Complete = true;
+            Check(snapshot.CountMatching(node => node.Eligible && !node.Complete) == 0, "Complete minds contribute zero.");
+            foreach (var node in snapshot.Members) { node.Complete = false; node.Eligible = false; }
+            Check(snapshot.CountMatching(node => node.Eligible && !node.Complete) == 0, "An entirely excluded selection contributes zero.");
+            Check(new SelectionSnapshot<Node>(new Node[0]).CountMatching(_ => true) == 0, "Empty selection count is zero.");
+        });
         Case("mixed acquisition, duplicates and nulls", () =>
         {
             var a = new Node(); var b = new Node(); var excluded = new Node { Eligible = false }; var complete = new Node { Complete = true };

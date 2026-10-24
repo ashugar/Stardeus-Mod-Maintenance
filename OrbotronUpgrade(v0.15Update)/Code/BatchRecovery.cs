@@ -36,6 +36,14 @@ namespace OrbotronUpgrade
                 else current.Add(entity);
             return membership.SetEquals(current);
         }
+        internal int CountMatching(Func<T, bool> eligible)
+        {
+            if (eligible == null) throw new ArgumentNullException(nameof(eligible));
+            int count = 0;
+            foreach (var entity in Members)
+                if (!ReferenceEquals(entity, null) && eligible(entity)) count++;
+            return count;
+        }
     }
 
     // Shared by external single and batch restore entry points, never by their
