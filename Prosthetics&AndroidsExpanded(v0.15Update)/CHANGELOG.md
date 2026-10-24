@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.4
+
+Updated the emergency Android raid fallback for the Stardeus v0.15.0-rc344 raid-selection changes. The compatibility hook now targets Core's `RaiderPicker.DrawSpecies` path, preserves forced-Human raids and normal weighted faction selection, and fails closed with a bounded diagnostic if Core changes the expected instruction shape again.
+
+Automatic Install Missing Parts and Replace Bad Parts operations for Androids now respect the player's Forbidden setting on loose components. PAE retains its mixed biological and robotic compatibility rules while leaving manual part selection, reservations, delivery, cancellation, and item identity under Core control.
+
+The repaired `2.3.3` candidate loaded cleanly on rc344 without the previous zero-replacement warning or Harmony errors, and the affected behavior was confirmed in game before promotion to this release.
+
 ## 2.3.3
 
 Migrated Android population integration to the Stardeus v0.15.0-rc332 generation paths. New stasis sleepers, survivor groups, derelict inhabitants, selected gifts, and combat-raid fallbacks can once again include Androids at the intended share. Existing and preset stasis sleepers retain their saved identities instead of being regenerated.
