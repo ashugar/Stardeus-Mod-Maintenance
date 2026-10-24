@@ -21,9 +21,9 @@ using Newtonsoft.Json.Linq;
 
 namespace TraitAndClothingCompatibility {
     internal static class TraitCatalog {
-        internal const string TestedCoreVersion = "v0.15.0-rc337.3219";
-        internal const string TestedGameHash = "38985F083AF23E557664230BC835BBF8BED3A4256F4F346C32E8428D68B33FA4";
-        internal const string TestedConstantsHash = "F49F4FAEF233ED15DEA4BB3061E196ACD1C16E193FC49B3FB20C6F3A5F599909";
+        internal const string TestedCoreVersion = "v0.15.0-rc344.3226";
+        internal const string TestedGameHash = "2B8D07A416BA89AA94C681D61B8EAA46CED5E2CD7B1E5CFA8C6D3B4391EB6BE1";
+        internal const string TestedConstantsHash = "BDFC046E6D8F141E341D0BC12ED62E387BC124451E7FACEC04BF80C74A96968C";
         internal static readonly HashSet<string> ShippedIds = new HashSet<string>(new[] {
             "Ablutophobic", "AlwaysHungry", "Antisocial", "Astrophile", "Astrophobe", "BadAppetite",
             "Beautiful", "Bookworm", "BWaveResistent", "Carnivore", "CatPerson", "Charismatic",
@@ -50,6 +50,10 @@ namespace TraitAndClothingCompatibility {
             "Game.Systems.AI.AIActionFindBestEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): prefix / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Prefix / 5eb2c05e-1725-4d0b-ae5c-6768b6f15319 / priority=400 / before= / after=",
             "Game.Systems.AI.AIActionFindEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): finalizer / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Finalizer / 5eb2c05e-1725-4d0b-ae5c-6768b6f15319 / priority=400 / before= / after=",
             "Game.Systems.AI.AIActionFindEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): prefix / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Prefix / 5eb2c05e-1725-4d0b-ae5c-6768b6f15319 / priority=400 / before= / after=",
+            "Game.Systems.AI.AIActionFindBestEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): finalizer / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Finalizer / 037db4c0-32d6-498a-9ee6-9c42fd03c77f / priority=400 / before= / after=",
+            "Game.Systems.AI.AIActionFindBestEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): prefix / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Prefix / 037db4c0-32d6-498a-9ee6-9c42fd03c77f / priority=400 / before= / after=",
+            "Game.Systems.AI.AIActionFindEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): finalizer / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Finalizer / 037db4c0-32d6-498a-9ee6-9c42fd03c77f / priority=400 / before= / after=",
+            "Game.Systems.AI.AIActionFindEquipment.Game.Systems.AI.AIActionResult Execute(Game.Data.GameState, Game.Systems.AI.AIAgentComp, Game.Systems.AI.AIGoal, Int64): prefix / jleas.quantumstorage / Game.Systems.QuantumStorage.QuantumObjectPositionRoutingContextPatch.Prefix / 037db4c0-32d6-498a-9ee6-9c42fd03c77f / priority=400 / before= / after=",
             "Game.Systems.Items.InventoryItemSlot.Game.Systems.Items.ObjData BetterItem(Game.Systems.Items.ObjData, Game.Systems.Items.ObjData): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.MinimalistEquipmentPatch.Prefix / 9dc01d16-8daa-4e5f-a1be-a5b5be1b9858 / priority=400 / before= / after=",
             "Game.Systems.Mental.MentalHealth.Void AddEffect(Game.Data.GameState, Game.Systems.Mental.MentalEffect, Single, Boolean): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.SleepMoodSeverityPatch.Prefix / 9dc01d16-8daa-4e5f-a1be-a5b5be1b9858 / priority=400 / before= / after=",
             "Game.Systems.Items.InventoryItemSlot.Game.Systems.Items.ObjData BetterItem(Game.Systems.Items.ObjData, Game.Systems.Items.ObjData): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.MinimalistEquipmentPatch.Prefix / 95e164e0-26dd-451e-984e-11e28c262fd0 / priority=400 / before= / after=",
