@@ -28,7 +28,7 @@ Versions and dependencies come from the current manifests. These entries do not 
 | [Quest Request Preview](QuestRequestPreview/) | 1.0.3 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3783715878) |
 | [Reconnect Teleporter Connections](ReconnectTeleporterConnections/) | 1.1.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3785027459) |
 | [Remember Facility Upgrades](RememberFacilityUpgrades/) | 1.1.0 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3791306246) |
-| [Super Cleaning](SuperCleaning/) | 1.0.3 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3787822873) |
+| [Super Cleaning](SuperCleaning/) | 1.0.4 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3787822873) |
 | [Tractor Beam Auto Connect](TractorBeamAutoConnect/) | 1.2.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3776012239) |
 | [Tractor Beam Overhaul](TractorBeamOverhaul/) | 1.1.1 | 0.15.0 | AutoUtilitiesModFramework, TractorBeamAutoConnect | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3791894872) |
 | [Trait and Clothing Compatibility Mod (TACC)](TraitAndClothingCompatibility/) | 1.1.5 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3796663540) |

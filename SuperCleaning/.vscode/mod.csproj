@@ -10,7 +10,7 @@
     <RootNamespace>SuperCleaning</RootNamespace>
     <AssemblyName>SuperCleaning</AssemblyName>
     <OutputPath>../Libraries</OutputPath>
-    <VersionPrefix>1.0.3.0</VersionPrefix>
+    <VersionPrefix>1.0.4.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <GenerateDependencyFile>false</GenerateDependencyFile>
