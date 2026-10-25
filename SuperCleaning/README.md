@@ -1,10 +1,15 @@
-# Super Cleaning 1.0.3
+# Super Cleaning 1.0.4
 
 Super Cleaning keeps otherwise available Cleaning Bots from remaining idle
 while safe, reachable dirt is waiting. When enabled, an idle bot starts the
 same vanilla cleaning sweep used by Stardeus's **Clean Now** action. The mod
 honors Auto Clean, Cleaning job priority, direct control, maintenance/device,
 work-capability, safety, reservation, and reachability restrictions.
+
+Idle Assist intentionally uses the same sweep as **Clean Now**, so it may search
+beyond any finite assigned Bot Dock **Work Radius > Range**. A Range of **∞** is
+already unrestricted. Normal dock-assigned tasks, including cleaning, continue
+to obey the selected Range.
 
 It also adds a manual **Queue Cleanup** action for ships where dirt is outpacing
 the normal Cleaning Bot cycle. An optional **Colonist Assisted** setting adds a
@@ -49,6 +54,20 @@ reports measured net changes rather than guessing at causes.
 Requires Auto Utilities Mod Framework 1.4.0.
 
 ## Release history
+
+### 1.0.4
+
+- Makes the Idle Assist Bot Dock Range override explicit in the Settings tooltip
+  and public documentation.
+- Clarifies that the Clean Now sweep may search beyond any finite **Work Radius >
+  Range** setting, while **∞** is already unrestricted.
+- Confirms that normal dock-assigned tasks, including cleaning, still obey Range.
+  No cleaning, task-selection, or execution logic changed in this release.
+
+Compatibility was checked against Stardeus v0.15.0-rc344.3226 and AUMF 1.4.0.
+The revised Idle Assist tooltip, including its wrapping and **∞** glyph, was
+confirmed in game by the mod author on October 24, 2026, before the version
+increment.
 
 ### 1.0.3
 
