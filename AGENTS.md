@@ -31,7 +31,7 @@ This guide applies to work in this repository and its mod folders. Read any addi
 
 ## Scoped evidence helpers
 
-Use the [evidence-helper selection and sequence guide](build/ModMaintenance/EvidenceTools.WORKFLOW.md) for baseline capture/comparison, explicit version checks and pinned validation summaries. Read compact summaries first, then investigate specific findings; do not repeat equivalent manual scans or rerun toolkit regression suites during ordinary mod maintenance. Keep profiles/reports private, select exact full reports and artifact hashes, preserve current versus historical evidence, and retain failed/unresolved results. Existing release/install/privacy/PR requirements remain authoritative; static checks and receipt attachments do not establish startup, gameplay, save safety, user acceptance or publication.
+Use the [evidence-helper selection and sequence guide](build/ModMaintenance/EvidenceTools.WORKFLOW.md) for baseline capture/comparison, version checks, log triage, scoped API/Harmony audits, selected contract comparison and pinned validation summaries. Read compact summaries first, then investigate specific findings; do not repeat equivalent manual scans or rerun toolkit regression suites during ordinary mod maintenance. Keep profiles/reports private, select exact full reports and artifact hashes, preserve current versus historical evidence, and retain failed/unresolved results. Existing release/install/privacy/PR requirements remain authoritative; static checks and receipt attachments do not establish startup, gameplay, save safety, user acceptance or publication.
 
 ## Stardeus mod investigation, audit, validation, and release process
 

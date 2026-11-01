@@ -1,0 +1,29 @@
+{
+  "Selections": [
+    {
+      "Key": "FullVersion",
+      "Kind": "Method",
+      "Name": "get_FullVersion",
+      "Type": "Game.Constants.Consts"
+    },
+    {
+      "Key": "VersionTag",
+      "Kind": "Field",
+      "Name": "ModsVersionTag",
+      "Type": "Game.Constants.Consts"
+    }
+  ],
+  "ComparisonId": "ChosenContractReview",
+  "ProtectedRoots": [
+    "<ABSOLUTE_GAME_ROOT>",
+    "<ABSOLUTE_LIVE_MODS_ROOT>"
+  ],
+  "OutputRoot": "<ABSOLUTE_PRIVATE_OUTPUT_ROOT>",
+  "SchemaVersion": 1,
+  "Before": "<ABSOLUTE_PRESERVED_BASELINE_ASSEMBLY>",
+  "Subject": {
+    "ModId": "ChosenMod",
+    "Root": "<ABSOLUTE_SUBJECT_MOD_ROOT>"
+  },
+  "After": "<ABSOLUTE_CURRENT_ASSEMBLY>"
+}

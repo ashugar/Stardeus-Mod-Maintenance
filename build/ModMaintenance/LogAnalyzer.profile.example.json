@@ -1,0 +1,20 @@
+{
+  "SchemaVersion": 1,
+  "AnalysisId": "ChosenModLogReview",
+  "Subject": { "ModId": "ChosenMod", "Root": "<ABSOLUTE_SUBJECT_MOD_ROOT>" },
+  "Format": "Stardeus",
+  "SourceLabel": "Explicit native Unity Player log",
+  "LogRoot": "<ABSOLUTE_LOG_ROOT>",
+  "LogFile": "Player.log",
+  "OutputRoot": "<ABSOLUTE_PRIVATE_OUTPUT_ROOT>",
+  "ProtectedRoots": ["<ABSOLUTE_GAME_ROOT>", "<ABSOLUTE_LIVE_MODS_ROOT>"],
+  "TimestampTimeZoneId": null,
+  "Expectations": { "NotBeforeUtc": null, "GameVersion": null },
+  "Limits": {
+    "MaxInputBytes": 67108864, "MaxLines": 250000, "MaxGroups": 10000,
+    "MaxExamplesPerGroup": 2, "MaxOccurrenceLines": 200,
+    "ContextBefore": 2, "ContextAfter": 4, "MaxStackLines": 40, "MaxAnalysisLineChars": 4096,
+    "MaxOutputTextChars": 4194304, "MaxAggregateInputBytes": 268435456
+  },
+  "AuxiliaryInputs": []
+}

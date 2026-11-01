@@ -1,0 +1,10 @@
+{
+  "SchemaVersion": 1,
+  "CheckId": "candidate-api",
+  "Subject": { "ModId": "ExampleMod", "Root": "<Private/Source/ExampleMod>" },
+  "Assemblies": [ "<Private/Source/ExampleMod/Libraries/ExampleMod.dll>" ],
+  "Dependencies": [ "<VerifiedGame/Stardeus_Data/Managed/Game.dll>" ],
+  "ReferenceAssemblyNames": [ "Game" ],
+  "OutputRoot": "<Private/Evidence/ExampleMod>",
+  "ProtectedRoots": [ "<VerifiedGame>", "<Private/LivePlayerData>" ]
+}

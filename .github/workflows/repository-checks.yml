@@ -209,6 +209,17 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Version fixture tests failed.' }
             & pwsh -NoProfile -File ./build/ModMaintenance/Tests/Test-ValidationRecord.ps1
             if ($LASTEXITCODE -ne 0) { throw 'Validation-record fixture tests failed.' }
+            & pwsh -NoProfile -File ./build/ModMaintenance/Tests/Test-LogAnalyzer.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'Log analyzer fixture tests failed.' }
+            $diagnosticStart = [DateTime]::UtcNow.AddSeconds(-1).ToString('o')
+            $api = & ./build/ModMaintenance/Tests/Test-ApiScanner.ps1
+            if ($api.State -ne 'Passed') { throw 'API scanner fixture tests failed.' }
+            $contracts = & ./build/ModMaintenance/Tests/Test-ContractComparison.ps1
+            if ($contracts.State -ne 'Passed') { throw 'Contract comparison fixture tests failed.' }
+            & ./build/ModMaintenance/Tests/Test-DiagnosticHandoffs.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'Diagnostic record fixture tests failed.' }
+            & ./build/ModMaintenance/Tests/Test-MetadataHandoffs.ps1 -ApiReportPath $api.WrapperReportPath -ContractReportPath $contracts.UnchangedReportPath -NotBeforeUtc $diagnosticStart
+            if ($LASTEXITCODE -ne 0) { throw 'Metadata report handoffs failed.' }
           }
 
   required:
