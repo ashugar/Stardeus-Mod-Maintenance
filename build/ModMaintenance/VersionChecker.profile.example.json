@@ -1,0 +1,49 @@
+{
+  "SchemaVersion": 1,
+  "CheckId": "example-mod-versions",
+  "Roots": [
+    {
+      "Path": "<PRIVATE_SOURCE/ExampleMod>",
+      "Key": "Source"
+    }
+  ],
+  "Groups": [
+    {
+      "Expected": "ExampleMod",
+      "Key": "Identity"
+    },
+    {
+      "Expected": "1.2.3",
+      "Key": "Release"
+    }
+  ],
+  "Surfaces": [
+    {
+      "Path": "ModInfo.json",
+      "RootKey": "Source",
+      "Storage": "File",
+      "Group": "Identity",
+      "Normalization": "Exact",
+      "Key": "Identity",
+      "Pointer": "/Id",
+      "Required": true,
+      "Type": "JsonScalar"
+    },
+    {
+      "Path": "ModInfo.json",
+      "RootKey": "Source",
+      "Storage": "File",
+      "Group": "Release",
+      "Normalization": "Exact",
+      "Key": "Manifest",
+      "Pointer": "/ModVersion",
+      "Required": true,
+      "Type": "JsonScalar"
+    }
+  ],
+  "OutputRoot": "<PRIVATE_EVIDENCE/ExampleMod/versions>",
+  "ProtectedRoots": [
+    "<VERIFIED_GAME_ROOT>",
+    "<VERIFIED_LIVE_MOD_ROOT>"
+  ]
+}

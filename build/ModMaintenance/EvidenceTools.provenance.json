@@ -1,0 +1,20 @@
+{
+  "SchemaVersion": 1,
+  "RuntimeDependency": "None; maintained Stardeus files and Common.ps1 are local to this repository",
+  "Origin": "Existing Cosmoteer maintenance toolkit supplied for reuse by the project maintainer",
+  "Purpose": "Pinned predecessor inputs for the Stardeus adaptations. Historical predecessor tests are not validation of these adapted copies.",
+  "Sources": [
+    {
+      "SHA256": "57B7157D8CCB268D987A8137C821DBA2A1003734203BFDC422AA60733CC4C66D",
+      "Program": "Record-ModBaseline.ps1"
+    },
+    {
+      "SHA256": "DB503F85D3F44162F1E20ED7392AB9204360A51E3CCC6FC1B8595CCC35EADC9A",
+      "Program": "Test-ModVersions.ps1"
+    },
+    {
+      "SHA256": "2E0836E1A92571FCE68966F71AD8BBDCA2713EB1EC8B72F703E0DCFF5FD27886",
+      "Program": "New-ModValidationRecord.ps1"
+    }
+  ]
+}

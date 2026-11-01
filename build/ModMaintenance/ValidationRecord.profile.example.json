@@ -1,0 +1,41 @@
+{
+  "SchemaVersion": 1,
+  "RecordId": "example-mod-validation",
+  "Subject": {
+    "Name": "Example Mod",
+    "ModId": "example.author.mod",
+    "Version": "1.2.3",
+    "CanonicalRoot": "<VERIFIED_CHECKOUT/ExampleMod>",
+    "Task": "Describe the exact maintenance change and validation scope",
+    "GameVersion": null
+  },
+  "SubjectRoots": ["<AUTHORIZED_PRIVATE_WORK/ExampleMod/staging>"],
+  "NotBeforeUtc": "REPLACE_WITH_TASK_BOUNDARY_IN_UTC",
+  "Artifacts": [
+    {
+      "Key": "Manifest",
+      "Path": "<AUTHORIZED_PRIVATE_WORK/ExampleMod/staging/ModInfo.json>",
+      "SHA256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "Role": "Payload"
+    }
+  ],
+  "Evidence": [
+    {
+      "Key": "Versions",
+      "Type": "Versions",
+      "Path": "<AUTHORIZED_PRIVATE_WORK/ExampleMod/version-reports/EXACT_RUN/versions.json>",
+      "SHA256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "Scope": "Current",
+      "Required": true,
+      "ExpectedContextId": "example-mod-versions",
+      "ReleaseGroupKey": "Release",
+      "BindMode": "ExactPathAndHash",
+      "RequiredArtifactKeys": ["Manifest"]
+    }
+  ],
+  "Attestations": [],
+  "RequiredStages": ["SourceReview", "VersionChecks", "Startup", "Gameplay", "UserAcceptance"],
+  "OutputRoot": "<AUTHORIZED_PRIVATE_WORK/ExampleMod/validation-records>",
+  "ProtectedRoots": ["<VERIFIED_GAME_ROOT>", "<VERIFIED_WORKSHOP_MOD_ROOT>"],
+  "CopyEvidence": true
+}

@@ -29,6 +29,10 @@ This guide applies to work in this repository and its mod folders. Read any addi
 - Auto-merge is opt-in after independent review of the exact head SHA. Use `build/RepositoryAutomation/Manage-PullRequest.ps1` to enable it. Before subsequent pushes, its `Update` action must disable and confirm auto-merge off, then push through the privacy hook. Review the new SHA and opt in again. GitHub's activation-time SHA check is not a permanent reviewed-head lock.
 - Preserve native merged-branch deletion and existing protections. Do not add automatic approval bots, blanket PR auto-merge, write-enabled untrusted PR execution, game-PC runners, or automatic live deployment. Current task authorization controls deployment.
 
+## Scoped evidence helpers
+
+Use the [evidence-helper selection and sequence guide](build/ModMaintenance/EvidenceTools.WORKFLOW.md) for baseline capture/comparison, explicit version checks and pinned validation summaries. Read compact summaries first, then investigate specific findings; do not repeat equivalent manual scans or rerun toolkit regression suites during ordinary mod maintenance. Keep profiles/reports private, select exact full reports and artifact hashes, preserve current versus historical evidence, and retain failed/unresolved results. Existing release/install/privacy/PR requirements remain authoritative; static checks and receipt attachments do not establish startup, gameplay, save safety, user acceptance or publication.
+
 ## Stardeus mod investigation, audit, validation, and release process
 
 ### 1. Establish scope and authority
