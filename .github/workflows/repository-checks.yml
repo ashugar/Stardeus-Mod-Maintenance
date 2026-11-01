@@ -203,6 +203,12 @@ jobs:
           if ($IsWindows) {
             & pwsh -NoProfile -File ./build/ModMaintenance/Tests/Test-ModInstall.ps1
             if ($LASTEXITCODE -ne 0) { throw 'Windows installer fixture tests failed.' }
+            & pwsh -NoProfile -File ./build/ModMaintenance/Tests/Test-BaselineRecorder.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'Baseline fixture tests failed.' }
+            & pwsh -NoProfile -File ./build/ModMaintenance/Tests/Test-VersionChecker.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'Version fixture tests failed.' }
+            & pwsh -NoProfile -File ./build/ModMaintenance/Tests/Test-ValidationRecord.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'Validation-record fixture tests failed.' }
           }
 
   required:

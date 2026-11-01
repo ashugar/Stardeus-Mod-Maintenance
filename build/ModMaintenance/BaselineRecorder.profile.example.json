@@ -1,0 +1,27 @@
+{
+  "SchemaVersion": 1,
+  "BaselineId": "example-mod-maintenance",
+  "OutputRoot": "<AUTHORIZED_PRIVATE_WORK/ExampleMod/baselines>",
+  "Game": {
+    "Root": "<VERIFIED_GAME_ROOT>",
+    "VersionAssembly": "Stardeus_Data/Managed/Game.dll",
+    "VersionType": null,
+    "VersionField": null,
+    "Files": ["Stardeus_Data/Managed/Game.dll", "Stardeus_Data/Managed/Game.Constants.dll"],
+    "Trees": [],
+    "ExcludeDirectories": [],
+    "ProcessNames": ["Stardeus"]
+  },
+  "Mods": [{
+    "Key": "primary", "Role": "Primary",
+    "Root": "<VERIFIED_MOD_ROOT>", "ExpectedId": "ExampleMod",
+    "Manifest": "ModInfo.json", "Files": ["ModInfo.json"],
+    "Trees": [], "ExcludeDirectories": [".git", "bin", "obj"],
+    "DependencyKeys": []
+  }, {
+    "Key": "core", "Role": "Reference",
+    "Root": "<VERIFIED_GAME_ROOT/Stardeus_Data/StreamingAssets/Mods/Core>",
+    "ExpectedId": "Core", "Manifest": "ModInfo.json", "ManifestFormat": "CoreJson",
+    "Files": ["ModInfo.json"], "Trees": [], "ExcludeDirectories": [], "DependencyKeys": []
+  }]
+}
