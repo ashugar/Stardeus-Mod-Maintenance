@@ -20,6 +20,8 @@ Hooks must be static and expose complete, unique parameter metadata. Prefix retu
 
 Each fixed patch row retains target `Status` and explicit `TargetStatus` separately from `BindingStatus`: `CheckedSupportedBindings`, `RequiresReview`, `Failed` or `NotRun`. A resolved target without recognized prefix/postfix/finalizer hooks produces a gap and `NotRun`; resolving a target never implies that binding was checked.
 
+Explicit parameter selectors preserve custom types' complete assembly identities. Same-named types from different assemblies cannot select each other's overloads. Intrinsic primitive selectors are recognized only from known runtime core library names and public-key tokens; custom types named `System.Int32` remain custom types. Constructed or element selector types whose exact identity is not modeled remain unsupported gaps.
+
 Dynamic `TargetMethod`/`TargetMethods`, transpilers, and manual Harmony registration references/declarations are inventoried as gaps. Providers are never executed. These inventories are static clues, not exhaustive control-flow discovery; reflection/string-based registration can escape recognition. Resolving a transpiler's target does not validate its instruction pattern. Harmony owner/order/priority interactions and runtime behaviour require separate review.
 
 `CheckedSupportedScope` means no findings or known gaps in the selected supported metadata scope. It does not establish that every relevant reference or hook was selected, that Harmony accepts the patch at runtime, or that gameplay, saves, startup or publication passed. `CheckedWithGaps` retains omissions; `Failed` retains findings or tool failures. None refreshes runtime guard approvals.

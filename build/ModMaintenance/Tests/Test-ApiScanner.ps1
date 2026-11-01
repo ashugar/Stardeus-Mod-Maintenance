@@ -9,10 +9,10 @@ $tool=Join-Path $PSScriptRoot '../MetadataDiagnostics/MetadataDiagnostics.csproj
 $config=Join-Path $root 'NuGet.Config';Set-Content $config '<configuration><packageSources><clear /></packageSources></configuration>'
 $count=0
 function Check($ok,[string]$message){if(!$ok){throw "Assertion failed: $message"};$script:count++}
-function Build([string]$name,[string]$source,[string]$assembly,[string]$reference=''){
+function Build([string]$name,[string]$source,[string]$assembly,[string]$reference='',[string]$extraReferences=''){
  $dir=Join-Path $root $name;$null=New-Item -ItemType Directory $dir
  $referenceXml=if($reference){'<ItemGroup><Reference Include="FixtureCore"><HintPath>'+[Security.SecurityElement]::Escape($reference)+'</HintPath></Reference></ItemGroup>'}else{''}
- Set-Content (Join-Path $dir 'Fixture.csproj') ('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><AssemblyName>'+$assembly+'</AssemblyName><Nullable>enable</Nullable></PropertyGroup>'+$referenceXml+'</Project>')
+ Set-Content (Join-Path $dir 'Fixture.csproj') ('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><AssemblyName>'+$assembly+'</AssemblyName><Nullable>enable</Nullable></PropertyGroup>'+$referenceXml+$extraReferences+'</Project>')
  Set-Content (Join-Path $dir 'Fixture.cs') $source
  $log=& dotnet build (Join-Path $dir 'Fixture.csproj') --artifacts-path (Join-Path $dir 'artifacts') --output (Join-Path $dir 'out') ('-p:RestoreConfigFile='+$config) -p:ImportDirectoryBuildProps=false -p:ImportDirectoryBuildTargets=false -p:NuGetAudit=false --nologo 2>&1
  if($LASTEXITCODE){throw ($log -join "`n")};return Join-Path $dir ('out/'+$assembly+'.dll')
@@ -35,7 +35,7 @@ $consumer=Build consumer $consumerSource FixtureConsumer $core
 $engineOut=Join-Path $root 'engine'
 $log=& dotnet build $tool --artifacts-path (Join-Path $root 'engine-artifacts') --output $engineOut ('-p:RestoreConfigFile='+$config) -p:ImportDirectoryBuildProps=false -p:ImportDirectoryBuildTargets=false -p:NuGetAudit=false --nologo 2>&1
 if($LASTEXITCODE){throw ($log -join "`n")}
-function Run([string]$assembly,[string[]]$deps){$p=Join-Path $root ('profile-'+[guid]::NewGuid().ToString('N')+'.json');@{SchemaVersion=1;CheckId='Fixture';Assemblies=@($assembly);Dependencies=@($deps);ReferenceAssemblyNames=@('FixtureCore')}|ConvertTo-Json -Depth 10|Set-Content $p;$json=& dotnet (Join-Path $engineOut 'MetadataDiagnostics.dll') api $p;return $json|ConvertFrom-Json}
+function Run([string]$assembly,[string[]]$deps,[string[]]$scopes=@('FixtureCore')){$p=Join-Path $root ('profile-'+[guid]::NewGuid().ToString('N')+'.json');@{SchemaVersion=1;CheckId='Fixture';Assemblies=@($assembly);Dependencies=@($deps);ReferenceAssemblyNames=@($scopes)}|ConvertTo-Json -Depth 10|Set-Content $p;$json=& dotnet (Join-Path $engineOut 'MetadataDiagnostics.dll') api $p;return $json|ConvertFrom-Json}
 $r=Run $consumer @($core)
 Check ($r.State -eq 'CheckedSupportedScope') ('good scope status '+($r.Gaps -join ';')+($r.Findings -join ';'))
 Check ($r.Inputs.Count -eq 2) 'all explicit consumed inputs recorded'
@@ -118,6 +118,30 @@ $unknownRole=Build unknownRole ($consumerSource.Replace('[HarmonyLib.HarmonyPatc
 $r=Run $unknownRole @($core)
 Check ($r.State -eq 'CheckedWithGaps') 'unknown method-level hook role stays open'
 Check (($r.Gaps -join ';') -match 'Unknown method-level patch hook role') 'unknown hook role explicit'
+$argA=Build argA 'namespace Shared {public class Arg{}}' ArgA
+$argB=Build argB 'namespace Shared {public class Arg{}}' ArgB
+$aliasCore=Build aliasCore 'namespace AliasCore {public class Api {public static void Use(Shared.Arg value){}}}' AliasCore $argB
+$aliasReferences='<ItemGroup><Reference Include="ArgA"><HintPath>'+[Security.SecurityElement]::Escape($argA)+'</HintPath><Aliases>A</Aliases></Reference><Reference Include="ArgB"><HintPath>'+[Security.SecurityElement]::Escape($argB)+'</HintPath><Aliases>B</Aliases></Reference></ItemGroup>'
+$aliasSource='extern alias A;extern alias B;using System;namespace HarmonyLib{[AttributeUsage(AttributeTargets.Class)]public class HarmonyPatch:Attribute{public HarmonyPatch(Type t,string n,Type[] a){}}}[HarmonyLib.HarmonyPatch(typeof(AliasCore.Api),"Use",new Type[]{typeof(A::Shared.Arg)})]public static class Patch{public static void Prefix(){}}'
+$wrongAlias=Build wrongAlias $aliasSource FixtureWrongAlias $aliasCore $aliasReferences
+$r=Run $wrongAlias @($aliasCore,$argA,$argB) @('AliasCore','ArgA','ArgB')
+Check ($r.State -ne 'CheckedSupportedScope') 'same type name from wrong assembly cannot pass target selection'
+Check ($r.Coverage.BindingChecks -eq 0) 'wrong assembly selector cannot check bindings'
+Check (@($r.Patches|Where-Object TargetStatus -eq Resolved).Count -eq 0) 'wrong assembly alias cannot resolve target'
+$rightAlias=Build rightAlias ($aliasSource.Replace('typeof(A::Shared.Arg)','typeof(B::Shared.Arg)')) FixtureRightAlias $aliasCore $aliasReferences
+$r=Run $rightAlias @($aliasCore,$argA,$argB) @('AliasCore','ArgA','ArgB')
+Check ($r.State -eq 'CheckedSupportedScope') 'matching full assembly identity resolves alias selector'
+Check ($r.Patches[0].BindingStatus -eq 'CheckedSupportedBindings') 'matching assembly selector permits binding inspection'
+$fakePrimitive=Build fakePrimitive 'namespace System {public class Int32{}}' FakePrimitive
+$fakeReference='<ItemGroup><Reference Include="FakePrimitive"><HintPath>'+[Security.SecurityElement]::Escape($fakePrimitive)+'</HintPath><Aliases>Fake</Aliases></Reference></ItemGroup>'
+$fakePatch=Build fakePatch 'extern alias Fake;using System;namespace HarmonyLib{[AttributeUsage(AttributeTargets.Class)]public class HarmonyPatch:Attribute{public HarmonyPatch(Type t,string n,Type[] a){}}}[HarmonyLib.HarmonyPatch(typeof(FixtureCore.Api),"Read",new Type[]{typeof(Fake::System.Int32)})]public static class Patch{public static void Prefix(){}}' FixtureFakePrimitive $core $fakeReference
+$r=Run $fakePatch @($core,$fakePrimitive)
+Check ($r.State -ne 'CheckedSupportedScope') 'fake System.Int32 is not a primitive selector'
+Check ($r.Coverage.BindingChecks -eq 0) 'fake primitive cannot permit binding checks'
+$targetV2=Build targetV2 (Get-Content -LiteralPath (Join-Path $root 'core/Fixture.cs') -Raw) FixtureCore '' '<PropertyGroup><AssemblyVersion>2.0.0.0</AssemblyVersion></PropertyGroup>'
+$r=Run $consumer @($targetV2) @('UnselectedScope')
+Check ($r.State -ne 'CheckedSupportedScope') 'target assembly version mismatch cannot pass outside reference scope'
+Check ($r.Coverage.BindingChecks -eq 0) 'mismatched target assembly identity cannot inspect bindings'
 $manifestRoot=Join-Path $root 'subject';$null=New-Item -ItemType Directory $manifestRoot
 Set-Content (Join-Path $manifestRoot 'ModInfo.json') '{"Id":"FixtureConsumer"}'
 $wrapperProfile=Join-Path $root 'wrapper-profile.json'
