@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+ <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><EnableDefaultCompileItems>false</EnableDefaultCompileItems><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>
+<ItemGroup><Compile Include="Program.cs" /><Compile Include="CommonMetadata.cs" /><Compile Include="ApiAudit.cs" /> <Compile Include="ContractCompare.cs" /></ItemGroup></Project>
