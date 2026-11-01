@@ -29,7 +29,7 @@ function JsonValue([Text.Json.JsonElement]$e){
     switch($e.ValueKind.ToString()){
         Object{$v=[ordered]@{};$seen=[Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase);foreach($p in $e.EnumerateObject()){if(!$seen.Add($p.Name)){throw 'Duplicate/case-colliding JSON property.'};$v[$p.Name]=JsonValue $p.Value};return [pscustomobject]$v}
         Array{$a=@(foreach($i in $e.EnumerateArray()){JsonValue $i});return ,$a}
-        String{return $e.GetString()} Number{return $e.GetInt64()} True{return $true} False{return $false} Null{return $null} default{throw 'Unsupported JSON value.'}
+        String{return $e.GetString()} Number{$integer=0L;if($e.TryGetInt64([ref]$integer)){return $integer};return $e.GetDouble()} True{return $true} False{return $false} Null{return $null} default{throw 'Unsupported JSON value.'}
     }
 }
 function ReadInput([string]$p,[string]$expected=''){

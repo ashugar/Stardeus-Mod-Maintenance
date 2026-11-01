@@ -14,7 +14,7 @@ function WriteJson($value,[string]$path){$value | ConvertTo-Json -Depth 64 | Set
 function Clone($o){return ($o | ConvertTo-Json -Depth 64 | ConvertFrom-Json -Depth 64)}
 function FixtureHash([string]$p){return (Get-FileHash -LiteralPath $p).Hash}
 $mod=Join-Path $TestRoot 'mod';$game=Join-Path $TestRoot 'game';$null=[IO.Directory]::CreateDirectory($mod);$null=[IO.Directory]::CreateDirectory($game)
-$manifest=Join-Path $mod 'ModInfo.json';WriteJson @{Id='Example';Name='Example';ModVersion='1.2.3';GameVersion='0.15.2'} $manifest
+$manifest=Join-Path $mod 'ModInfo.json';WriteJson @{Id='Example';Name='Example';ModVersion='1.2.3';GameVersion='0.15.2';Atlas=@{MipMapBias=-0.2}} $manifest
 [IO.File]::WriteAllText((Join-Path $game 'version.dll'),'Not a managed DLL')
 $boundary=[DateTime]::UtcNow.AddMinutes(-2).ToString('o')
 $bp=@{SchemaVersion=1;BaselineId='fixture';OutputRoot=(Join-Path $TestRoot 'baselines');Game=@{Root=$game;VersionAssembly='version.dll';VersionType=$null;VersionField=$null;Files=@('version.dll');Trees=@();ExcludeDirectories=@();ProcessNames=@()};Mods=@(@{Key='primary';Role='Primary';Root=$mod;ExpectedId='Example';Manifest='ModInfo.json';Files=@('ModInfo.json');Trees=@();ExcludeDirectories=@();DependencyKeys=@()})}
@@ -27,6 +27,7 @@ $vpp=Join-Path $TestRoot 'version-profile.json';WriteJson $vp $vpp
 $vr=& (Join-Path $PSScriptRoot '../Test-ModVersions.ps1') -ProfilePath $vpp
 $versionPath=$vr.ReportPath
 Check (Test-Path -LiteralPath $versionPath) 'actual version report missing'
+Check ($vr.State -eq 'Consistent') 'fractional manifest metadata must pass producer and validation handoff'
 $profile=@{SchemaVersion=1;RecordId='fixture';Subject=@{Name='Example|<tag>';ModId='Example';Version='1.2.3';CanonicalRoot=$mod;Task='Fixture'};SubjectRoots=@();NotBeforeUtc=$boundary;Artifacts=@(@{Key='Manifest';Path=$manifest;SHA256=(FixtureHash $manifest);Role='Payload'});Evidence=@(@{Key='Versions';Type='Versions';Path=$versionPath;SHA256=(FixtureHash $versionPath);Scope='Current';Required=$true;ExpectedContextId='fixture';ReleaseGroupKey='Release';BindMode='ExactPathAndHash';RequiredArtifactKeys=@('Manifest')});Attestations=@();RequiredStages=@('VersionChecks');OutputRoot=(Join-Path $TestRoot 'records');ProtectedRoots=@($game);CopyEvidence=$true}
 $pp=Join-Path $TestRoot 'validation-profile.json'
 function Run($p,[switch]$Gate){WriteJson $p $pp;if($Gate){return & $tool -ProfilePath $pp -RequireComplete};return & $tool -ProfilePath $pp -ReportOnly}
