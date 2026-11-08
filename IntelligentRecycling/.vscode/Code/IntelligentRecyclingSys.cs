@@ -25,14 +25,14 @@ namespace Game.Systems.IntelligentRecycling {
         public const string SysId = "IntelligentRecyclingSys";
         public const string ModId = "IntelligentRecycling";
         public const string DisplayName = "Intelligent Recycling";
-        public const string ModVersion = "1.3.3";
+        public const string ModVersion = "1.4.0";
         private const string ConsumerId = ModId;
         internal const string ArtilleryFungusDefinitionId =
             "Obj/Plants/ArtilleryFungus";
         public const string RequiredUtilitiesVersion = "1.4.0";
         private const string HarmonyId = "jleas.stardeus.intelligentrecycling.events";
         internal const long ScanIntervalTicks = 300;
-        internal const int SaveSchemaVersion = 13;
+        internal const int SaveSchemaVersion = 14;
         internal const float DefaultQualityThreshold = 0.5f;
         private readonly List<DisposerComp> disposers = new();
         private readonly List<StasisPodComp> stasisPods = new();
@@ -106,6 +106,7 @@ namespace Game.Systems.IntelligentRecycling {
         public int LostShuttleReplacementsQueued { get; private set; }
         public int ActiveTrackedTasks => trackedGoalsByObjectId.Count
             + trackedGoalsByBeingId.Count
+            + corpseGoals.Count
             + trackedGoalsByStasisPodId.Count
             + trackedGoalsByBreachCapsuleId.Count
             + lostShuttleReplacements.Count;
@@ -135,6 +136,9 @@ namespace Game.Systems.IntelligentRecycling {
         }
 
         protected override void OnInitialize() {
+            // The native load/tick sentinel is independent of Harmony and AUMF.
+            S.Sig.AfterLoadState.AddListener(OnCorpseSafetyAfterLoadState);
+            CorpseDisposalGuards.Install();
             if (!AutoUtilitiesApi.TryRegisterConsumer(
                     ConsumerId, DisplayName,
                     typeof(IntelligentRecyclingSys).Assembly.GetName().Version
@@ -169,6 +173,7 @@ namespace Game.Systems.IntelligentRecycling {
                     Order = 300
                 });
             S.Sig.AfterLoadState.AddListener(OnAfterLoadState);
+            corpseInitializationReady = true;
         }
 
         private void OnAfterLoadState(GameState state) {
@@ -179,6 +184,8 @@ namespace Game.Systems.IntelligentRecycling {
             }
             if (loadedSettingsGameId != state.GameId) {
                 ResetToDefaults();
+                loadedSettingsGameId = state.GameId;
+                corpseSettingsLoaded = corpseLoadAttemptedGameId != state.GameId;
             }
             loadedState = state;
             partRestorationUnit.RefreshAvailability();
@@ -742,6 +749,8 @@ namespace Game.Systems.IntelligentRecycling {
             SafeBoxTasksQueued = 0;
             ArtilleryFungusTasksQueued = 0;
             DeadCrawlerTasksQueued = 0;
+            BiologicalCorpseTasksQueued = 0;
+            RoboticCorpseTasksQueued = 0;
             StasisPodTasksQueued = 0;
             BreachCapsulePortTasksQueued = 0;
             LostShuttleReplacementsQueued = 0;
@@ -808,6 +817,7 @@ namespace Game.Systems.IntelligentRecycling {
                 ScanStasisPods();
                 ScanBreachCapsulePorts();
                 ScanDeadCrawlers(processors.BiologicalThreshold);
+                ScanCorpses();
                 ScanLostShuttles();
             }
 
@@ -911,6 +921,7 @@ namespace Game.Systems.IntelligentRecycling {
         private void ReconcileTrackedGoals() {
             if (trackedGoalsByObjectId.Count == 0
                     && trackedGoalsByBeingId.Count == 0
+                    && corpseGoals.Count == 0
                     && trackedGoalsByStasisPodId.Count == 0
                     && trackedGoalsByBreachCapsuleId.Count == 0
                     && lostShuttleReplacements.Count == 0) {
@@ -936,6 +947,7 @@ namespace Game.Systems.IntelligentRecycling {
                 }
             }
             changed |= ReconcileTrackedCrawlers();
+            changed |= ReconcileCorpseGoals();
             changed |= ReconcileTrackedStasisPods();
             changed |= ReconcileTrackedBreachCapsules();
             changed |= ReconcileLostShuttleReplacements();
@@ -1418,10 +1430,13 @@ namespace Game.Systems.IntelligentRecycling {
             saveData.SetIntSet("TrackedBreachCapsuleIds", breachCapsuleIds);
             saveData.SetIntSet("TrackedBreachGoalIds", breachGoalIds);
             SaveLostShuttleReplacementState(saveData);
+            SaveCorpseState(saveData);
             return saveData;
         }
 
         public void Load(ComponentData data) {
+            corpseSettingsLoaded = false;
+            corpseLoadAttemptedGameId = S.GameId;
             saveData = data;
             loadedSettingsGameId = S.GameId;
             int schemaVersion = Math.Max(0,
@@ -1566,6 +1581,7 @@ namespace Game.Systems.IntelligentRecycling {
                 }
             }
             LoadLostShuttleReplacementState(data, schemaVersion);
+            LoadCorpseState(data);
             MarkApiRevision();
         }
 
@@ -1607,6 +1623,12 @@ namespace Game.Systems.IntelligentRecycling {
             DeconstructBreachCapsulePorts = true;
             RecycleArtilleryFungus = true;
             DisposeDeadCrawlers = true;
+            RecycleBiologicalCorpses = false;
+            RecycleRoboticCorpses = false;
+            BiologicalCorpseTasksQueued = 0;
+            RoboticCorpseTasksQueued = 0;
+            corpseSettingsLoaded = false;
+            corpseGoals.Clear();
             ReplaceLostShuttles = false;
             BiologicalQualityThreshold = DefaultQualityThreshold;
             RoboticQualityThreshold = DefaultQualityThreshold;
@@ -1659,6 +1681,10 @@ namespace Game.Systems.IntelligentRecycling {
         }
 
         public override void Unload() {
+            corpseInitializationReady = false;
+            S.Sig.AfterLoadState.RemoveListener(OnCorpseSafetyAfterLoadState);
+            corpseSafetyState?.Clock.OnTickEarly.RemoveListener(OnCorpseSafetyTick);
+            corpseSafetyState = null;
             S.Sig.AfterLoadState.RemoveListener(OnAfterLoadState);
             if (loadedState != null) {
                 loadedState.Clock.OnTick.RemoveListener(OnTick);
@@ -1685,6 +1711,7 @@ namespace Game.Systems.IntelligentRecycling {
             InvalidateProcessorContext();
             trackedGoalsByObjectId.Clear();
             trackedGoalsByBeingId.Clear();
+            corpseGoals.Clear();
             trackedGoalsByStasisPodId.Clear();
             trackedGoalsByBreachCapsuleId.Clear();
             lostShuttleReplacements.Clear();

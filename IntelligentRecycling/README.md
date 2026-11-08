@@ -6,7 +6,9 @@ is at or below the shared biological or robotic/equipment threshold. Those two
 thresholds can be set in Intelligent Recycling and are synchronized with every
 compatible facility in both directions. The mod also cleans up selected event
 objects after Stardeus marks them safe for Disassembly or Deconstruction, and
-can automatically dispose of dead Crawler pests. An opt-in recovery workflow
+can automatically dispose of dead Crawler pests. Separate opt-in settings can
+dispose of biological and robotic corpses after their removable parts have been
+harvested. An opt-in recovery workflow
 can also replace a Shuttle landing pad after its Shuttle is permanently lost.
 
 ## Requirements
@@ -29,6 +31,8 @@ widget and panel only when that handshake reports a compatible framework.
   instead of iterating every persistent stored object.
 - Performs no automation scans while the game is paused.
 - Supports biological parts, robotic parts, and equipment independently.
+- Provides independent, default-disabled biological and robotic corpse cleanup
+  controls after all removable body parts have been harvested.
 - Provides shared biological and robotic/equipment Quality controls in the
   Settings panel. Changes synchronize to every matching facility, while a
   facility-side change updates Intelligent Recycling and its peers.
@@ -89,6 +93,42 @@ widget and panel only when that handshake reports a compatible framework.
 Each event-object cleanup path has an independent toggle. Existing cleanup paths
 are enabled by default; lost Shuttle pad replacement is disabled by default.
 
+## Optional corpse cleanup
+
+**Biological corpses** and **Robotic corpses** are separate Settings options.
+Both start disabled, including when loading an existing save. They do not remove
+body parts or change harvesting orders. Eligible corpses use the normal Nutrient
+Extractor or Disassembler work, with Core handling workers, transport, equipment
+stripping, processor availability and outputs.
+
+A corpse must be genuinely dead, with no removable installed body parts left.
+Optional implants count, and a destroyed-but-still-installed removable part must
+still be removed. Welded parts and the body's inherent nonremovable structure
+may remain. An installed Brain, Core or other mind-bearing part must be removed
+or actually welded; other reasons a part cannot be removed do not waive this
+protection. Loose Brain/Core and mind-associated parts remain protected.
+
+The body species selects the biological or robotic setting, independently of
+its mind or the materials of its installed parts. The existing **Dead Crawlers**
+control remains exclusively responsible for Crawlers, including when disabled.
+
+Stored or unavailable bodies, bodies carried by another worker, and bodies with
+existing work or pending surgery are left alone. An active IR job uses only its
+own worker's processor reservation. Eligibility is checked
+again for IR-owned corpse jobs before processing. Disabling a corpse option or
+Automation stops pending IR corpse work through Core's normal cancellation;
+processing already accepted by a device continues normally. Settings and exact
+task ownership survive save/load. Corpse discovery uses the existing 300-tick
+full reconciliation scan rather than a new scan for every loose item.
+
+Corpse admission does not compare quality against the loose-part thresholds.
+Core retains its ordinary processing and output rules, including any native
+recovery of parts remaining in a robotic corpse.
+
+Before downgrading or removing IR, disable both corpse options and let pending
+corpse jobs cancel, then save. An older IR DLL cannot enforce these new saved
+jobs' eligibility checks; restoring the old DLL alone does not undo saved work.
+
 ## Defaults
 
 - Automation: On
@@ -103,6 +143,8 @@ are enabled by default; lost Shuttle pad replacement is disabled by default.
 - Breach Capsule Ports: On
 - Artillery Fungus: On
 - Dead Crawlers: On
+- Biological corpses: Off
+- Robotic corpses: Off
 - Lost Shuttle pads: Off
 - Biological quality threshold: 50%
 - Robotic/equipment quality threshold: 50%
@@ -119,9 +161,11 @@ The normal quality-threshold workflow considers loose active objects with
 Stardeus's disposable component. The only constructed objects considered are
 the explicitly supported Stasis Pods, Breach Capsule Ports, and permanently lost
 Shuttle pads, with their respective safety checks. Raw materials and stored
-inventory are outside this mod's scope. Dead Crawlers are an explicit Being-level exception: the mod
-requires the Crawler species and Dead state before requesting Core's vanilla
-Dispose task, and never targets a living or merely incapacitated Being.
+inventory are outside this mod's scope. Dead Crawlers and the opt-in stripped
+corpse settings are separate Being-level paths. The Crawler path requires its
+species and Dead state; generic corpse cleanup additionally verifies that the
+body is no longer alive and all removable parts have been harvested. Neither
+generic corpse option targets a living or merely incapacitated Being.
 
 Quality thresholds are global per processor family. On the first load after
 upgrading from 1.1.1 or earlier, Intelligent Recycling adopts the highest
@@ -130,6 +174,43 @@ effective cutoff that save was already using. It then synchronizes every
 matching facility. If no compatible facility exists during migration, the
 corresponding threshold starts at Core's existing 50% default. New facilities
 inherit the saved Intelligent Recycling threshold when construction completes.
+
+## 1.4.0
+
+Status: implementation candidate; fresh startup and gameplay validation pending.
+
+- Adds independent, default-disabled **Biological corpses** and **Robotic
+  corpses** Settings options, including safe defaults for existing saves.
+- Uses native disposal work only after all removable parts are removed. Welded
+  remnants, including welded Brain/Core parts, may remain; nonwelded installed
+  mind parts and detached protected parts retain their safeguards.
+- Preserves genuine body-death checks, player work, pending surgery and foreign
+  ownership. Revalidates only exact IR-owned corpse jobs during execution and
+  immediately before processor acceptance, including after save/load.
+- Keeps Crawlers exclusively under their existing dedicated control and retains
+  the 300-tick full reconciliation backstop.
+- Extends read-only API contract 1 with additive corpse settings and task/target
+  reporting. AUMF requirement 1.4.0 remains unchanged.
+- Advances the save schema to 14 for corpse settings and exact task ownership.
+- Processor outputs remain Core-owned; this feature promises neither destruction
+  nor recovery of welded remnants.
+
+Remaining in-game acceptance for 1.4.0:
+
+1. Load an existing save and confirm both corpse options start off while the
+   existing Crawler and loose-part choices are preserved.
+2. Enable one corpse family with its compatible processor. A dead body with one
+   removable part remaining must stay untouched; after the last removable part
+   is harvested it should receive native work within the normal advancing
+   300-tick scan. Repeat for the other family and a welded Brain/Core remnant.
+3. Confirm living/incapacitated Beings, ongoing Core replacement, pending surgery,
+   stored bodies and existing manual jobs remain untouched.
+4. Turn the relevant option or Automation off during pending and carried work.
+   Confirm IR cancels its pending job normally without losing the body or
+   interfering with another job. Work already accepted by a processor continues.
+5. Save/load with pending and carried corpse jobs; confirm correct ownership,
+   no duplicate orders and normal reservation/carrier cleanup. Check a fresh
+   log for the expected version and corpse-hook initialization errors.
 
 ## 1.3.3
 

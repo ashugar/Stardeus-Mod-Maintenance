@@ -33,7 +33,9 @@ namespace Game.Systems.IntelligentRecycling {
         BreachCapsulePort = 9,
         WholeBeing = 10,
         SafeBox = 11,
-        LostShuttle = 12
+        LostShuttle = 12,
+        BiologicalCorpse = 13,
+        RoboticCorpse = 14
     }
 
     public enum IntelligentRecyclingProcessorFamily {
@@ -140,6 +142,10 @@ namespace Game.Systems.IntelligentRecycling {
                     return "safe-box";
                 case IntelligentRecyclingTargetType.LostShuttle:
                     return "lost-shuttle";
+                case IntelligentRecyclingTargetType.BiologicalCorpse:
+                    return "biological-corpse";
+                case IntelligentRecyclingTargetType.RoboticCorpse:
+                    return "robotic-corpse";
                 default:
                     return "unsupported";
             }
@@ -557,7 +563,8 @@ namespace Game.Systems.IntelligentRecycling {
                 int breachCapsulePorts, int lostShuttleReplacements,
                 int activeObjects, int activeBeings, int activeStasisPods,
                 int activeBreachCapsulePorts,
-                int activeLostShuttleReplacements) {
+                int activeLostShuttleReplacements, int biologicalCorpses = 0,
+                int roboticCorpses = 0) {
             BiologicalTasksQueued = biological;
             RoboticTasksQueued = robotic;
             EquipmentTasksQueued = equipment;
@@ -578,6 +585,8 @@ namespace Game.Systems.IntelligentRecycling {
             ActiveStasisPodTasks = activeStasisPods;
             ActiveBreachCapsulePortTasks = activeBreachCapsulePorts;
             ActiveLostShuttleReplacements = activeLostShuttleReplacements;
+            BiologicalCorpseTasksQueued = biologicalCorpses;
+            RoboticCorpseTasksQueued = roboticCorpses;
         }
 
         public int BiologicalTasksQueued { get; }
@@ -600,6 +609,8 @@ namespace Game.Systems.IntelligentRecycling {
         public int ActiveStasisPodTasks { get; }
         public int ActiveBreachCapsulePortTasks { get; }
         public int ActiveLostShuttleReplacements { get; }
+        public int BiologicalCorpseTasksQueued { get; }
+        public int RoboticCorpseTasksQueued { get; }
     }
 
     public sealed class IntelligentRecyclingTrackedTaskSnapshot {
