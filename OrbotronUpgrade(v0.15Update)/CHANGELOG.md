@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.2 — 2026-11-08
+
+- Reviewed the native recovery contracts against Stardeus v0.15.12.3259 and updated the exact supported Core identity. Unreviewed modules still refuse recovery before registration or changes.
+- Preserved missing-only insertion, existing slot identities and learned skills/progress/XP/priorities, Orbotron-mind-only eligibility, selection revalidation, cancellation, rollback and mixed-selection counting.
+- Retained native job/ability arrays, curves, spawn requirements and player choices. No automatic migration or recovery is added.
+- Rebuilt against the reviewed current native assemblies. Actual Unity/optional Harmony integration and separate-save recovery/save-load acceptance on this Core remain pending.
+- Earlier 2.2.1 mixed-selection count and Orbotron-only restoration were user-confirmed on the prior supported Core; that acceptance does not certify this new Core.
+
 ## 2.2.1 — 2026-10-24
 
 - Fixed the multi-selection **Restore jobs ×N** badge: it now uses the native counted-button loader with the eligible incomplete Orbotron-mind count. The previous loader left the pooled badge unset, so a stale count could be displayed.
