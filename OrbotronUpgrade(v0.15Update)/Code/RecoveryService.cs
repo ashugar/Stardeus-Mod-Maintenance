@@ -8,8 +8,8 @@ namespace OrbotronUpgrade
 {
     internal static class RecoveryContract
     {
-        // The copied flag and new-slot contracts were reviewed against rc344.3226.
-        internal static readonly Guid SupportedGameModule = new Guid("bf5d4d92-ad65-4f59-a00e-14a764a9eceb");
+        // The copied flag and new-slot contracts were reviewed against v0.15.12.3259.
+        internal static readonly Guid SupportedGameModule = new Guid("fc2ba5e9-a198-436a-b9b5-1fd4e6e1b85f");
         internal static bool IsSupported => typeof(Jobs).Module.ModuleVersionId == SupportedGameModule;
     }
 
