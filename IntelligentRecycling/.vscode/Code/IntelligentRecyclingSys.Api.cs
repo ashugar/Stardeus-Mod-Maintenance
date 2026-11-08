@@ -260,6 +260,14 @@ namespace Game.Systems.IntelligentRecycling {
                 ReplaceLostShuttles, false,
                 "Replace permanently lost Shuttle pads and reorder installed upgrades.",
                 Enabled && ReplaceLostShuttles));
+            result.Add(Setting("biological-corpses", "Biological corpses",
+                RecycleBiologicalCorpses, false,
+                "Dispose dead biological bodies after removable parts are gone; welded remnants may remain.",
+                Enabled && RecycleBiologicalCorpses && CorpseRuntimeReady(loadedState)));
+            result.Add(Setting("robotic-corpses", "Robotic corpses",
+                RecycleRoboticCorpses, false,
+                "Disassemble dead robotic bodies after removable parts are gone; welded remnants may remain.",
+                Enabled && RecycleRoboticCorpses && CorpseRuntimeReady(loadedState)));
             return result;
         }
 
@@ -997,10 +1005,11 @@ namespace Game.Systems.IntelligentRecycling {
                 BreachCapsulePortTasksQueued,
                 LostShuttleReplacementsQueued,
                 trackedGoalsByObjectId.Count,
-                trackedGoalsByBeingId.Count,
+                trackedGoalsByBeingId.Count + corpseGoals.Count,
                 trackedGoalsByStasisPodId.Count,
                 trackedGoalsByBreachCapsuleId.Count,
-                lostShuttleReplacements.Count);
+                lostShuttleReplacements.Count,
+                BiologicalCorpseTasksQueued, RoboticCorpseTasksQueued);
         }
 
         private List<IntelligentRecyclingTrackedTaskSnapshot>
@@ -1041,6 +1050,19 @@ namespace Game.Systems.IntelligentRecycling {
                     data?.Species?.Name,
                     "dead-crawlers",
                     IntelligentRecyclingTargetType.DeadCrawler,
+                    data?.Being?.Goal);
+            }
+
+            foreach (CorpseRecord tracked in corpseGoals.Values) {
+                BeingData data = null;
+                beings?.TryGetValue(tracked.BeingId, out data);
+                bool biological = tracked.Kind == CorpseDisposalKind.Biological;
+                AddTrackedTask(result, tracked.GoalId, tracked.BeingId,
+                    IntelligentRecyclingTrackedTargetKind.Being,
+                    data?.Species?.Id, data?.Species?.Name,
+                    biological ? "biological-corpses" : "robotic-corpses",
+                    biological ? IntelligentRecyclingTargetType.BiologicalCorpse
+                        : IntelligentRecyclingTargetType.RoboticCorpse,
                     data?.Being?.Goal);
             }
 
@@ -1327,7 +1349,7 @@ namespace Game.Systems.IntelligentRecycling {
                 BuildBeingSpecialSnapshot(BeingData data,
                 ProcessorContext processors) {
             if (data?.Species?.IdH != SpeciesIdH.Crawler) {
-                return null;
+                return BuildCorpseSpecialSnapshot(data, processors);
             }
             Being being = data.Being;
             bool alive = data.HasStateFlag(BeingState.Alive);

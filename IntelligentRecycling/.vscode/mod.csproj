@@ -10,8 +10,9 @@
     <RootNamespace>Game.IntelligentRecycling</RootNamespace>
     <AssemblyName>IntelligentRecycling</AssemblyName>
     <OutputPath>../Libraries</OutputPath>
-    <VersionPrefix>1.3.3.0</VersionPrefix>
+    <VersionPrefix>1.4.0.0</VersionPrefix>
     <DebugType>embedded</DebugType>
+    <PathMap>$(MSBuildProjectDirectory)=/_/IntelligentRecycling</PathMap>
     <DebugSymbols>false</DebugSymbols>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <PreserveCompilationContext>false</PreserveCompilationContext>

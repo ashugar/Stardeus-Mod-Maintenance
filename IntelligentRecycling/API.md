@@ -1,6 +1,6 @@
 # Intelligent Recycling read-only API
 
-Intelligent Recycling 1.3.3 exposes contract version 1 at:
+Intelligent Recycling 1.4.0 exposes contract version 1 at:
 
 ```csharp
 Game.Systems.IntelligentRecycling.IntelligentRecyclingApi
@@ -25,6 +25,13 @@ and collection values are read-only copies.
   unload boundaries.
 - Snapshots do not update in place. Query again when `DataRevision` changes or
   when the consumer needs current object state.
+
+Version 1.4.0 adds independent `biological-corpses` and `robotic-corpses`
+settings, both disabled by default, and additive whole-corpse target/task
+reporting. Existing contract-1 entry points and enum values remain unchanged.
+Save schema 14 stores the settings and exact IR-owned corpse-task records.
+Implementation build/static checks are separate from fresh startup, gameplay
+and save/load acceptance; the new feature has not yet been validated in game.
 
 Version 1.3.3 restores Core forbidden-state reads through
 `StorableObjComp.IsForbidden` for Stardeus 0.15.0-rc337.3219 and newer.
@@ -111,11 +118,41 @@ public static IReadOnlyList<IntelligentRecyclingSpecialTargetSnapshot> GetSpecia
 - scan scheduling, split scan results, and accumulated per-feature totals;
 - active tasks created and tracked by Intelligent Recycling;
 - Hullpiercer, Storage Capsule, Safe Box, Artillery Fungus, Dead Crawler,
+  biological corpse, robotic corpse,
   Stasis Pod, Breach Capsule Port, and lost Shuttle pad state;
 - panel, top-bar widget, and managed-shortcut status.
 
 Consumers making a decision for one object should prefer
 `TryGetObjectSnapshot`. It avoids constructing the comprehensive catalogs.
+
+### Whole-corpse settings and ownership
+
+The `biological-corpses` and `robotic-corpses` settings are independent of loose
+body-part categories and start disabled in existing saves. The body's native
+species selects the family. Admission requires a genuinely dead body with no
+removable installed parts, including optional implants and destroyed-but-still-
+installed removable parts. Welded remnants may remain. Installed Brain/Core or
+other mind-bearing slots must be removed or actually welded; an unrelated
+inability to remove a mind-bearing part is not permission to dispose of it.
+Detached protected-part policy is unchanged.
+
+Whole-corpse snapshots use additive target types `BiologicalCorpse = 13` and
+`RoboticCorpse = 14`, with stable IDs `biological-corpse` and `robotic-corpse`.
+Accumulated totals expose `BiologicalCorpseTasksQueued` and
+`RoboticCorpseTasksQueued` separately from `DeadCrawlerTasksQueued`. These are
+queue totals rather than proof that a processor completed the work.
+
+Crawlers remain exclusively controlled by `dead-crawlers`, including its disabled
+state. They are excluded from the general biological-corpse path. Corpse jobs
+use Being IDs and never grant object-API hauling permission. Auto Hauling's
+separate exclusion of whole Beings remains applicable.
+
+The corpse workflow uses native disposal goals with exact IR ownership and
+persisted category identity. Eligibility and ownership are rechecked for active
+work and before processor acceptance. A setting change can cancel only that
+exact pending IR corpse goal; replaced/manual goals are never adopted or
+cancelled. After a processor accepts the corpse, its native work and outputs
+continue. API inspection does not queue or cancel work.
 
 ### Managed processor thresholds
 

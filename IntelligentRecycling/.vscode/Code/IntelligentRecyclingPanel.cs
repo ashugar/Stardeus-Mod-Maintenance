@@ -160,6 +160,18 @@ namespace Game.Systems.IntelligentRecycling {
                 system.ReplaceLostShuttles,
                 system.SetReplaceLostShuttles,
                 system.BuildLostShuttleReplacementTooltip());
+            AddSettingCard(automation, "Biological corpses",
+                system.RecycleBiologicalCorpses, system.SetBiologicalCorpses,
+                "Dispose dead biological bodies only after all removable parts "
+                + "are gone. Welded parts, including welded Brain/Core, may remain. "
+                + "Uses a Nutrient Extractor and native disposal; no automatic harvesting. "
+                + "Dead Crawlers retain their separate setting. Disabled by default.");
+            AddSettingCard(automation, "Robotic corpses",
+                system.RecycleRoboticCorpses, system.SetRoboticCorpses,
+                "Disassemble genuinely dead robotic bodies only after all removable "
+                + "parts are gone. Welded parts, including welded Core, may remain. "
+                + "Uses a Disassembler and native disposal; no automatic harvesting. "
+                + "Disabled by default.");
 
             context.AddHeader("Quality thresholds");
             context.AddInfo(IconId.CInfo, "Shared processor thresholds",
