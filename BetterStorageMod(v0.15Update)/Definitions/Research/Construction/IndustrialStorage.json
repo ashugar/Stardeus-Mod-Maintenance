@@ -11,7 +11,7 @@
         "DatoidCosts" : [
             {
                 "TypeId" : "DatoidBasic",
-                "StackSize" : 20
+                "StackSize" : 24
             },
             {
                 "TypeId": "DatoidTech",

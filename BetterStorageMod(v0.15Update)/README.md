@@ -1,11 +1,21 @@
-[h1]Better Storage 2.0.4[/h1]
-[b]Release date: October 17, 2026 (America/Chicago)[/b]
+[h1]Better Storage 2.0.5[/h1]
+[b]Release date: November 8, 2026[/b]
 
-[h2]2.0.4 maintenance update[/h2]
+[h2]2.0.5 research cost update[/h2]
+[list]
+[*]Aligns the three affected research costs with current native progression checks while retaining their tiers, prerequisites, unlocks, and existing material types.
+[*]AdvancedStorage: 22 Basic Datoids (previously 10); base weighted cost 22.
+[*]IndustrialStorage: 24 Basic and 15 Technical Datoids (previously 20 Basic and 15 Technical); base weighted cost 54.
+[*]CryoRefrigeration: 10 Basic, 18 Technical, and 2 Biotic Datoids (previously 10 Basic, 6 Technical, and 2 Biotic); base weighted cost 54. The increase uses its existing Technical material, preserving Basic and Biotic counts.
+[*]AdvancedCooling remains unchanged at 13 Basic, 3 Technical, and 1 Biotic Datoids; base weighted cost 23. Actual research requirements depend on the game's difficulty settings.
+[*]Storage capacities, footprints, construction costs, and the 2.0.4 native hauling and fridge power changes are preserved. Native validation remains enabled; warnings caused by other mods are outside this update.
+[/list]
+
+[h2]2.0.4 maintenance update (October 17, 2026)[/h2]
 [list]
 [*]The two custom fridges and two custom beverage coolers use Core's native electricity requirement for new hauling decisions: the device must be switched on and either electrically connected or linked to a worker. This connection check does not guarantee sufficient power generation. Deliveries already planned by Core may still finish.
 [*]Large Fridge (Fridge01) and Huge Fridge (Fridge02) use native fridge power demand: 2 kW plus 5 W per stored unit. At their unchanged capacities, demand ranges from 2 to 3 kW for the 200-unit Large Fridge and from 2 to 4.5 kW for the 500-unit Huge Fridge.
-[*]Custom capacities, footprints, construction work, ingredients, and research are unchanged. Outdated vanilla capacity examples below are corrected in documentation only.
+[*]In 2.0.4, custom capacities, footprints, construction work, ingredients, and research were unchanged. Outdated vanilla capacity examples below were corrected in documentation only.
 [/list]
 
 [h1]Storage options[/h1]
