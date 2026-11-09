@@ -3,12 +3,10 @@
 Part Restoration Unit adds a Tier 3 automated facility for restoring the
 Condition of detached biological and robotic body parts.
 
-Version 1.1.2 is a maintenance release that corrects save recovery for loaded
-parts and in-flight Nanobot Hive deliveries. Recovery now waits until Core has
-fully restored the save state, retains loaded inputs and repair progress, and
-leaves Hives available for later deliveries. The correction was gameplay- and
-log-validated across repeated save loads. Auto Utilities Mod Framework 1.4.0
-remains the required and tested framework version.
+Version 1.1.3 promotes the in-game validated research balance adjustment.
+Part Restoration costs 6 Biotic, 4 Synthetic, and 2 High-Tech datoids while
+retaining Tier 3 and the Medical Care and Maintenance prerequisites.
+Auto Utilities Mod Framework 1.4.0 remains the required framework version.
 
 ## Operation
 
@@ -91,6 +89,15 @@ active Stardeus theme. PRU does not use AUMF's opt-in `ThemeAwareUi` helpers,
 so no feature gate or custom UI migration is required. Nanobot delivery
 likewise uses Core's Hive and hauling lifecycle because AUMF does not duplicate
 that system.
+
+## Version 1.1.3
+
+- Reduces research cost from 10 Biotic, 10 Synthetic, and 6 High-Tech datoids
+  to 6 Biotic, 4 Synthetic, and 2 High-Tech (weighted cost 126 to 56).
+- Preserves Tier 3 and both Medical Care and Maintenance prerequisites.
+- Fits the inspected native tier and prerequisite cost comparisons.
+- The research adjustment was confirmed in-game by the user before release
+  promotion.
 
 ## Version 1.1.2
 
