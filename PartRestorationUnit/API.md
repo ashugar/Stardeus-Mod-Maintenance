@@ -1,6 +1,6 @@
 # Part Restoration Unit read-only API
 
-Part Restoration Unit 1.1.2 exposes contract version 1 at:
+Part Restoration Unit 1.1.3 exposes contract version 1 at:
 
 ```csharp
 Game.Systems.PartRestoration.PartRestorationApi
