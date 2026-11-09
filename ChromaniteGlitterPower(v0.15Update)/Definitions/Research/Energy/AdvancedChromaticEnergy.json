@@ -12,19 +12,19 @@
         "DatoidCosts" : [
             {
                 "TypeId" : "DatoidBiotic",
-                "StackSize" : 45
+                "StackSize" : 29
             },
             {
                 "TypeId" : "DatoidSynthetic",
-                "StackSize" : 27
+                "StackSize" : 18
             },
             {
                 "TypeId" : "DatoidEnergy",
-                "StackSize" : 39
+                "StackSize" : 25
             },
             {
                 "TypeId" : "DatoidAlien",
-                "StackSize" : 6
+                "StackSize" : 4
             }
         ]
     }

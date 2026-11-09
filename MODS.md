@@ -12,10 +12,10 @@ Versions and dependencies come from the current manifests. These entries do not 
 | [Auto Utilities Mod Framework](AutoUtilitiesModFramework/) | 1.4.0 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3776751765) |
 | [Better Storage (v0.15 Update)](BetterStorageMod%28v0.15Update%29/) | 2.0.5 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748324441) |
 | [Bot Auto Hack](BotAutoHack/) | 1.0.7 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3788363114) |
-| [Chromanite Material (v0.15 Update)](Chromanite%28v0.15Update%29/) | 2.0.1 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748921886) |
-| [Chromanite Doors (v0.15 Update)](ChromaniteDoors%28v0.15Update%29/) | 2.0.1 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748937744) |
-| [Chromanite Power (v0.15 Update)](ChromaniteGlitterPower%28v0.15Update%29/) | 2.0.1 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748932401) |
-| [Chromanite Walls (v0.15 Update)](ChromaniteWalls%28v0.15Update%29/) | 2.0.1 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748937799) |
+| [Chromanite Material (v0.15 Update)](Chromanite%28v0.15Update%29/) | 2.0.2 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748921886) |
+| [Chromanite Doors (v0.15 Update)](ChromaniteDoors%28v0.15Update%29/) | 2.0.2 | 0.15.0 | Core, Chromanite(v0.15Update) | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748937744) |
+| [Chromanite Power (v0.15 Update)](ChromaniteGlitterPower%28v0.15Update%29/) | 2.0.2 | 0.15.0 | Core, Chromanite(v0.15Update) | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748932401) |
+| [Chromanite Walls (v0.15 Update)](ChromaniteWalls%28v0.15Update%29/) | 2.0.2 | 0.15.0 | Core, Chromanite(v0.15Update) | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748937799) |
 | [Colonist And Bots Auto Upgrade](ColonistAndBotsAutoUpgrade/) | 1.1.3 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3754689644) |
 | [Intelligent Recycling](IntelligentRecycling/) | 1.4.0 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3775577154) |
 | [Metal Husks Revisited (v0.15 Update)](MetalHuskRevisited%28v0.15Update%29/) | 2.0.1 | 0.15.0 | - | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3749399478) |
