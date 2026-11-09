@@ -4,13 +4,21 @@ Quantum Storage provides ten compact late-game storage endpoints. Matching endpo
 
 The first endpoint supplies a fixed initial capacity. Each additional endpoint of the same type doubles the network total.
 
-## Current data update — 1.3.10 research progression (2026-11-08)
+## Current release — 1.3.11 validated research progression
+
+Version 1.3.11 assigns a new release version to the research fix the user validated in the 1.3.10 data revision. It preserves that exact research definition: Tier 5, Quantum Computing as the sole prerequisite, and 21 High-Tech, 16 Quantum and 10 Nuclear Datoids (weighted cost 340). Quasi-Quantum research and the ten existing unlock bindings are unchanged.
+
+The DLL is rebuilt for synchronized release metadata and the diagnostic build label; this is not another research or gameplay change. User acceptance of F11 remains recorded against the preceding data revision. Fresh startup of the rebuilt 1.3.11 DLL and Workshop publication of 1.3.11 remain pending; no additional individual gameplay scenarios are inferred from the user's validation statement. Diagnostics remain default-off.
+
+With the inspected TACC 1.1.6, the rebuilt DLL's new module identity can produce four unreviewed Quantum equipment-effect patch diagnostics until TACC's recognition is reviewed. The inspected TACC path records/logs these findings and refreshes its diagnostic UI; it does not disable gameplay. No TACC update or recognition waiver is included in this release.
+
+## Accepted data revision — 1.3.10 research progression (2026-11-08)
 
 Advanced Quantum Storage remains Tier 5 and requires Quantum Computing. The direct basic Storage research prerequisite has been removed. Its base cost is now 21 High-Tech, 16 Quantum and 10 Nuclear Datoids (weighted cost 340, previously 260). Actual research counts follow Core's difficulty adjustment and rounding. This intentionally removes the early Storage completion gate while retaining the late-game computing gate and the existing ten unlocks.
 
 The former Tier 2 Storage edge crossed three tiers and imposed a cost ceiling incompatible with the Tier 5 cost floor. The data update addresses those owned research constraints without changing Core validation or other mods. Quasi-Quantum Storage research, Relay progression, building recipes, capacities and gameplay code are unchanged.
 
-The accepted 1.3.10 DLL and version metadata are retained byte-for-byte to preserve optional integrations that identify its patches by module identity. This data revision is identified by its date and repository commit; there is no DLL rebuild or save migration. Core's native calculation changes Quantum's minimum prerequisite depth from 3 to 4 and base research-disk use from 11 to 12, before its tunable multiplier. Core also recalculates basic Storage's derived research-tree unlock value because it has one fewer direct dependent; its tier, Datoid price and base disk use remain unchanged. Source review indicates completed research remains completed by ID, while used research-disk space is recalculated; no research reset or save migration is performed. Existing research bookmarks retain their IDs, and unlocking uses the current Datoid costs. Fresh save/UI behavior and runtime warning resolution remain user-controlled checks.
+The accepted 1.3.10 DLL and version metadata were retained byte-for-byte for that data revision to preserve optional integrations that identify its patches by module identity. It was identified by its date and repository commit, with no DLL rebuild or save migration. Core's native calculation changes Quantum's minimum prerequisite depth from 3 to 4 and base research-disk use from 11 to 12, before its tunable multiplier. Core also recalculates basic Storage's derived research-tree unlock value because it has one fewer direct dependent; its tier, Datoid price and base disk use remain unchanged. Source review indicates completed research remains completed by ID, while used research-disk space is recalculated; no research reset or save migration is performed. Existing research bookmarks retain their IDs, and unlocking uses the current Datoid costs. The user subsequently confirmed validation of the selected research fix. No additional individual save/UI scenarios were asserted; the remaining historical coverage limits do not reopen the accepted fix.
 
 ## Accepted release — 1.3.10 Mono material-panel guard repair
 
@@ -258,6 +266,12 @@ When a Being withdraws a stored object, Quantum Storage resolves the nearest saf
 
 ## Change Log
 
+### 1.3.11 — Validated research progression release
+
+- Assign the validated research definition a new synchronized mod/project/DLL version; update the fixed diagnostic build label without changing the guard or gameplay logic.
+- Retain Tier 5, Quantum Computing as the sole prerequisite, and the 21/16/10 High-Tech/Quantum/Nuclear Datoid basket (weighted cost 340). Keep Quasi research, existing unlock bindings and native research-disk recalculation unchanged from the accepted data revision.
+- Record the user's F11 validation separately from pending startup of the rebuilt 1.3.11 DLL and unconfirmed Workshop publication.
+
 ### 1.3.10 data revision — 2026-11-08
 
 - Keep advanced Quantum research at Tier 5 with Quantum Computing as its sole prerequisite; remove the direct basic Storage requirement.
@@ -269,7 +283,7 @@ When a Being withdraws a stored object, Quantum Storage resolves the nearest saf
 - Read Mono-incompatible signature tokens from module-identity-checked metadata with validated table rows. Fingerprint authored method flags, requiring exact method attributes and allowing only Mono's exact runtime-added `NoInlining` implementation flag after Harmony patching.
 - Retain all four version-independent contract approvals and refusal of changed native code, authored flags, schemas or unsupported metadata. Preserve the full native fallback, row cache, controls, notifications, inventory, saves, hauling, Relay rules and balance.
 - Retain the local `FindModById` diagnostic activation fix and one bounded later-refusal stage record. Remove the temporary local marker for normal play while keeping bounded diagnostic source default-off.
-- The accepted `1.3.9 / local-loadguard-1` test on rc343.3225 confirmed 566 row reuses in 598 calls (94.6%) and approximate same-speed FPS averages of 76 closed / 74 open / 77 closed. Capture limits and separate untested controls remain documented. Fresh startup of final 1.3.10 and Workshop publication remain pending.
+- The accepted `1.3.9 / local-loadguard-1` test on rc343.3225 confirmed 566 row reuses in 598 calls (94.6%) and approximate same-speed FPS averages of 76 closed / 74 open / 77 closed. Capture limits and separate untested controls remain documented. The user accepted final 1.3.10 using the prior validation and confirmed Workshop publication; no repeat runtime run is claimed.
 
 ### 1.3.9 — Optional bounded panel diagnostics
 
