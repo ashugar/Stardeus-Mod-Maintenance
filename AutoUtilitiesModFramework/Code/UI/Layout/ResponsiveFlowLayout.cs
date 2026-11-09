@@ -30,7 +30,9 @@ public sealed class ResponsiveFlowLayout : LayoutGroup
     {
         base.CalculateLayoutInputHorizontal();
         CalculateGrid();
-        SetLayoutInputForAxis(padding.horizontal + CellSize.x, -1f, -1f, 0);
+        // Unity 6.6 requires a maximum size; preserve our unconstrained layout.
+        SetLayoutInputForAxis(padding.horizontal + CellSize.x,
+            float.PositiveInfinity, -1f, -1f, 0);
     }
 
     /// <summary>Unity layout callback; do not call directly.</summary>
@@ -39,7 +41,7 @@ public sealed class ResponsiveFlowLayout : LayoutGroup
         CalculateGrid();
         float height = padding.vertical + rows * CellSize.y
             + Mathf.Max(0, rows - 1) * Spacing.y;
-        SetLayoutInputForAxis(height, height, 0f, 1);
+        SetLayoutInputForAxis(height, float.PositiveInfinity, height, 0f, 1);
     }
 
     /// <summary>Unity layout callback; do not call directly.</summary>
