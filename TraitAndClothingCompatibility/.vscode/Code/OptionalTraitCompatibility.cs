@@ -13,6 +13,7 @@ namespace TraitAndClothingCompatibility {
         internal const string ExpandedTraitsAssembly = "ExpandedTraitsMod";
         internal const string ExpandedTraits013DllHash = "FB8C13C813F491B980402BB416806C1139E23525AA8028D4B9E1280973DC1130";
         internal const string ExpandedTraits014DllHash = "5A9ACA692F52B41D845DECACFAE9EE4CF0886B2D155D0247616C1D2A0BADC46F";
+        internal const string ExpandedTraits015DllHash = "03321A6FFE32E79ADC589EADE028549444FD1397FD31404A986E4F8FF576BBA3";
         internal const string ExpandedTraitsDefinitionsHash = "94A39E354BE0C29C0A3B9EF31B6DB12C27D644A8C4F3B3107CA144177F690DE2";
         internal const string GeneratedPetPrefix = "ExpandedTraits.PetAffinity.";
 
@@ -69,7 +70,8 @@ namespace TraitAndClothingCompatibility {
 
         internal static bool IsReviewedExpandedTraitsDllHash(string hash) =>
             string.Equals(hash, ExpandedTraits013DllHash, StringComparison.Ordinal)
-            || string.Equals(hash, ExpandedTraits014DllHash, StringComparison.Ordinal);
+            || string.Equals(hash, ExpandedTraits014DllHash, StringComparison.Ordinal)
+            || string.Equals(hash, ExpandedTraits015DllHash, StringComparison.Ordinal);
 
         private static bool ValidGeneratedPet(string id, string snapshot,
                 IDictionary<string, string> current) {
