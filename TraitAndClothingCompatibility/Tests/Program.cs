@@ -53,6 +53,8 @@ internal static class Program {
             OptionalTraitCompatibility.ExpandedTraits014DllHash), "reviewed Expanded Traits 0.1.4 DLL hash accepted");
         Assert(OptionalTraitCompatibility.IsReviewedExpandedTraitsDllHash(
             OptionalTraitCompatibility.ExpandedTraits015DllHash), "reviewed Expanded Traits 0.1.5 DLL hash accepted");
+        Assert(OptionalTraitCompatibility.IsReviewedExpandedTraitsDllHash(
+            OptionalTraitCompatibility.ExpandedTraits016DllHash), "reviewed Expanded Traits 0.1.6 DLL hash accepted");
         Assert(!OptionalTraitCompatibility.IsReviewedExpandedTraitsDllHash(
             new string('0', 64)), "unknown Expanded Traits DLL hash refused");
 
