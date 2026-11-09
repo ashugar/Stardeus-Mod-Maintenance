@@ -1,3 +1,11 @@
+# TACC 1.1.7: optional dependency approvals — runtime pending
+
+This rebuild adds exact reviewed Expanded Traits 0.1.6 and Quantum Storage 1.3.11 approval entries, retaining Core v0.15.12.3259 approvals and all behavior. The user accepted and published 1.1.6; this rebuilt artifact requires its own startup and acceptance. Core and all three embedded references are unchanged.
+
+User-run checks: fresh startup with the exact final dependency pair; diagnostic clear and combined late patch ordering; clothing/equipment mood and eligibility, manual policies/opt-outs/forbidden and automation settings; Quantum/Relay retrieval; washing completion/cancellation and unavailable or removed targets; save/reload with policies, original object identity and matching reservations preserved. Optional dependency absence remains separately pending where safely supported. Unknown changes must still return after clearing. Workshop publication stays with the user. See COMPATIBILITY-REVIEW-optional-0.1.6-1.3.11.md.
+
+---
+
 # TACC 1.1.6: Core v0.15.12.3259 — runtime pending
 
 This rebuild refreshes reviewed Core identities and records native second-hand mood values -1 ordinary, +1 Thrifty and -3 Fastidious. Gameplay logic and saved state are unchanged. Prior 1.1.5 user acceptance is historical. Launch, fresh diagnostic clear, combined patch ordering, gameplay/save-load acceptance and Workshop publication remain with the user.

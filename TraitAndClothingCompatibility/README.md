@@ -1,8 +1,8 @@
 # Trait and Clothing Compatibility Mod (TACC)
 
-Version **1.1.6** — clothing automation and Washing Machine build for Stardeus **v0.15.12.3259**. Requires AUMF **1.4.0**.
+Version **1.1.7** — clothing automation and Washing Machine build for Stardeus **v0.15.12.3259**. Requires AUMF **1.4.0**.
 
-**Validation status:** Version 1.1.6 records reviewed Core v0.15.12.3259 identities and its native second-hand mood tuning (-1 ordinary, +1 Thrifty, -3 Fastidious). TACC already reads those native tunables; gameplay policy/ranking/washing logic and saved state are unchanged. All 52 trait references and the other nine equipment entries retain their contents. Exact optional Expanded Traits 0.1.5 DLL/patch recognition is added after separate review; earlier optional identities remain recognized. Source/binary/build checks are separate from fresh startup, gameplay and Workshop publication, which remain pending for 1.1.6. The user confirmed 1.1.5 working with a clear log; that historical acceptance does not validate this rebuilt DLL. See `COMPATIBILITY-REVIEW-0.15.12.3259.md`.
+**Validation status:** Version 1.1.7 adds only exact reviewed Expanded Traits 0.1.6 and Quantum Storage 1.3.11 identities. Core v0.15.12.3259 approvals, all three embedded references, gameplay behavior and saved state are unchanged. The user validated and published 1.1.6; fresh startup, combined dependency order, gameplay/save-load acceptance and Workshop publication for this rebuilt DLL remain pending. See `COMPATIBILITY-REVIEW-optional-0.1.6-1.3.11.md`.
 
 TACC configures each living player colonist's clothing policy from their traits. It uses Stardeus's existing equipment-policy and replacement system, but ranks eligible clothing by the total mood result for that wearer before Core's ordinary item comparison. Its Washing Machine can replace the **Taken from the dead** origin with **Second-hand** after a completed wash job. TACC does not change clothing mood formulas or item quality.
 
@@ -110,7 +110,7 @@ Thrifty colonists can choose second-hand clothing ahead of new clothing when the
 
 ## Installation and removal
 
-Requires the separately installed **Auto Utilities Mod Framework 1.4.0**. TACC declares the dependency and uses the four-argument compatibility handshake with its own version **1.1.6** and tested framework level **1.4.0**. Expanded Traits and Quantum Storage are optional. No AUMF, Core, Unity, Harmony, Newtonsoft, Expanded Traits, or Quantum Storage DLL is bundled.
+Requires the separately installed **Auto Utilities Mod Framework 1.4.0**. TACC declares the dependency and uses the four-argument compatibility handshake with its own version **1.1.7** and tested framework level **1.4.0**. Expanded Traits and Quantum Storage are optional. No AUMF, Core, Unity, Harmony, Newtonsoft, Expanded Traits, or Quantum Storage DLL is bundled.
 
 The installed framework's [API usage guide](../AutoUtilitiesModFramework/USAGE.md) and [theme guide](../AutoUtilitiesModFramework/THEME_TESTING.md) confirm that these existing helpers retain their signatures and need no consumer UI migration. TACC does not call the new optional custom theme bindings or state-card APIs, so no new feature gate is needed. Its native pooled controls should not receive extra theme bindings.
 
@@ -155,6 +155,12 @@ On **2026-10-10**, the **1.1.3** review checked Core rc324.3201, Quantum Storage
 On **2026-10-19**, the **1.1.4** review checked Core rc337.3219, Quantum Storage 1.3.5, and optional Expanded Traits 0.1.4 while retaining the exact reviewed 0.1.3 compatibility route. Core renamed the loose-item forbidden property from `IsHaulingForbidden` to `IsForbidden`; TACC now patches and reads that current property while keeping the same equipment-search-only override. Initialization after the AUMF handshake publishes the system only after successful setup. On failure it clears the active instance and attempts listener, UI, and Harmony cleanup independently before rethrowing the original error. The Core reference now includes Stoic and Wimp and the reviewed Enlightened threshold changes; its other 49 trait snapshots and all 12 equipment values are unchanged. The production build passed with **0 warnings and 0 errors**, and the public optional-reference harness passed **187 assertions**. The user subsequently confirmed 1.1.4 working in game with a clear diagnostic log on the same date. Runtime acceptance is recorded for that installation; TACC is back in maintenance mode. See `COMPATIBILITY-REVIEW-rc337.3219.md`.
 
 ## Changelog
+
+### 1.1.7
+
+- Added exact reviewed Expanded Traits 0.1.6 DLL/two patch identities and Quantum Storage 1.3.11 four routing snapshots; earlier approved identities remain recognized.
+- Preserved Core approvals, trait/equipment references, gameplay algorithms, save schema, policies, washing, definitions and artwork. Unknown changes remain unvalidated after clearing.
+- Build/static checks are separate from user-run startup, combined behavior, gameplay/save-load validation and Workshop publication.
 
 ### 1.1.6
 

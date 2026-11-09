@@ -24,7 +24,7 @@ namespace TraitAndClothingCompatibility {
         public const string SysId = "TraitAndClothingCompatibilitySys";
         public const string ConsumerId = "TraitAndClothingCompatibility";
         public const string DisplayName = "Trait and Clothing Compatibility Mod (TACC)";
-        public const string ModVersion = "1.1.6";
+        public const string ModVersion = "1.1.7";
         public const string RequiredUtilitiesVersion = "1.4.0";
         internal const string HarmonyId = "TraitAndClothingCompatibility.Notifications";
         internal const int LogLimit = 200;
