@@ -12,6 +12,11 @@ remains the required and tested framework version.
 
 ## Operation
 
+Part Restoration remains Tier 3 and requires Medical Care and Maintenance.
+Its base research cost is 6 Biotic, 4 Synthetic, and 2 High-Tech datoids
+(weighted cost 56), placing this specialized facility near the entry cost of
+native Tier 3 research while respecting both prerequisite cost comparisons.
+
 1. Research **Part Restoration** after **Medical Care** and **Maintenance**.
 2. Build a **Part Restoration Unit** from the Facilities menu.
 3. Store damaged detached body parts in any object storage. A powered idle
