@@ -1,6 +1,6 @@
 {
     "Id" : "Research/ApexChromaticEnergy",
-    "Tier" : 7,
+    "Tier" : 6,
     "IsAbstract" : true,
     "PreviewIcon" : "Icons/Color/Energy",
     "Researchable" : {

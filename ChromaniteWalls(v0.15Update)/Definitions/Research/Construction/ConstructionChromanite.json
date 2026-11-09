@@ -6,7 +6,7 @@
     "Researchable" : {
         "IsTreeNode" : true,
         "Prerequisites" : [
-            "Research/Construction/Structure"
+            "Research/Construction/StructureReinforced"
         ],
         "DatoidCosts" : [
             {
@@ -15,7 +15,7 @@
             },
             {
                 "TypeId" : "DatoidTech",
-                "StackSize" : 40
+                "StackSize" : 39
             }
         ]
     }
