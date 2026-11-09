@@ -12,15 +12,15 @@
         "DatoidCosts" : [
             {
                 "TypeId" : "DatoidBiotic",
-                "StackSize" : 10
+                "StackSize" : 6
             },
             {
                 "TypeId" : "DatoidSynthetic",
-                "StackSize" : 10
+                "StackSize" : 4
             },
             {
                 "TypeId" : "DatoidTechHigh",
-                "StackSize" : 6
+                "StackSize" : 2
             }
         ]
     }
