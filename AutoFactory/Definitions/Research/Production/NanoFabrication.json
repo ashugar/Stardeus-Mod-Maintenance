@@ -11,8 +11,8 @@
             "Research/Robotics/Nanobots"
         ],
         "DatoidCosts": [
-            { "TypeId": "DatoidSynthetic", "StackSize": 18 },
-            { "TypeId": "DatoidTechHigh", "StackSize": 24 }
+            { "TypeId": "DatoidSynthetic", "StackSize": 27 },
+            { "TypeId": "DatoidTechHigh", "StackSize": 36 }
         ]
     }
 }

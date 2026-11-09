@@ -18,6 +18,34 @@ preserving the normal material requirements and Core lifecycle of each recipe.
 Auto Factory declares and registers against the AUMF 1.4.0 feature level. The
 framework DLL remains external and is not bundled with this mod.
 
+## Research progression
+
+Version 1.5.3 adjusts the three research projects to fit Stardeus
+0.15.12.3259's research-cost comparisons while keeping their tiers,
+prerequisites, and Datoid types.
+
+| Research | Base Datoid quantities | Base weighted cost |
+| --- | --- | ---: |
+| Nano Smelting (Tier 4) | Synthetic 10, Energy 8, High-Tech 12 | 154 |
+| Nano Fabrication (Tier 5) | Synthetic 27, High-Tech 36 | 351 |
+| Nano Cloning (Tier 5) | Biotic 30, Synthetic 27, High-Tech 18 | 363 |
+
+Nano Smelting's cost decreases; Nano Fabrication and Nano Cloning each cost
+50% more before difficulty adjustments. Difficulty and research modifiers
+still apply through Core. Existing research IDs and unlock relationships
+are preserved; no save migration is introduced.
+
+The read-only regression check reconstructs Core's research cost comparisons
+for Core plus Auto Factory at all five preset difficulty scales, with the
+default research-cost modifier. It includes prerequisite tier propagation
+and per-Datoid rounding. It does not run Stardeus or validate gameplay,
+custom modifier combinations, or unrelated mods' balance. From the repository's
+AutoFactory directory, with Python 3 installed and the Core path configured:
+
+```powershell
+python tools/test_research_progression.py --core-root "$env:STARDEUS_CORE_ROOT"
+```
+
 ## Nano Fabricator behavior
 
 - Recreates eligible recipes exposed by other crafting machines.
@@ -862,6 +890,17 @@ recreates those source families inside `AutoCloning`. This preserves ownership
 without preventing Auto Factory from automating the native facility role.
 
 ## Release history
+
+### 1.5.3
+
+- Corrected Auto Factory's research-cost warnings by adjusting only the
+  Datoid quantities for Nano Smelting, Nano Fabrication, and Nano Cloning.
+- Preserved research tiers, prerequisites, material types, facility unlocks,
+  production behavior, and the save schema.
+- Added a read-only research-cost regression check covering all five preset
+  difficulty scales against installed Core definitions.
+- Synchronized the manifest, project, and compiled DLL at version 1.5.3.
+- Other mods' independent research-cost warnings remain outside this change.
 
 ### 1.5.2
 
