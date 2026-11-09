@@ -12,7 +12,7 @@ namespace Game.Systems.PartRestoration {
         public static PartRestorationApiInfo GetApiInfo() {
             return new PartRestorationApiInfo(
                 ContractVersion,
-                "1.1.2",
+                "1.1.3",
                 A.IsMainThread,
                 A.S != null);
         }
