@@ -1,6 +1,14 @@
 # Quantum Storage 1.3.10 — Mono material-panel guard repair
 
-## Current 1.3.10 validation scope — 2026-10-22
+## Research data revision — 2026-11-08
+
+Reviewed the advanced research definition against installed Stardeus `v0.15.12.3259`. Tier 5 and Quantum Computing remain; the direct basic Storage prerequisite is removed. Base High-Tech/Quantum/Nuclear Datoid counts change from 16/12/8 to 21/16/10 (weighted cost 260 to 340). Quasi-Quantum research, existing unlock bindings, gameplay source, accepted DLL and version metadata remain unchanged. This dated data revision retains version 1.3.10 and its reviewed module identity for optional integrations.
+
+Fresh static reconstruction of the selected installed definitions/eligible patches gives zero tree warnings for native-only research before and after, three to zero for native plus Quantum, and 16 to 13 for the current ecosystem. Both relevant candidate scenarios introduce no new modeled evaluator warnings across 5,077 sampled float32 difficulty/rounding scales from 0.5 to 1.5. Other mods' warnings remain outside this repair. This model does not run the game's loader, dynamic mutations, UI or saves; it is not a fresh unmodded gameplay test or a universal balance guarantee.
+
+The modeled graph is acyclic, with unchanged tiers and existing unlock bindings. Removing the shorter Storage branch raises Quantum's minimum prerequisite depth from 3 to 4 and its base native research-disk use from 11 to 12, before Core's tunable multiplier. Core also recalculates basic Storage's derived research-tree unlock value because it has one fewer direct dependent; its tier, Datoid price and base disk use remain unchanged. Native source review indicates completed research persists by ID and remains completed, while disk use is recalculated on load. Bookmarks also retain IDs; current costs are checked/consumed when research is unlocked. No save rewriting, forced completion/reset or migration is added. Fresh loading of this data revision, displayed prerequisites/costs/disk use and research/save behavior remain pending user-controlled runtime checks.
+
+## Historical panel validation — 2026-10-22
 
 Reviewed against Stardeus `v0.15.0-rc343.3225`. The repair reads valid signature tokens rejected by Mono through module-identity-checked metadata, validates their table rows, and fingerprints authored method flags. Exact method attributes remain required; only Mono's exact runtime-added `NoInlining` implementation flag is allowed. Authored flag changes, other runtime differences, changed instructions/schema and missing or invalid metadata still refuse the optional optimization. All four contract approvals remain unchanged and independent of the game version. The local activation fix uses `FindModById` to resolve Quantum Storage.
 
