@@ -55,7 +55,7 @@ namespace Game.Systems.QuantumStorage
                 enabled = mod != null && File.Exists(mod.ModFilePath(Marker, false, false));
                 if (!enabled) { return; }
                 armedAt = Now;
-                Guard("state=armed schema=1 build=1.3.10 capture_s=180 call_cap=2048 raw_cap=512 key_cap=4096 line_cap=96 warnings_are_diagnostic");
+                Guard("state=armed schema=1 build=1.3.11 capture_s=180 call_cap=2048 raw_cap=512 key_cap=4096 line_cap=96 warnings_are_diagnostic");
             }
             catch (Exception) { enabled = false; }
         }

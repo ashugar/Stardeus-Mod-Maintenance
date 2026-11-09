@@ -1,4 +1,8 @@
-# Material panel performance — 1.3.10
+# Material panel performance
+
+## Release status — 1.3.11
+
+Version 1.3.11 promotes the user-validated research data revision under a new release version. The panel guard, row cache, native controls and default-off diagnostic policy retain the existing implementation; only version metadata and the fixed diagnostic build label change. The historical performance evidence below remains attached to its stated test build and Core version. Fresh startup of the rebuilt 1.3.11 DLL is pending; no new panel benchmark or broader gameplay validation is claimed.
 
 ## Accepted local repair observation — 2026-10-22
 
@@ -16,7 +20,7 @@ The large sustained open-panel drop appears resolved in that observed run. The 1
 
 Version 1.3.10 carries the accepted guard repair and release metadata. Mono rejects valid MethodDef, FieldDef and TypeSpec tokens through `ResolveSignature`; the guard reads these from module-identity-checked metadata with validated table rows. Harmony also adds a live `NoInlining` flag on Mono that can persist after unpatching. The guard now serializes authored method flags, requires exact method attributes, and permits only that exact Mono runtime addition. Authored flag changes, changed native code/schema, unknown runtime flags and invalid metadata still refuse. All four reviewed approvals, row-cache decisions, native actions/notifications and complete fallback remain unchanged. The retained local activation fix resolves Quantum Storage with `FindModById`.
 
-Temporary diagnostics are off for normal play because the local `PanelDiagnostics.enabled` marker has been removed. The default-off bounded source remains available for future authorized captures; without the marker at startup, no recorder, sampler or diagnostic observer is created. One bounded later-refusal stage record remains available when diagnostics are enabled. A fresh startup of the final version-only 1.3.10 release remains pending. Repeated real save loads, native ejection/filter controls, Relay transitions, hauling and save edge cases remain separate coverage limits. No Workshop publication of 1.3.10 has occurred.
+Temporary diagnostics are off for normal play because the local `PanelDiagnostics.enabled` marker has been removed. The default-off bounded source remains available for future authorized captures; without the marker at startup, no recorder, sampler or diagnostic observer is created. One bounded later-refusal stage record remains available when diagnostics are enabled. The user accepted the final version-only 1.3.10 release using the previous validation; no repeat runtime run is claimed. Repeated real save loads, native ejection/filter controls, Relay transitions, hauling and save edge cases remain separate coverage limits. The user confirmed Workshop publication of that 1.3.10 panel release; publication of the later research data revision and 1.3.11 is not confirmed.
 
 ## Historical 1.3.9 bounded diagnostic capture preparation — 2026-10-21
 
