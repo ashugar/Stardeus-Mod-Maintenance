@@ -250,6 +250,17 @@ RectTransform cards = ui.AddResponsiveFlow("TargetCards",
 card.transform.SetParent(cards, false);
 ```
 
+The validated AUMF 1.4.0 maintenance repair for Stardeus `0.15.14.3261` /
+Unity `6000.6.8f1` adapts `ResponsiveFlowLayout` to Unity's required
+maximum-size argument. Both axes retain an unbounded maximum; grid sizing and
+child positioning are unchanged. This applies to `AddResponsiveFlow(...)`
+and direct use of `ResponsiveFlowLayout` alike. Consumers keep their existing
+calls, fields and framework declarations; no consumer changes or rebuilds are
+required for this repair. The user validated CARAU and Intelligent Recycling,
+including resizing and reopening. See the [README repair record](README.md)
+for scope and binary identity; older Unity assemblies are not covered by this
+validation.
+
 For long content, retain normalized scroll position in consumer state:
 
 ```csharp

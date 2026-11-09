@@ -2,6 +2,36 @@
 
 Shared infrastructure for compatible Stardeus mods.
 
+## 1.4.0 - validated Unity 6.6 layout repair (2026-11-09)
+
+The user confirmed that CARAU and Intelligent Recycling work correctly again,
+including resizing and reopening, and accepted the fix. The reported Unity
+layout compatibility issue is closed.
+
+Unity `6000.6.8f1` in Stardeus `0.15.14.3261` replaced the four-parameter
+`LayoutGroup.SetLayoutInputForAxis` contract with a five-parameter contract.
+AUMF's `ResponsiveFlowLayout` now supplies the required maximum-size argument
+as `float.PositiveInfinity` on both axes, preserving unbounded sizing and the
+existing grid/positioning behavior. See
+[repair PR #73](https://github.com/ashugar/Stardeus-Mod-Maintenance/pull/73).
+
+This is internal compatibility maintenance: AUMF remains `1.4.0`
+(assembly/file `1.4.0.0`). Public API, consumer code and declarations are
+unchanged; no consumer migration is required. The demonstration UI stays off.
+
+The rebuilt DLL passed the layout regression check (which rejects the old
+DLL), the existing popup check and all 15 isolated pooled-input tests. Binary
+review found only the two intended layout-method changes and no public API
+changes. The reviewed post-test log contains no `SetLayoutInputForAxis`,
+`MissingMethodException` or widget-click failure messages. The accepted DLL
+SHA-256 is
+`7BE48915DD839883F6718428F421B5A58EF2D91DBAE62432D4F5DDADE24361D3`.
+
+Acceptance covers the reported CARAU/Intelligent Recycling UI issue, including
+resizing and reopening. It is not an exhaustive consumer-control retest,
+older-Unity compatibility claim, or separate pooled-input acceptance. Workshop
+publication remains a separate user action.
+
 ## 1.4.0 - validated popup compatibility repair (2026-10-24)
 
 The user confirmed that widgets open their panels correctly again, including
