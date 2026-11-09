@@ -46,6 +46,17 @@ AutoFactory directory, with Python 3 installed and the Core path configured:
 python tools/test_research_progression.py --core-root "$env:STARDEUS_CORE_ROOT"
 ```
 
+## Diagnostic logging
+
+Standard builds do not write the recurring planner, cache, or phase-timing
+diagnostic summaries to Player.log. Warnings, runtime errors, and each facility's
+in-game Log tab remain available. Diagnostic counters and timing windows still
+reset hourly; production planning and safety reconciliation are unchanged.
+
+For a deliberate performance investigation, a developer can rebuild with the
+`AUTOFACTORY_PLANNER_DIAGNOSTICS` compilation symbol to enable those summaries.
+This is a build-time opt-in, not a player setting or a change to Core logging.
+
 ## Nano Fabricator behavior
 
 - Recreates eligible recipes exposed by other crafting machines.
@@ -890,6 +901,14 @@ recreates those source families inside `AutoCloning`. This preserves ownership
 without preventing Auto Factory from automating the native facility role.
 
 ## Release history
+
+### 1.5.4
+
+- Disabled recurring planner, cache, and phase-timing diagnostics in standard
+  builds while preserving warnings, errors, and facility Log entries.
+- Retained bounded diagnostic windows and an explicit diagnostic-build opt-in.
+- Preserved the 1.5.3 research corrections and all production behavior.
+- Synchronized the manifest, project, and compiled DLL at version 1.5.4.
 
 ### 1.5.3
 
