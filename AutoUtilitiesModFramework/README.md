@@ -20,8 +20,8 @@ This is internal compatibility maintenance: AUMF remains `1.4.0`
 unchanged; no consumer migration is required. The demonstration UI stays off.
 
 The rebuilt DLL passed the layout regression check (which rejects the old
-DLL), the existing popup check and all 15 isolated pooled-input tests. Binary
-review found only the two intended layout-method changes and no public API
+DLL) and the existing popup check. All 15 isolated pooled-input tests also
+passed. Binary review found only the two intended layout-method changes and no public API
 changes. The reviewed post-test log contains no `SetLayoutInputForAxis`,
 `MissingMethodException` or widget-click failure messages. The accepted DLL
 SHA-256 is
