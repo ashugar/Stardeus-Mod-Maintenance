@@ -81,8 +81,8 @@ namespace AutoFactory
         // 60-300 tick fallback range. Signals remain next-tick responsive;
         // this pass only catches state transitions with no dependable signal.
         private const long FallbackReconciliationTicks = Consts.TicksPerHour;
-        // Purpose: Emits compact phase/origin summaries once per in-game hour
-        // so short performance captures include actionable phase timings.
+        // Diagnostic builds can emit compact phase/origin summaries hourly.
+        // Standard builds only clear these bounded diagnostic windows.
         private const long PlanningDiagnosticsReportTicks = Consts.TicksPerHour;
         // Failed goal routes are deliberately retried in small batches. This
         // bounds recursive dependency discovery without allowing a cached
@@ -1892,7 +1892,7 @@ namespace AutoFactory
             planningDirtyOriginCounts[origin] = count + 1;
         }
 
-        // Purpose: Writes one compact hourly diagnostic summary instead of per-tick log spam.
+        // Purpose: Reports only in explicit diagnostic builds; always bounds timing windows.
         private void MaybeReportPlanningDiagnostics(long ticks)
         {
             if (lastPlanningDiagnosticsTick == long.MinValue
@@ -1907,6 +1907,7 @@ namespace AutoFactory
                 return;
             }
 
+#if AUTOFACTORY_PLANNER_DIAGNOSTICS
             var dirtyOrigins = planningDirtyOriginCounts.Count == 0
                 ? "none"
                 : string.Join(",", planningDirtyOriginCounts
@@ -2034,6 +2035,10 @@ namespace AutoFactory
             objectChangedValues = 0;
             maximumObjectChangesPerSignal = 0;
             lastPlanningDiagnosticsTick = ticks;
+#else
+            ResetPlanningDiagnostics();
+            lastPlanningDiagnosticsTick = ticks;
+#endif
         }
 
         // Purpose: Clears diagnostic windows without touching planner-owned game state.

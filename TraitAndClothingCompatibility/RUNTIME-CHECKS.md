@@ -1,3 +1,11 @@
+# TACC 1.1.6: Core v0.15.12.3259 — runtime pending
+
+This rebuild refreshes reviewed Core identities and records native second-hand mood values -1 ordinary, +1 Thrifty and -3 Fastidious. Gameplay logic and saved state are unchanged. Prior 1.1.5 user acceptance is historical. Launch, fresh diagnostic clear, combined patch ordering, gameplay/save-load acceptance and Workshop publication remain with the user.
+
+Use the retained checklist below with TACC 1.1.6 and today's reviewed dependencies. Pay particular attention to native second-hand mood values, ordinary/Thrifty/mixed clothing, manual policies/opt-outs, forbidden switch, Quantum/Relay retrieval, completed/cancelled washing and pending-operation save/load. Unknown identities and values must still reappear after clearing. See COMPATIBILITY-REVIEW-0.15.12.3259.md.
+
+---
+
 # TACC 1.1.5: rc344 compatibility refresh — runtime pending
 
 Version **1.1.5** refreshes the reviewed references for **Core v0.15.0-rc344.3226** and the exact **Quantum Storage 1.3.10** equipment-routing hooks. It retains AUMF **1.4.0**, the existing trait/equipment resources, earlier optional identities, gameplay behavior and save schema. The current Core/Quantum semantic and binary review is recorded in `COMPATIBILITY-REVIEW-rc344.3226.md`.

@@ -15,8 +15,8 @@
         <RootNamespace>AutoFactory</RootNamespace>
         <AssemblyName>AutoFactory</AssemblyName>
         <OutputPath>../Libraries</OutputPath>
-        <VersionPrefix>1.5.3</VersionPrefix>
-        <InformationalVersion>1.5.3</InformationalVersion>
+        <VersionPrefix>1.5.4</VersionPrefix>
+        <InformationalVersion>1.5.4</InformationalVersion>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 
         <!-- do not generate or embed a pdb file -->

@@ -7,7 +7,7 @@ Versions and dependencies come from the current manifests. These entries do not 
 | Mod | Version | Game version | Dependencies | Contents | Workshop |
 | --- | --- | --- | --- | --- | --- |
 | [Aggressive Auto Connect Upgrade](AggressiveAutoConnectUpgrade/) | 1.2.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3770671842) |
-| [Auto Factory](AutoFactory/) | 1.5.3 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3784267361) |
+| [Auto Factory](AutoFactory/) | 1.5.4 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3784267361) |
 | [Auto Hauling](AutoHauling/) | 1.1.6 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3783767356) |
 | [Auto Utilities Mod Framework](AutoUtilitiesModFramework/) | 1.4.0 | 0.15.0 | - | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3776751765) |
 | [Better Storage (v0.15 Update)](BetterStorageMod%28v0.15Update%29/) | 2.0.5 | 0.15.0 | Core | Data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3748324441) |
@@ -31,4 +31,4 @@ Versions and dependencies come from the current manifests. These entries do not 
 | [Super Cleaning](SuperCleaning/) | 1.0.4 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3787822873) |
 | [Tractor Beam Auto Connect](TractorBeamAutoConnect/) | 1.2.2 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3776012239) |
 | [Tractor Beam Overhaul](TractorBeamOverhaul/) | 1.1.1 | 0.15.0 | AutoUtilitiesModFramework, TractorBeamAutoConnect | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3791894872) |
-| [Trait and Clothing Compatibility Mod (TACC)](TraitAndClothingCompatibility/) | 1.1.5 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3796663540) |
+| [Trait and Clothing Compatibility Mod (TACC)](TraitAndClothingCompatibility/) | 1.1.6 | 0.15.0 | AutoUtilitiesModFramework | DLL + data | [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3796663540) |

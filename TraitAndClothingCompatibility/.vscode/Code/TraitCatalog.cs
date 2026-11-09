@@ -21,9 +21,9 @@ using Newtonsoft.Json.Linq;
 
 namespace TraitAndClothingCompatibility {
     internal static class TraitCatalog {
-        internal const string TestedCoreVersion = "v0.15.0-rc344.3226";
-        internal const string TestedGameHash = "2B8D07A416BA89AA94C681D61B8EAA46CED5E2CD7B1E5CFA8C6D3B4391EB6BE1";
-        internal const string TestedConstantsHash = "BDFC046E6D8F141E341D0BC12ED62E387BC124451E7FACEC04BF80C74A96968C";
+        internal const string TestedCoreVersion = "v0.15.12.3259";
+        internal const string TestedGameHash = "FADEF88BAFEA06FA2C2F0B0FBA59E4DFCCC944DA221010E7ABFEE5823DF4F748";
+        internal const string TestedConstantsHash = "6C42D6A090573D55A500863B56350F6A58F10ED667AD4399F0091303F035DEE8";
         internal static readonly HashSet<string> ShippedIds = new HashSet<string>(new[] {
             "Ablutophobic", "AlwaysHungry", "Antisocial", "Astrophile", "Astrophobe", "BadAppetite",
             "Beautiful", "Bookworm", "BWaveResistent", "Carnivore", "CatPerson", "Charismatic",
@@ -57,7 +57,9 @@ namespace TraitAndClothingCompatibility {
             "Game.Systems.Items.InventoryItemSlot.Game.Systems.Items.ObjData BetterItem(Game.Systems.Items.ObjData, Game.Systems.Items.ObjData): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.MinimalistEquipmentPatch.Prefix / 9dc01d16-8daa-4e5f-a1be-a5b5be1b9858 / priority=400 / before= / after=",
             "Game.Systems.Mental.MentalHealth.Void AddEffect(Game.Data.GameState, Game.Systems.Mental.MentalEffect, Single, Boolean): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.SleepMoodSeverityPatch.Prefix / 9dc01d16-8daa-4e5f-a1be-a5b5be1b9858 / priority=400 / before= / after=",
             "Game.Systems.Items.InventoryItemSlot.Game.Systems.Items.ObjData BetterItem(Game.Systems.Items.ObjData, Game.Systems.Items.ObjData): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.MinimalistEquipmentPatch.Prefix / 95e164e0-26dd-451e-984e-11e28c262fd0 / priority=400 / before= / after=",
-            "Game.Systems.Mental.MentalHealth.Void AddEffect(Game.Data.GameState, Game.Systems.Mental.MentalEffect, Single, Boolean): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.SleepMoodSeverityPatch.Prefix / 95e164e0-26dd-451e-984e-11e28c262fd0 / priority=400 / before= / after="
+            "Game.Systems.Mental.MentalHealth.Void AddEffect(Game.Data.GameState, Game.Systems.Mental.MentalEffect, Single, Boolean): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.SleepMoodSeverityPatch.Prefix / 95e164e0-26dd-451e-984e-11e28c262fd0 / priority=400 / before= / after=",
+            "Game.Systems.Items.InventoryItemSlot.Game.Systems.Items.ObjData BetterItem(Game.Systems.Items.ObjData, Game.Systems.Items.ObjData): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.MinimalistEquipmentPatch.Prefix / 6ef2abe7-89d9-444b-b630-37b6bffc6572 / priority=400 / before= / after=",
+            "Game.Systems.Mental.MentalHealth.Void AddEffect(Game.Data.GameState, Game.Systems.Mental.MentalEffect, Single, Boolean): prefix / ExpandedTraitsMod.Runtime.Bootstrap / ExpandedTraitsMod.SleepMoodSeverityPatch.Prefix / 6ef2abe7-89d9-444b-b630-37b6bffc6572 / priority=400 / before= / after="
         }, StringComparer.Ordinal);
 
         private static readonly string[] Fields = {
