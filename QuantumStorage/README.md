@@ -4,7 +4,15 @@ Quantum Storage provides ten compact late-game storage endpoints. Matching endpo
 
 The first endpoint supplies a fixed initial capacity. Each additional endpoint of the same type doubles the network total.
 
-## Current release — 1.3.10 Mono material-panel guard repair
+## Current data update — 1.3.10 research progression (2026-11-08)
+
+Advanced Quantum Storage remains Tier 5 and requires Quantum Computing. The direct basic Storage research prerequisite has been removed. Its base cost is now 21 High-Tech, 16 Quantum and 10 Nuclear Datoids (weighted cost 340, previously 260). Actual research counts follow Core's difficulty adjustment and rounding. This intentionally removes the early Storage completion gate while retaining the late-game computing gate and the existing ten unlocks.
+
+The former Tier 2 Storage edge crossed three tiers and imposed a cost ceiling incompatible with the Tier 5 cost floor. The data update addresses those owned research constraints without changing Core validation or other mods. Quasi-Quantum Storage research, Relay progression, building recipes, capacities and gameplay code are unchanged.
+
+The accepted 1.3.10 DLL and version metadata are retained byte-for-byte to preserve optional integrations that identify its patches by module identity. This data revision is identified by its date and repository commit; there is no DLL rebuild or save migration. Core's native calculation changes Quantum's minimum prerequisite depth from 3 to 4 and base research-disk use from 11 to 12, before its tunable multiplier. Core also recalculates basic Storage's derived research-tree unlock value because it has one fewer direct dependent; its tier, Datoid price and base disk use remain unchanged. Source review indicates completed research remains completed by ID, while used research-disk space is recalculated; no research reset or save migration is performed. Existing research bookmarks retain their IDs, and unlocking uses the current Datoid costs. Fresh save/UI behavior and runtime warning resolution remain user-controlled checks.
+
+## Accepted release — 1.3.10 Mono material-panel guard repair
 
 Restores the reviewed material-panel optimization on Core `v0.15.0-rc343.3225` across Mono startup and save-loading patch preparation. Mono rejects some valid signature tokens through `ResolveSignature`; the guard now reads those signatures from module-identity-checked metadata with validated table rows. It also fingerprints authored method flags, allowing only Mono's exact runtime-added `NoInlining` flag while requiring every other inspected flag to match. Harmony can leave that runtime flag set after unpatching. The four reviewed contract approvals are unchanged; changed native code, authored flags, schemas or unsupported metadata still retain the complete native panel.
 
@@ -12,7 +20,7 @@ The accepted local test build (`1.3.9 / local-loadguard-1`) loaded on rc343.3225
 
 Temporary diagnostics are off for normal play: the local `PanelDiagnostics.enabled` marker has been removed. The default-off bounded diagnostic source remains available for future authorized investigation; without the startup marker, no recorder, sampler or diagnostic observer is created. The guard retains one bounded later-refusal stage record when diagnostics are enabled.
 
-The row cache, native notifications, full list and controls, inventory, save schema, hauling, Relay rules and balance are unchanged. A fresh startup of the final version-only 1.3.10 release is still pending; the accepted runtime evidence belongs to the local test build. Repeated real save loads, detailed native controls and broader gameplay scenarios remain coverage limits. Workshop publication of 1.3.10 has not been performed. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) and [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md).
+The row cache, native notifications, full list and controls, inventory, save schema, hauling, Relay rules and balance are unchanged. The user accepted the behavior-equivalent final 1.3.10 release using the previous validation and confirmed Workshop publication. No repeat runtime run is claimed. Repeated real save loads, detailed native controls and broader gameplay scenarios remain coverage limits. See [UI-PERFORMANCE-TESTING.md](UI-PERFORMANCE-TESTING.md) and [COMPATIBILITY-TESTING.md](COMPATIBILITY-TESTING.md).
 
 ## Previous release — 1.3.9 optional panel diagnostics
 
@@ -249,6 +257,12 @@ Core serializes object contents once as individual records. Quantum object endpo
 When a Being withdraws a stored object, Quantum Storage resolves the nearest safe, reachable endpoint in that object's matching network. The object's serialized owner is left unchanged unless Core successfully removes it from storage. Equipment searches, device loading, and organic or robotic surgery all use the same resolver.
 
 ## Change Log
+
+### 1.3.10 data revision — 2026-11-08
+
+- Keep advanced Quantum research at Tier 5 with Quantum Computing as its sole prerequisite; remove the direct basic Storage requirement.
+- Change base Datoid counts from 16/12/8 to 21/16/10 (High-Tech/Quantum/Nuclear), increasing weighted cost from 260 to 340.
+- Preserve Quasi-Quantum research, unlock bindings, existing gameplay code and the accepted DLL/module identity. Native validation remains enabled; this does not resolve research warnings owned by other mods.
 
 ### 1.3.10 — Mono material-panel guard repair
 

@@ -6,21 +6,20 @@
   "Researchable" : {
     "IsTreeNode" : true,
     "Prerequisites" : [
-      "Research/Computing/ResearchQuantum",
-      "Research/Construction/Storage"
+      "Research/Computing/ResearchQuantum"
     ],
     "DatoidCosts" : [
       {
         "TypeId" : "DatoidTechHigh",
-        "StackSize" : 16
+        "StackSize" : 21
       },
       {
         "TypeId" : "DatoidQuantum",
-        "StackSize" : 12
+        "StackSize" : 16
       },
       {
         "TypeId" : "DatoidNuclear",
-        "StackSize" : 8
+        "StackSize" : 10
       }
     ]
   }
