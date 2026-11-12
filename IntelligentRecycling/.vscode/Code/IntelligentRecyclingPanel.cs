@@ -262,7 +262,9 @@ namespace Game.Systems.IntelligentRecycling {
                 system.AllowDeadMansEquipment ? "On" : "Off",
                 system.AllowDeadMansEquipment, system.SetAllowDeadMansEquipment,
                 "Allow qualifying gear with the dead-owner flag. Forbidden items remain protected.");
-            DrawWeaponChecklist(context);
+            if (system.IsEquipmentCategoryEnabled(InventorySlotId.Weapon)) {
+                DrawWeaponChecklist(context);
+            }
 
             context.AddHeader("Keyboard shortcut");
             context.AddInfo(IconId.CInfo, "Open/close panel",

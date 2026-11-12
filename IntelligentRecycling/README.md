@@ -175,6 +175,11 @@ matching facility. If no compatible facility exists during migration, the
 corresponding threshold starts at Core's existing 50% default. New facilities
 inherit the saved Intelligent Recycling threshold when construction completes.
 
+## 1.5.1
+
+- Hides the weapon checklist while the Weapon equipment category is disabled.
+  Re-enabling the category restores the checklist with its saved choices.
+
 ## 1.5.0
 
 - **Alien eggs** is off by default. It orders native biological disposal for
