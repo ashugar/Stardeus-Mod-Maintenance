@@ -280,8 +280,8 @@ namespace Game.Systems.IntelligentRecycling {
                 Enabled && RecycleEquipment && AllowDeadMansEquipment));
             bool weaponSlotEnabled = Enabled && RecycleEquipment
                 && IsEquipmentCategoryEnabled("Weapon");
-            result.Add(Setting("filter-weapon-definitions", "Filter weapon types",
-                FilterWeaponDefinitions, false, "Allow only checked weapon types.",
+            result.Add(Setting("filter-weapon-definitions", "Use weapon checklist",
+                FilterWeaponDefinitions, false, "Read-only status: on when at least one weapon is checked.",
                 weaponSlotEnabled && FilterWeaponDefinitions));
             result.Add(Setting("weapons-follow-quality", "Selected weapons follow quality",
                 WeaponsFollowQuality, true, "Apply the shared quality cutoff to checked weapons.",

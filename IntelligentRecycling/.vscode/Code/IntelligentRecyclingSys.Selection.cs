@@ -21,7 +21,7 @@ namespace Game.Systems.IntelligentRecycling {
         public bool RecycleAlienEggs { get; private set; }
         public bool AllowSecondHandEquipment { get; private set; } = true;
         public bool AllowDeadMansEquipment { get; private set; } = true;
-        public bool FilterWeaponDefinitions { get; private set; }
+        public bool FilterWeaponDefinitions => selectedWeaponDefinitionIds.Count != 0;
         public bool WeaponsFollowQuality { get; private set; } = true;
         public int AlienEggTasksQueued { get; private set; }
 
@@ -47,13 +47,6 @@ namespace Game.Systems.IntelligentRecycling {
             panel?.Refresh();
         }
 
-        internal void SetFilterWeaponDefinitions(bool value) {
-            if (FilterWeaponDefinitions == value) { return; }
-            FilterWeaponDefinitions = value;
-            RequestScan();
-            panel?.Refresh();
-        }
-
         internal void SetWeaponsFollowQuality(bool value) {
             if (WeaponsFollowQuality == value) { return; }
             WeaponsFollowQuality = value;
@@ -69,6 +62,12 @@ namespace Game.Systems.IntelligentRecycling {
             foreach (InventoryItemDef item in InventoryItemDef.All.Values) {
                 if (IsWeaponSlot(item) && !string.IsNullOrEmpty(item.Def?.Id)) {
                     definitions[item.Def.Id] = item.Def.NameT ?? item.Def.Id;
+                }
+            }
+            // Keep a saved choice visible and clearable when its mod is absent.
+            foreach (string id in selectedWeaponDefinitionIds) {
+                if (!definitions.ContainsKey(id)) {
+                    definitions.Add(id, id + " (unavailable)");
                 }
             }
             return SortCategories(definitions);
@@ -219,13 +218,21 @@ namespace Game.Systems.IntelligentRecycling {
             RecycleAlienEggs = data.GetBool("RecycleAlienEggs", false);
             AllowSecondHandEquipment = data.GetBool("AllowSecondHandEquipment", true);
             AllowDeadMansEquipment = data.GetBool("AllowDeadMansEquipment", true);
-            FilterWeaponDefinitions = data.GetBool("FilterWeaponDefinitions", false);
+            bool previousFilter = data.GetBool("FilterWeaponDefinitions", false);
             WeaponsFollowQuality = data.GetBool("WeaponsFollowQuality", true);
             AlienEggTasksQueued = Math.Max(0, data.GetInt("AlienEggTasksQueued", 0));
             var selected = data.GetStringSet("SelectedWeaponDefinitionIds", null);
-            if (selected == null) { return; }
-            foreach (string id in selected) {
-                if (!string.IsNullOrEmpty(id)) { selectedWeaponDefinitionIds.Add(id); }
+            if (selected != null) {
+                foreach (string id in selected) {
+                    if (!string.IsNullOrEmpty(id)) { selectedWeaponDefinitionIds.Add(id); }
+                }
+            }
+            if (previousFilter && !FilterWeaponDefinitions) {
+                // A legacy enabled but empty list blocked all weapon recycling.
+                disabledEquipmentSlotIds.Add("Weapon");
+            } else if (!previousFilter && FilterWeaponDefinitions) {
+                // A dormant quality override must not become active on upgrade.
+                WeaponsFollowQuality = true;
             }
         }
 
@@ -233,7 +240,6 @@ namespace Game.Systems.IntelligentRecycling {
             RecycleAlienEggs = false;
             AllowSecondHandEquipment = true;
             AllowDeadMansEquipment = true;
-            FilterWeaponDefinitions = false;
             WeaponsFollowQuality = true;
             AlienEggTasksQueued = 0;
             selectedWeaponDefinitionIds.Clear();

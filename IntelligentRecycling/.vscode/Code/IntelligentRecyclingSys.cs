@@ -25,7 +25,7 @@ namespace Game.Systems.IntelligentRecycling {
         public const string SysId = "IntelligentRecyclingSys";
         public const string ModId = "IntelligentRecycling";
         public const string DisplayName = "Intelligent Recycling";
-        public const string ModVersion = "1.5.1";
+        public const string ModVersion = "1.5.2";
         private const string ConsumerId = ModId;
         internal const string ArtilleryFungusDefinitionId =
             "Obj/Plants/ArtilleryFungus";

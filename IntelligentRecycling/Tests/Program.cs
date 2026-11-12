@@ -277,8 +277,13 @@ internal static class Program {
         var (weaponSys, weapon) = SetupSelection(false);
         weaponSys.SetWeaponsFollowQuality(false);
         Check(weaponSys.QueueSelection(weapon) == null, "quality setting cannot bypass an inactive checklist");
-        weaponSys.SetFilterWeaponDefinitions(true);
+        weaponSys.SetWeaponDefinitionSelected("Obj/Test/OtherWeapon", true);
         Check(weaponSys.QueueSelection(weapon) == null, "unchecked weapon remains excluded");
+        Check(weaponSys.FilterWeaponDefinitions, "first selection activates the checklist");
+        Check(weaponSys.GetWeaponDefinitions().Exists(item => item.Key == "Obj/Test/OtherWeapon"),
+            "unavailable saved selection remains visible and clearable");
+        weaponSys.SetWeaponDefinitionSelected("Obj/Test/OtherWeapon", false);
+        Check(!weaponSys.FilterWeaponDefinitions, "clearing the last selection deactivates the checklist");
         weaponSys.SetWeaponDefinitionSelected(weapon.Def.Id, true);
         weapon.Quality = float.NaN;
         Check(weaponSys.QueueSelection(weapon) == null, "invalid quality still denied");
@@ -298,6 +303,15 @@ internal static class Program {
             && !loaded.WeaponsFollowQuality && !loaded.AllowSecondHandEquipment && loaded.AllowDeadMansEquipment,
             "stable definition selection and independent filters persist");
         Check(!loaded.IsWeaponDefinitionSelected(weapon.Def.Id.ToUpperInvariant()), "definition keys are exact");
+        var legacyEmpty = new ComponentData();
+        legacyEmpty.SetBool("FilterWeaponDefinitions", true);
+        loaded.LoadSelection(legacyEmpty);
+        Check(!loaded.FilterWeaponDefinitions && loaded.WeaponCategoryDisabled,
+            "legacy enabled empty list still blocks all weapon recycling");
+        settings.SetBool("FilterWeaponDefinitions", false);
+        loaded.LoadSelection(settings);
+        Check(loaded.FilterWeaponDefinitions && loaded.WeaponsFollowQuality,
+            "upgrading a dormant list does not activate its quality override");
 
         var (gearSys, gear) = SetupSelection(false);
         gear.Item.SlotId = "Torso";

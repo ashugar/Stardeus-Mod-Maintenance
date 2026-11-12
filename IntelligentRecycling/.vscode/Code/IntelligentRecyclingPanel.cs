@@ -307,10 +307,9 @@ namespace Game.Systems.IntelligentRecycling {
                 weaponsExpanded, value => weaponsExpanded = value);
             if (!weaponsExpanded) return;
 
-            context.AddToggle(IconId.CFilter, "Use weapon checklist",
-                system.FilterWeaponDefinitions ? "On" : "Off",
-                system.FilterWeaponDefinitions, system.SetFilterWeaponDefinitions,
-                "When on, only checked weapons can qualify. When off, the existing Weapon category rules apply.");
+            context.AddInfo(IconId.CFilter, "Use weapon checklist",
+                system.FilterWeaponDefinitions ? "<color=#8FE388>On</color>" : "<color=#FF8080>Off</color>",
+                "On when at least one weapon is checked. With none checked, the Weapon category uses its usual rules.");
             context.AddToggle(IconId.CCog, "Follow quality threshold",
                 system.WeaponsFollowQuality ? "On" : "Off",
                 system.WeaponsFollowQuality, system.SetWeaponsFollowQuality,
