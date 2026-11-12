@@ -175,6 +175,14 @@ matching facility. If no compatible facility exists during migration, the
 corresponding threshold starts at Core's existing 50% default. New facilities
 inherit the saved Intelligent Recycling threshold when construction completes.
 
+## 1.5.2
+
+- **Use weapon checklist** is a green On / red Off status, driven by the checked
+  weapon definitions. With no selections, normal Weapon category rules apply.
+- On upgrade, a previously enabled empty checklist keeps weapon recycling
+  disabled through the Weapon category. A previously inactive list with saved
+  selections now follows the quality threshold until you explicitly turn it off.
+
 ## 1.5.1
 
 - Hides the weapon checklist while the Weapon equipment category is disabled.

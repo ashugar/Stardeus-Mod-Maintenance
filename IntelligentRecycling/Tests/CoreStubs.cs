@@ -290,6 +290,8 @@ namespace Game.Systems.IntelligentRecycling {
         }
         internal ComponentData SaveSelection() { var d = new ComponentData(); SaveRecyclingSelection(d); return d; }
         internal void LoadSelection(ComponentData data) => LoadRecyclingSelection(data);
+        private readonly HashSet<string> disabledEquipmentSlotIds = new();
+        internal bool WeaponCategoryDisabled => disabledEquipmentSlotIds.Contains("Weapon");
         internal void SetSelectionReady(bool value) => selectionSettingsLoaded = value;
         internal void CheckSelectionTick() => OnRecyclingSelectionTickEarly(S.Ticks);
     }
