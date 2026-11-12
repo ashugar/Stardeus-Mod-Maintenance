@@ -21,6 +21,10 @@ namespace Game.Systems.IntelligentRecycling {
         private readonly FrameworkPanel panel;
         private readonly Dictionary<string, WIconText2> statisticRows = new();
         private string activeTab = MainTab;
+        private const int WeaponsPerPage = 12;
+        private bool weaponsExpanded;
+        private string weaponSearch = string.Empty;
+        private int weaponPage;
 
         public bool IsOpen => panel.IsOpen;
 
@@ -39,6 +43,11 @@ namespace Game.Systems.IntelligentRecycling {
         }
 
         public void Show() => panel.Show();
+        internal void ShowSettings() {
+            activeTab = SettingsTab;
+            if (panel.IsOpen) panel.Refresh();
+            else panel.Show();
+        }
         public void Close() => panel.Close();
         public void Toggle() => panel.Toggle();
         public void Refresh() => panel.Refresh();
@@ -107,6 +116,10 @@ namespace Game.Systems.IntelligentRecycling {
             AddSettingCard(automation, "Equipment", system.RecycleEquipment,
                 system.SetEquipment,
                 "Send qualifying loose equipment to a Disassembler.");
+            AddSettingCard(automation, "Alien eggs", system.RecycleAlienEggs,
+                system.SetAlienEggs,
+                "Queue intact Alien Eggs for a Nutrient Extractor. Eggs can still "
+                + "hatch before disposal. Disabled by default.");
             AddSettingCard(automation, "Replace storage-haul tasks",
                 system.ReplaceStorageHaulTasks, system.SetReplaceStorageHaulTasks,
                 "Cancel only unassigned storage-haul tasks for qualifying loose "
@@ -173,6 +186,13 @@ namespace Game.Systems.IntelligentRecycling {
                 + "Uses a Disassembler and native disposal; no automatic harvesting. "
                 + "Disabled by default.");
 
+            if (system.IsAlienEggReminderAwaitingDecision) {
+                context.AddButton(IconId.CInfo, "Keep automatic egg disposal", "Keep enabled",
+                    system.KeepAlienEggDisposalAfterReminder,
+                    "Alien Datoids require Egg Shell and Crawler Goo. Turn off Alien eggs above "
+                    + "to keep eggs for those materials, or keep disposal enabled.");
+            }
+
             context.AddHeader("Quality thresholds");
             context.AddInfo(IconId.CInfo, "Shared processor thresholds",
                 "Bidirectional",
@@ -233,6 +253,17 @@ namespace Game.Systems.IntelligentRecycling {
                     system.Enabled && system.RecycleEquipment);
             }
 
+            context.AddHeader("Equipment condition");
+            context.AddToggle(IconId.CInfo, "Second-hand equipment",
+                system.AllowSecondHandEquipment ? "On" : "Off",
+                system.AllowSecondHandEquipment, system.SetAllowSecondHandEquipment,
+                "Allow qualifying worn gear that Core classifies as second-hand.");
+            context.AddToggle(IconId.CInfo, "Belonged to a dead person",
+                system.AllowDeadMansEquipment ? "On" : "Off",
+                system.AllowDeadMansEquipment, system.SetAllowDeadMansEquipment,
+                "Allow qualifying gear with the dead-owner flag. Forbidden items remain protected.");
+            DrawWeaponChecklist(context);
+
             context.AddHeader("Keyboard shortcut");
             context.AddInfo(IconId.CInfo, "Open/close panel",
                 panelShortcut.DisplayName,
@@ -261,6 +292,76 @@ namespace Game.Systems.IntelligentRecycling {
                 + "available for opening the panel.");
             context.AddInfo(IconId.CInfo, "Shortcut status",
                 BuildShortcutStatusSummary(), panelShortcut.StatusMessage);
+        }
+
+        private void DrawWeaponChecklist(PanelContentContext context) {
+            var weapons = new List<KeyValuePair<string, string>>(
+                system.GetWeaponDefinitions());
+            int selected = 0;
+            foreach (var weapon in weapons) {
+                if (system.IsWeaponDefinitionSelected(weapon.Key)) selected++;
+            }
+            context.AddCollapsibleHeader($"Weapon checklist ({selected} selected)",
+                weaponsExpanded, value => weaponsExpanded = value);
+            if (!weaponsExpanded) return;
+
+            context.AddToggle(IconId.CFilter, "Use weapon checklist",
+                system.FilterWeaponDefinitions ? "On" : "Off",
+                system.FilterWeaponDefinitions, system.SetFilterWeaponDefinitions,
+                "When on, only checked weapons can qualify. When off, the existing Weapon category rules apply.");
+            context.AddToggle(IconId.CCog, "Follow quality threshold",
+                system.WeaponsFollowQuality ? "On" : "Off",
+                system.WeaponsFollowQuality, system.SetWeaponsFollowQuality,
+                "Applies to all checked weapons when the checklist is in use. Other equipment still follows its usual quality rules.");
+            context.AddInput(IconId.CFilter, "Search weapon names or IDs",
+                weaponSearch, value => {
+                    string search = value?.Trim() ?? string.Empty;
+                    if (search == weaponSearch) return;
+                    weaponSearch = search;
+                    weaponPage = 0;
+                    panel.Refresh();
+                }, tooltip: "Press Enter or leave the search field to filter.");
+            if (weaponSearch.Length > 0) {
+                weapons.RemoveAll(item => (item.Value ?? item.Key).IndexOf(weaponSearch,
+                    StringComparison.CurrentCultureIgnoreCase) < 0
+                    && item.Key.IndexOf(weaponSearch, StringComparison.OrdinalIgnoreCase) < 0);
+            }
+            weapons.Sort((left, right) => {
+                int order = StringComparer.CurrentCultureIgnoreCase.Compare(left.Value, right.Value);
+                return order != 0 ? order : StringComparer.Ordinal.Compare(left.Key, right.Key);
+            });
+            if (weapons.Count == 0) {
+                context.AddInfo(IconId.CInfo, "No matching weapons", "");
+                return;
+            }
+            int pages = (weapons.Count + WeaponsPerPage - 1) / WeaponsPerPage;
+            weaponPage = Math.Max(0, Math.Min(weaponPage, pages - 1));
+            context.AddInfo(IconId.CCount, "Matching weapons",
+                $"{weapons.Count} · Page {weaponPage + 1} of {pages}");
+            if (weaponPage > 0) {
+                context.AddButton(IconId.CFilter, "Previous page", "", () => {
+                    weaponPage--;
+                    panel.Refresh();
+                });
+            }
+            if (weaponPage + 1 < pages) {
+                context.AddButton(IconId.CFilter, "Next page", "", () => {
+                    weaponPage++;
+                    panel.Refresh();
+                });
+            }
+            int start = weaponPage * WeaponsPerPage;
+            for (int i = start; i < Math.Min(start + WeaponsPerPage, weapons.Count); i++) {
+                var weapon = weapons[i];
+                bool checkedWeapon = system.IsWeaponDefinitionSelected(weapon.Key);
+                context.AddToggle(IconId.CFilter, weapon.Value ?? weapon.Key,
+                    checkedWeapon ? "Selected" : "", checkedWeapon,
+                    value => {
+                        system.SetWeaponDefinitionSelected(weapon.Key, value);
+                        panel.Refresh();
+                    },
+                    weapon.Key);
+            }
         }
 
         private void AddResultRow(PanelContentContext context,

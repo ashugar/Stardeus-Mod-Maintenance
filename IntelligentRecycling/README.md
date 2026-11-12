@@ -175,6 +175,38 @@ matching facility. If no compatible facility exists during migration, the
 corresponding threshold starts at Core's existing 50% default. New facilities
 inherit the saved Intelligent Recycling threshold when construction completes.
 
+## 1.5.0
+
+- **Alien eggs** is off by default. It orders native biological disposal for
+  intact Alien Eggs. An egg can still hatch while waiting for delivery.
+  Egg Shell and Crawler Goo are not disposal targets.
+- If enabled when unfinished Alien Datoid research becomes available, egg
+  automation pauses new orders while you review the setting. One Egg Shell
+  and one Crawler Goo craft an Alien Datoid. Choose to keep disposal enabled,
+  or turn it off in Settings. The decision is saved with the game.
+- **Second-hand equipment** and **Belonged to a dead person** independently
+  control worn gear. Both start on to preserve existing behavior. Core assigns
+  gear that matches both to the dead-owner category. Forbidden gear stays
+  protected.
+- Enable **Use weapon checklist** to limit the Weapon category to checked
+  definitions. Search by name or ID, then browse up to twelve results per page.
+  Compatible mod-added weapon-slot items are included.
+- **Follow quality threshold** starts on. Turning it off bypasses the quality
+  cutoff only for checked weapons when the checklist is in use. Equipment and
+  Weapon category switches, processor availability and safety still apply.
+
+In-game acceptance: load an older save and verify its existing equipment
+behavior is preserved. With egg disposal enabled, reach or load a save with
+eligible Alien Datoid research; verify Review opens Settings and that egg
+orders wait for your decision. Save and reload after choosing, and check that
+the reminder does not repeat. For equipment, try second-hand and dead-owner
+gear separately, including a forbidden item. For weapons, search across pages,
+select a mod-added item, and compare checked and unchecked weapons above the
+cutoff with Follow quality threshold on and off.
+
+For an exact rollback to 1.4.0, keep a save made before upgrading. Restoring
+the previous DLL does not revert settings or disposal jobs saved by 1.5.0.
+
 ## 1.4.0
 
 Status: implementation candidate; fresh startup and gameplay validation pending.

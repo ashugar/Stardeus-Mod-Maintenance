@@ -25,14 +25,14 @@ namespace Game.Systems.IntelligentRecycling {
         public const string SysId = "IntelligentRecyclingSys";
         public const string ModId = "IntelligentRecycling";
         public const string DisplayName = "Intelligent Recycling";
-        public const string ModVersion = "1.4.0";
+        public const string ModVersion = "1.5.0";
         private const string ConsumerId = ModId;
         internal const string ArtilleryFungusDefinitionId =
             "Obj/Plants/ArtilleryFungus";
         public const string RequiredUtilitiesVersion = "1.4.0";
         private const string HarmonyId = "jleas.stardeus.intelligentrecycling.events";
         internal const long ScanIntervalTicks = 300;
-        internal const int SaveSchemaVersion = 14;
+        internal const int SaveSchemaVersion = 15;
         internal const float DefaultQualityThreshold = 0.5f;
         private readonly List<DisposerComp> disposers = new();
         private readonly List<StasisPodComp> stasisPods = new();
@@ -179,6 +179,7 @@ namespace Game.Systems.IntelligentRecycling {
         private void OnAfterLoadState(GameState state) {
             if (loadedState != null) {
                 loadedState.Clock.OnTick.RemoveListener(OnTick);
+                loadedState.Clock.OnTickEarly.RemoveListener(OnRecyclingSelectionTickEarly);
                 loadedState.Sig.ConstructionCompleted.RemoveListener(OnConstructionCompleted);
                 loadedState.Sig.BeingDied.RemoveListener(OnBeingDied);
             }
@@ -186,8 +187,10 @@ namespace Game.Systems.IntelligentRecycling {
                 ResetToDefaults();
                 loadedSettingsGameId = state.GameId;
                 corpseSettingsLoaded = corpseLoadAttemptedGameId != state.GameId;
+                selectionSettingsLoaded = corpseLoadAttemptedGameId != state.GameId;
             }
             loadedState = state;
+            AttachAlienEggReminder(state);
             partRestorationUnit.RefreshAvailability();
             loadedObjsSystem = ResolveObjsSystem(state);
             InitializeThresholdAuthority();
@@ -199,6 +202,7 @@ namespace Game.Systems.IntelligentRecycling {
             pendingObjectScanIds.Clear();
             processingObjectScanIds.Clear();
             state.Clock.OnTick.AddListener(OnTick);
+            state.Clock.OnTickEarly.AddListener(OnRecyclingSelectionTickEarly);
             state.Sig.ConstructionCompleted.AddListener(OnConstructionCompleted);
             state.Sig.BeingDied.AddListener(OnBeingDied);
             state.Clock.OnNextUpdate(() => {
@@ -226,6 +230,7 @@ namespace Game.Systems.IntelligentRecycling {
         private void OnTick(long ticks) {
             // Event patches only request work. Scans are consumed here so a
             // paused game remains idle and several events collapse into one pass.
+            TickAlienEggReminder(ticks);
             if (trackedGoalsReady) {
                 ReconcileTrackedGoals();
             }
@@ -321,6 +326,7 @@ namespace Game.Systems.IntelligentRecycling {
 
         internal void SetEnabled(bool value) {
             Enabled = value;
+            MarkAlienEggReminderDirty();
             if (value) {
                 RequestScan();
             }
@@ -748,6 +754,7 @@ namespace Game.Systems.IntelligentRecycling {
             StorageCapsuleTasksQueued = 0;
             SafeBoxTasksQueued = 0;
             ArtilleryFungusTasksQueued = 0;
+            AlienEggTasksQueued = 0;
             DeadCrawlerTasksQueued = 0;
             BiologicalCorpseTasksQueued = 0;
             RoboticCorpseTasksQueued = 0;
@@ -870,8 +877,16 @@ namespace Game.Systems.IntelligentRecycling {
                 LastCategoryDisabled++;
                 return;
             }
+            if (!snapshot.EquipmentOriginAllowed || !snapshot.WeaponDefinitionAllowed) {
+                LastCategoryDisabled++;
+                return;
+            }
             if (snapshot.SpecialTarget
                     && !snapshot.SpecialReadyForProcessing) {
+                LastSpecialConditionNotReady++;
+                return;
+            }
+            if (snapshot.QualityCutoffBypassed && !SelectionRuntimeReady(loadedState)) {
                 LastSpecialConditionNotReady++;
                 return;
             }
@@ -889,11 +904,12 @@ namespace Game.Systems.IntelligentRecycling {
                 }
                 return;
             }
-            if (!snapshot.EffectiveThresholdAvailable) {
+            if (!evaluation.ProcessorReady) {
                 LastNoCompatibleProcessor++;
                 return;
             }
             if (!snapshot.SpecialTarget
+                    && !snapshot.QualityCutoffBypassed
                     && snapshot.QualityRelation
                         == IntelligentRecyclingQualityRelation.AboveThreshold) {
                 LastAboveThreshold++;
@@ -901,7 +917,8 @@ namespace Game.Systems.IntelligentRecycling {
             }
 
             if (evaluation.Obj.Goal != null
-                    && (!ReplaceStorageHaulTasks
+                    && (snapshot.TargetType == IntelligentRecyclingTargetType.AlienEgg
+                        || !ReplaceStorageHaulTasks
                         || !TryCancelUnassignedStorageGoal(evaluation.Obj))) {
                 LastBlockedByTask++;
                 return;
@@ -910,8 +927,10 @@ namespace Game.Systems.IntelligentRecycling {
             if (evaluation.Disposable.TryOrderDispose(false, out _)) {
                 LastQueued++;
                 RecordQueuedCategory(data, evaluation.Disposable);
-                if (evaluation.Obj.Goal != null) {
-                    trackedGoalsByObjectId[objectId] = evaluation.Obj.Goal.Id;
+                AIGoal goal = evaluation.Obj.Goal;
+                if (goal != null && !goal.IsByPlayer && ReferenceEquals(goal.Target, evaluation.Disposable)) {
+                    trackedGoalsByObjectId[objectId] = goal.Id;
+                    MarkSelectionGoal(goal, data, snapshot);
                 }
             } else {
                 LastVanillaOrderRejected++;
@@ -1219,7 +1238,10 @@ namespace Game.Systems.IntelligentRecycling {
         }
 
         private void RecordQueuedCategory(ObjData data, DisposableComp disposable) {
-            if (string.Equals(data.Def?.Id, ArtilleryFungusDefinitionId,
+            if (RecyclingSelectionRules.IsAlienEgg(data.Def?.Id)) {
+                BiologicalTasksQueued++;
+                AlienEggTasksQueued++;
+            } else if (string.Equals(data.Def?.Id, ArtilleryFungusDefinitionId,
                     StringComparison.Ordinal)) {
                 BiologicalTasksQueued++;
                 ArtilleryFungusTasksQueued++;
@@ -1431,11 +1453,14 @@ namespace Game.Systems.IntelligentRecycling {
             saveData.SetIntSet("TrackedBreachGoalIds", breachGoalIds);
             SaveLostShuttleReplacementState(saveData);
             SaveCorpseState(saveData);
+            SaveRecyclingSelection(saveData);
+            SaveAlienEggReminder(saveData);
             return saveData;
         }
 
         public void Load(ComponentData data) {
             corpseSettingsLoaded = false;
+            selectionSettingsLoaded = false;
             corpseLoadAttemptedGameId = S.GameId;
             saveData = data;
             loadedSettingsGameId = S.GameId;
@@ -1582,6 +1607,9 @@ namespace Game.Systems.IntelligentRecycling {
             }
             LoadLostShuttleReplacementState(data, schemaVersion);
             LoadCorpseState(data);
+            LoadRecyclingSelection(data);
+            LoadAlienEggReminder(data);
+            selectionSettingsLoaded = schemaVersion <= SaveSchemaVersion;
             MarkApiRevision();
         }
 
@@ -1610,6 +1638,8 @@ namespace Game.Systems.IntelligentRecycling {
 
         private void ResetToDefaults() {
             saveData = null;
+            ResetRecyclingSelection();
+            ResetAlienEggReminder();
             loadedSettingsGameId = -1;
             Enabled = true;
             RecycleBiologicalParts = true;
@@ -1628,6 +1658,7 @@ namespace Game.Systems.IntelligentRecycling {
             BiologicalCorpseTasksQueued = 0;
             RoboticCorpseTasksQueued = 0;
             corpseSettingsLoaded = false;
+            selectionSettingsLoaded = false;
             corpseGoals.Clear();
             ReplaceLostShuttles = false;
             BiologicalQualityThreshold = DefaultQualityThreshold;
@@ -1681,6 +1712,7 @@ namespace Game.Systems.IntelligentRecycling {
         }
 
         public override void Unload() {
+            ResetAlienEggReminder();
             corpseInitializationReady = false;
             S.Sig.AfterLoadState.RemoveListener(OnCorpseSafetyAfterLoadState);
             corpseSafetyState?.Clock.OnTickEarly.RemoveListener(OnCorpseSafetyTick);
@@ -1688,6 +1720,7 @@ namespace Game.Systems.IntelligentRecycling {
             S.Sig.AfterLoadState.RemoveListener(OnAfterLoadState);
             if (loadedState != null) {
                 loadedState.Clock.OnTick.RemoveListener(OnTick);
+                loadedState.Clock.OnTickEarly.RemoveListener(OnRecyclingSelectionTickEarly);
                 loadedState.Sig.ConstructionCompleted.RemoveListener(OnConstructionCompleted);
                 loadedState.Sig.BeingDied.RemoveListener(OnBeingDied);
                 loadedState = null;

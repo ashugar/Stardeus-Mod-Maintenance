@@ -34,16 +34,24 @@ namespace Game.Systems.IntelligentRecycling {
         private void OnCorpseSafetyTick(long ticks) {
             if (corpseSafetySweepDone || corpseSafetyState == null) { return; }
             corpseSafetySweepDone = true;
-            if (CorpseRuntimeReady(corpseSafetyState)) { return; }
+            bool corpseReady = CorpseRuntimeReady(corpseSafetyState);
+            bool selectionReady = SelectionRuntimeReady(corpseSafetyState);
+            if (corpseReady && selectionReady) { return; }
             List<AIGoal> denied = null;
             foreach (AIGoal goal in corpseSafetyState.Sys.AI.ColonyGoals.Values) {
-                if (TryReadCorpseMarker(goal, out _, out _) || IsRegisteredCorpseGoal(goal)) {
+                if ((!corpseReady && (TryReadCorpseMarker(goal, out _, out _)
+                            || IsRegisteredCorpseGoal(goal)))
+                        || (!selectionReady && !IsNativeSelectionTakeover(goal)
+                            && (HasSelectionMarker(goal)
+                            || IsRegisteredEggGoal(goal)))) {
                     (denied ??= new List<AIGoal>()).Add(goal);
                 }
             }
             if (denied == null) { return; }
             foreach (AIGoal goal in denied) {
-                AIGoal.Cancel(goal, ticks, CorpsePolicyDenied, removeImmediately: false);
+                string reason = HasSelectionMarker(goal) || IsRegisteredEggGoal(goal)
+                    ? SelectionPolicyDenied : CorpsePolicyDenied;
+                AIGoal.Cancel(goal, ticks, reason, removeImmediately: false);
             }
         }
 
@@ -82,26 +90,26 @@ namespace Game.Systems.IntelligentRecycling {
                 out CorpseDisposalKind kind, out uint beingId) {
             kind = default;
             beingId = 0;
-            ComponentData vars = goal?.Vars;
-            if (vars == null) {
-                return false;
-            }
-            bool marked = vars.Ints?.ContainsKey(CorpseMarker) == true
-                || vars.Strings?.ContainsKey(CorpseMarker) == true
-                || vars.Bools?.ContainsKey(CorpseMarker) == true
-                || vars.Longs?.ContainsKey(CorpseMarker) == true
-                || vars.Floats?.ContainsKey(CorpseMarker) == true
-                || vars.IntSets?.ContainsKey(CorpseMarker) == true
-                || vars.StringSets?.ContainsKey(CorpseMarker) == true
-                || vars.FloatSets?.ContainsKey(CorpseMarker) == true
-                || vars.Mats?.ContainsKey(CorpseMarker) == true;
-            if (!marked) { return false; }
+            if (!HasGoalMarker(goal, CorpseMarker)) { return false; }
             goal.TryGetVar(CorpseMarker, out int raw);
             kind = (CorpseDisposalKind) raw;
             // Any namespaced marker remains guarded, including incomplete or
             // damaged persisted data. It must never fall back to manual work.
             goal.TryGetVar(CorpseBeingMarker, out beingId);
             return true;
+        }
+
+        private static bool HasGoalMarker(AIGoal goal, string key) {
+            ComponentData vars = goal?.Vars;
+            return vars != null && (vars.Ints?.ContainsKey(key) == true
+                || vars.Strings?.ContainsKey(key) == true
+                || vars.Bools?.ContainsKey(key) == true
+                || vars.Longs?.ContainsKey(key) == true
+                || vars.Floats?.ContainsKey(key) == true
+                || vars.IntSets?.ContainsKey(key) == true
+                || vars.StringSets?.ContainsKey(key) == true
+                || vars.FloatSets?.ContainsKey(key) == true
+                || vars.Mats?.ContainsKey(key) == true);
         }
 
         internal static bool IsCorpseWork(AIGoal goal) {
@@ -370,6 +378,9 @@ namespace Game.Systems.IntelligentRecycling {
             internal AIGoal Goal;
             internal AIAgentComp Agent;
             internal bool Denied;
+            internal bool Selection;
+            internal string DenialReason => Selection
+                ? IntelligentRecyclingSys.SelectionPolicyDenied : IntelligentRecyclingSys.CorpsePolicyDenied;
         }
 
         internal static void Install() {
@@ -388,7 +399,7 @@ namespace Game.Systems.IntelligentRecycling {
                 null, nameof(AfterGoalLoad), null);
             Ready = execute && load && restore;
             if (!Ready) {
-                D.Warn("[Intelligent Recycling] Corpse safety hooks incomplete; new and restored corpse automation is blocked.");
+                D.Warn("[Intelligent Recycling] Disposal safety hooks incomplete; guarded corpse, egg, and weapon override jobs are blocked.");
             }
         }
 
@@ -411,20 +422,22 @@ namespace Game.Systems.IntelligentRecycling {
         private static bool BeforeExecute(GameState S, AIAgentComp agent,
                 AIGoal goal, ref AIActionResult __result, out Scope __state) {
             __state = null;
-            if (!IntelligentRecyclingSys.IsCorpseWork(goal)) { return true; }
-            __state = new Scope { Previous = current, Goal = goal, Agent = agent };
+            bool selection = IntelligentRecyclingSys.IsSelectionWork(goal);
+            if (!selection && !IntelligentRecyclingSys.IsCorpseWork(goal)) { return true; }
+            __state = new Scope { Previous = current, Goal = goal, Agent = agent,
+                Selection = selection };
             current = __state;
-            if (IntelligentRecyclingSys.ApiInstance?.ValidateCorpseExecution(S, goal, agent) == true) {
+            if (ValidateExecution(S, goal, agent, selection)) {
                 return true;
             }
             __state.Denied = true;
-            __result = AIActionResult.Create(AIActionState.Cancelled, IntelligentRecyclingSys.CorpsePolicyDenied);
+            __result = AIActionResult.Create(AIActionState.Cancelled, __state.DenialReason);
             return false;
         }
 
         private static void AfterExecute(ref AIActionResult __result, Scope __state) {
             if (__state?.Denied == true) {
-                __result = AIActionResult.Create(AIActionState.Cancelled, IntelligentRecyclingSys.CorpsePolicyDenied);
+                __result = AIActionResult.Create(AIActionState.Cancelled, __state.DenialReason);
             }
         }
 
@@ -436,8 +449,14 @@ namespace Game.Systems.IntelligentRecycling {
         private static bool BeforeLoad(DisposerComp __instance, DisposableComp disposable,
                 AIAgentComp agent, ref bool __result) {
             bool scopedTarget = current != null && ReferenceEquals(current.Goal.Target, disposable);
-            AIGoal goal = scopedTarget ? current.Goal : disposable?.Being?.Goal;
-            if (!scopedTarget && !IntelligentRecyclingSys.IsCorpseWork(goal)) { return true; }
+            AIGoal goal = scopedTarget ? current.Goal : disposable?.Entity?.Goal;
+            bool selection = scopedTarget ? current.Selection : IntelligentRecyclingSys.IsSelectionWork(goal);
+            if (scopedTarget && selection && IntelligentRecyclingSys.IsNativeSelectionTakeover(goal)
+                    && ReferenceEquals(disposable.Entity.Goal, goal)
+                    && ReferenceEquals(current.Agent, agent)) {
+                return true;
+            }
+            if (!scopedTarget && !selection && !IntelligentRecyclingSys.IsCorpseWork(goal)) { return true; }
             bool allowed = current != null && ReferenceEquals(current.Goal, goal)
                 && ReferenceEquals(current.Agent, agent)
                 && ReferenceEquals(goal.Target, disposable)
@@ -445,8 +464,7 @@ namespace Game.Systems.IntelligentRecycling {
                 && __instance.Tile != null && __instance.Tile.IsActive
                 && __instance.Tile.IsConstructed
                 && ReferenceEquals(__instance.S, disposable.S)
-                && IntelligentRecyclingSys.ApiInstance?.ValidateCorpseExecution(
-                    disposable.S, goal, agent) == true;
+                && ValidateExecution(disposable.S, goal, agent, selection);
             if (allowed) { return true; }
             if (current != null && ReferenceEquals(current.Goal, goal)
                     && ReferenceEquals(current.Agent, agent)) {
@@ -457,7 +475,19 @@ namespace Game.Systems.IntelligentRecycling {
         }
 
         private static void AfterGoalLoad(AIGoal goal) {
-            IntelligentRecyclingSys.AttachCorpseAvailabilityGate(goal);
+            if (IntelligentRecyclingSys.IsSelectionWork(goal)) {
+                IntelligentRecyclingSys.AttachSelectionAvailabilityGate(goal);
+            } else {
+                IntelligentRecyclingSys.AttachCorpseAvailabilityGate(goal);
+            }
+        }
+
+        private static bool ValidateExecution(GameState state, AIGoal goal,
+                AIAgentComp agent, bool selection) {
+            var system = IntelligentRecyclingSys.ApiInstance;
+            return system != null && (selection
+                ? system.ValidateSelectionExecution(state, goal, agent)
+                : system.ValidateCorpseExecution(state, goal, agent));
         }
     }
 }

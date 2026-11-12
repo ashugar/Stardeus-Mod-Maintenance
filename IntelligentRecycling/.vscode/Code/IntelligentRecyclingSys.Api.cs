@@ -37,6 +37,7 @@ namespace Game.Systems.IntelligentRecycling {
             internal bool Recognized;
             internal bool PolicyCategoryReady;
             internal bool SpecialReady;
+            internal bool ProcessorReady;
         }
 
         internal static IntelligentRecyclingSys ApiInstance => activeInstance;
@@ -268,6 +269,23 @@ namespace Game.Systems.IntelligentRecycling {
                 RecycleRoboticCorpses, false,
                 "Disassemble dead robotic bodies after removable parts are gone; welded remnants may remain.",
                 Enabled && RecycleRoboticCorpses && CorpseRuntimeReady(loadedState)));
+            result.Add(Setting("alien-eggs", "Alien eggs", RecycleAlienEggs, false,
+                "Send loose alien eggs to a Nutrient Extractor.",
+                Enabled && RecycleAlienEggs && !IsAlienEggReminderBlocking));
+            result.Add(Setting("allow-second-hand-equipment", "Second-hand equipment",
+                AllowSecondHandEquipment, true, "Allow second-hand worn gear.",
+                Enabled && RecycleEquipment && AllowSecondHandEquipment));
+            result.Add(Setting("allow-dead-mans-equipment", "Dead person's equipment",
+                AllowDeadMansEquipment, true, "Allow worn gear flagged as belonging to the dead.",
+                Enabled && RecycleEquipment && AllowDeadMansEquipment));
+            bool weaponSlotEnabled = Enabled && RecycleEquipment
+                && IsEquipmentCategoryEnabled("Weapon");
+            result.Add(Setting("filter-weapon-definitions", "Filter weapon types",
+                FilterWeaponDefinitions, false, "Allow only checked weapon types.",
+                weaponSlotEnabled && FilterWeaponDefinitions));
+            result.Add(Setting("weapons-follow-quality", "Selected weapons follow quality",
+                WeaponsFollowQuality, true, "Apply the shared quality cutoff to checked weapons.",
+                weaponSlotEnabled && FilterWeaponDefinitions && WeaponsFollowQuality));
             return result;
         }
 
@@ -614,6 +632,9 @@ namespace Game.Systems.IntelligentRecycling {
             snapshot.QualityRelation = ClassifyQualityRelation(
                 data.Quality, specialTarget, thresholdAvailable,
                 thresholdInvalid, threshold, out bool numericValuesValid);
+            bool alienEgg = snapshot.TargetType == IntelligentRecyclingTargetType.AlienEgg;
+            result.ProcessorReady = alienEgg ? compatibleProcessorExists : thresholdAvailable;
+            if (alienEgg) { numericValuesValid = true; }
 
             IntelligentRecyclingBlockers blockers =
                 IntelligentRecyclingBlockers.None;
@@ -653,14 +674,23 @@ namespace Game.Systems.IntelligentRecycling {
             if (!snapshot.CategorySettingEnabled) {
                 blockers |= IntelligentRecyclingBlockers.CategoryDisabled;
             }
+            if (!snapshot.EquipmentOriginAllowed) {
+                blockers |= IntelligentRecyclingBlockers.EquipmentOriginExcluded;
+            }
+            if (!snapshot.WeaponDefinitionAllowed) {
+                blockers |= IntelligentRecyclingBlockers.WeaponDefinitionExcluded;
+            }
             if (snapshot.PermanentlyProtected) {
                 blockers |= IntelligentRecyclingBlockers.PermanentlyProtected;
             }
             if (specialTarget && !specialReady) {
                 blockers |= IntelligentRecyclingBlockers.SpecialCondition;
             }
-            if (result.Recognized && !thresholdAvailable
-                    && !thresholdInvalid) {
+            if (snapshot.QualityCutoffBypassed && !SelectionRuntimeReady(loadedState)) {
+                blockers |= IntelligentRecyclingBlockers.SpecialCondition;
+            }
+            if (result.Recognized && !result.ProcessorReady
+                    && (alienEgg || !thresholdInvalid)) {
                 blockers |= IntelligentRecyclingBlockers.NoProcessor;
             }
             if (!result.Recognized || result.Disposable == null) {
@@ -674,8 +704,11 @@ namespace Game.Systems.IntelligentRecycling {
             result.PolicyCategoryReady = Enabled
                 && snapshot.ParentSettingEnabled
                 && snapshot.CategorySettingEnabled
+                && snapshot.EquipmentOriginAllowed
+                && snapshot.WeaponDefinitionAllowed
                 && (!specialTarget || specialReady)
-                && thresholdAvailable
+                && (!snapshot.QualityCutoffBypassed || SelectionRuntimeReady(loadedState))
+                && result.ProcessorReady
                 && numericValuesValid;
             ApplyOwnership(result);
 
@@ -740,6 +773,17 @@ namespace Game.Systems.IntelligentRecycling {
             specialTarget = false;
             specialReady = true;
             string definitionId = data.Def?.Id;
+            if (RecyclingSelectionRules.IsAlienEgg(definitionId)) {
+                specialTarget = true;
+                snapshot.TargetType = IntelligentRecyclingTargetType.AlienEgg;
+                snapshot.ProcessorFamily = IntelligentRecyclingProcessorFamily.Biological;
+                snapshot.CategoryId = "alien-eggs";
+                snapshot.CategoryDisplayName = "Alien eggs";
+                snapshot.ParentSettingEnabled = true;
+                snapshot.CategorySettingEnabled = RecycleAlienEggs;
+                specialReady = IsAlienEggReady(obj, disposable);
+                return;
+            }
             if (string.Equals(definitionId, DefIds.ObjContainersHullpiercer,
                     StringComparison.Ordinal)) {
                 specialTarget = true;
@@ -838,6 +882,7 @@ namespace Game.Systems.IntelligentRecycling {
                 snapshot.ParentSettingEnabled = RecycleEquipment;
                 snapshot.CategorySettingEnabled =
                     IsEquipmentCategoryEnabled(data.Item.SlotId);
+                ApplyEquipmentSelection(data, snapshot);
                 return;
             }
             snapshot.TargetType = IntelligentRecyclingTargetType.Unsupported;
@@ -908,11 +953,35 @@ namespace Game.Systems.IntelligentRecycling {
                     "The specific target category is disabled.");
                 return;
             }
+            if (!snapshot.EquipmentOriginAllowed) {
+                SetUnknown(snapshot,
+                    IntelligentRecyclingDecisionReason.EquipmentOriginExcluded,
+                    "The equipment's origin is excluded by Intelligent Recycling.");
+                return;
+            }
+            if (!snapshot.WeaponDefinitionAllowed) {
+                SetUnknown(snapshot,
+                    IntelligentRecyclingDecisionReason.WeaponDefinitionExcluded,
+                    "The weapon definition is not checked in Intelligent Recycling.");
+                return;
+            }
             if ((snapshot.Blockers
                     & IntelligentRecyclingBlockers.NoProcessor) != 0) {
                 SetUnknown(snapshot,
                     IntelligentRecyclingDecisionReason.NoCompatibleProcessor,
                     "No constructed compatible processor provides a threshold.");
+                return;
+            }
+            if (snapshot.QualityCutoffBypassed) {
+                if (!evaluation.PolicyCategoryReady) {
+                    SetUnknown(snapshot, IntelligentRecyclingDecisionReason.SpecialConditionNotReady,
+                        "The checked-weapon safety guard is not ready.");
+                    return;
+                }
+                snapshot.Ownership = IntelligentRecyclingOwnership.IntelligentRecycling;
+                snapshot.DecisionReason = IntelligentRecyclingDecisionReason.OwnedWithoutQualityCutoff;
+                snapshot.DiagnosticReason = "This checked weapon is configured to bypass the quality cutoff.";
+                snapshot.IntelligentRecyclingWouldClaimUnderPolicy = evaluation.PolicyCategoryReady;
                 return;
             }
             if (snapshot.QualityRelation
@@ -1009,7 +1078,7 @@ namespace Game.Systems.IntelligentRecycling {
                 trackedGoalsByStasisPodId.Count,
                 trackedGoalsByBreachCapsuleId.Count,
                 lostShuttleReplacements.Count,
-                BiologicalCorpseTasksQueued, RoboticCorpseTasksQueued);
+                BiologicalCorpseTasksQueued, RoboticCorpseTasksQueued, AlienEggTasksQueued);
         }
 
         private List<IntelligentRecyclingTrackedTaskSnapshot>
@@ -1169,7 +1238,8 @@ namespace Game.Systems.IntelligentRecycling {
                     if (type != IntelligentRecyclingTargetType.Hullpiercer
                             && type != IntelligentRecyclingTargetType.StorageCapsule
                             && type != IntelligentRecyclingTargetType.SafeBox
-                            && type != IntelligentRecyclingTargetType.ArtilleryFungus) {
+                            && type != IntelligentRecyclingTargetType.ArtilleryFungus
+                            && type != IntelligentRecyclingTargetType.AlienEgg) {
                         continue;
                     }
                     bool midFlight = data.Obj != null
