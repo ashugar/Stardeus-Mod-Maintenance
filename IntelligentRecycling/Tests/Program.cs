@@ -6,6 +6,7 @@ using Game.Systems.AI;
 using Game.Systems.BodyParts;
 using Game.Systems.Creatures;
 using Game.Systems.IntelligentRecycling;
+using Game.Systems.Items;
 using HarmonyLib;
 
 internal static class Program {
@@ -43,9 +44,13 @@ internal static class Program {
         return worker;
     }
     private static AIActionResult Execute(BeingData data, AIAgentComp worker, Action body = null,
+            AIActionState nativeState = AIActionState.Success) =>
+        Execute(data.Being.S, worker, body, nativeState);
+
+    private static AIActionResult Execute(GameState state, AIAgentComp worker, Action body,
             AIActionState nativeState = AIActionState.Success) {
         AIGoal goal = worker.Goal;
-        object[] args = { data.Being.S, worker, goal, default(AIActionResult), null };
+        object[] args = { state, worker, goal, default(AIActionResult), null };
         bool run = (bool) Guards.GetMethod("BeforeExecute", Hidden).Invoke(null, args);
         object scope = args[4];
         AIActionResult result = (AIActionResult) args[3];
@@ -58,9 +63,12 @@ internal static class Program {
             Guards.GetMethod("FinishExecute", Hidden).Invoke(null, new[] { null, scope });
         }
     }
-    private static (bool run, bool result) Load(BeingData data, AIAgentComp worker, DisposerComp device = null) {
+    private static (bool run, bool result) Load(BeingData data, AIAgentComp worker, DisposerComp device = null) =>
+        Load(data.Being.Disposable, worker, device);
+
+    private static (bool run, bool result) Load(DisposableComp disposable, AIAgentComp worker, DisposerComp device = null) {
         device ??= (DisposerComp) worker.BB.ReservedSlot.Parent;
-        object[] args = { device, data.Being.Disposable, worker, true };
+        object[] args = { device, disposable, worker, true };
         bool run = (bool) Guards.GetMethod("BeforeLoad", Hidden).Invoke(null, args);
         return (run, (bool) args[3]);
     }
@@ -182,7 +190,7 @@ internal static class Program {
         saved.IntSets["CorpseKinds"] = Array.Empty<int>();
         replacement.LoadForTest(saved);
         Check(!replacement.ValidateCorpseExecution(sys.S, worker.Goal, worker), "partial registry load fails closed");
-        saved.SetInt("SaveSchemaVersion", 15);
+        saved.SetInt("SaveSchemaVersion", IntelligentRecyclingSys.SaveSchemaVersion + 1);
         replacement.LoadForTest(saved);
         Check(!replacement.ValidateCorpseExecution(sys.S, worker.Goal, worker)
             && !replacement.RecycleBiologicalCorpses && !replacement.RecycleRoboticCorpses,
@@ -203,8 +211,116 @@ internal static class Program {
         Check(Execute(data, worker).State == AIActionState.Success, "unmarked manual execution unchanged");
         Install();
     }
+    private static (IntelligentRecyclingSys sys, ObjData data) SetupSelection(bool egg) {
+        var (sys, _) = Setup();
+        var obj = new Obj { S = sys.S, Egg = egg ? new EggComp() : null };
+        var data = new ObjData { Id = 10, Obj = obj, Def = new Def {
+            Id = egg ? RecyclingSelectionRules.AlienEggDefinitionId : "Obj/Equipment/TestWeapon"
+        }};
+        if (!egg) { data.Item = new InventoryItemDef { SlotId = "Weapon", Def = data.Def }; }
+        obj.Data = data;
+        obj.Disposable = new DisposableComp { Obj = obj, IsBiological = egg, SlotDesignation = egg ? 1 : 2 };
+        sys.S.Query.GetAllObjs.Items[data.Id] = data;
+        return (sys, data);
+    }
+
+    private static AIAgentComp AssignSelection(ObjData data) {
+        var goal = data.Obj.Goal;
+        var worker = new AIAgentComp { Being = new Being { S = data.Obj.S }, Goal = goal };
+        goal.Agent = worker;
+        worker.BB.ReservedSlot = new Slot { Parent = new DisposerComp {
+            S = data.Obj.S, SlotDesignation = data.Obj.Disposable.SlotDesignation
+        }};
+        return worker;
+    }
+
+    private static void SelectionSettings() {
+        var (sys, egg) = SetupSelection(true);
+        Check(!sys.RecycleAlienEggs && sys.AllowSecondHandEquipment && sys.AllowDeadMansEquipment
+            && !sys.FilterWeaponDefinitions && sys.WeaponsFollowQuality, "legacy defaults preserved");
+        Check(!RecyclingSelectionRules.IsAlienEgg("Obj/Eggs/Egg01_Hatched"), "shell excluded");
+        Check(!RecyclingSelectionRules.IsAlienEgg("Obj/Mod/Egg01"), "similarly named eggs excluded");
+        sys.SetAlienEggs(true);
+        sys.IsAlienEggReminderBlocking = true;
+        Check(sys.QueueSelection(egg) == null, "pending reminder blocks egg admission");
+        sys.IsAlienEggReminderBlocking = false;
+        Check(sys.QueueSelection(egg) != null, "exact loose egg uses native goal");
+        var worker = AssignSelection(egg);
+        egg.Obj.Carrier = worker.Being;
+        Check(Execute(sys.S, worker, () => Check(Load(egg.Obj.Disposable, worker).run,
+            "own carrier and free native slot reach egg disposal")).State == AIActionState.Success,
+            "valid guarded egg reaches native disposal");
+        Check(Execute(sys.S, worker, () => {
+            sys.SetAlienEggs(false);
+            Check(!Load(egg.Obj.Disposable, worker).run, "egg toggle rechecked at final boundary");
+        }).State == AIActionState.Cancelled, "invalid egg work returns native cancellation");
+        sys.SetAlienEggs(true);
+        Check(Execute(sys.S, worker, () => {
+            sys.SetAlienEggs(false);
+            worker.Goal.IsForceAssigned = true;
+            Check(Load(egg.Obj.Disposable, worker).run, "force assignment inside exact scope passes to Core");
+        }).State == AIActionState.Success, "explicit forced takeover does not cancel");
+        sys.SetSelectionReady(false);
+        sys.StartSafety(sys.S);
+        sys.S.Clock.OnTickEarly.Send(1);
+        sys.CheckSelectionTick();
+        Check(!worker.Goal.Cancelled, "fallback and early recheck preserve forced selection work");
+
+        (sys, egg) = SetupSelection(true);
+        sys.SetAlienEggs(true);
+        var restoredGoal = sys.QueueSelection(egg);
+        Install("all");
+        sys.StartSafety(sys.S);
+        sys.S.Clock.OnTickEarly.Send(1);
+        Check(restoredGoal.Cancelled, "all failed hooks still cancel restored tagged egg before AI");
+
+        var (weaponSys, weapon) = SetupSelection(false);
+        weaponSys.SetWeaponsFollowQuality(false);
+        Check(weaponSys.QueueSelection(weapon) == null, "quality setting cannot bypass an inactive checklist");
+        weaponSys.SetFilterWeaponDefinitions(true);
+        Check(weaponSys.QueueSelection(weapon) == null, "unchecked weapon remains excluded");
+        weaponSys.SetWeaponDefinitionSelected(weapon.Def.Id, true);
+        weapon.Quality = float.NaN;
+        Check(weaponSys.QueueSelection(weapon) == null, "invalid quality still denied");
+        weapon.Quality = 1f;
+        Check(weaponSys.QueueSelection(weapon) != null, "checked weapon may bypass cutoff");
+        var weaponWorker = AssignSelection(weapon);
+        Check(Execute(weaponSys.S, weaponWorker, () => {
+            weaponSys.SetWeaponsFollowQuality(true);
+            Check(!Load(weapon.Obj.Disposable, weaponWorker).run, "weapon cutoff rechecked at final boundary");
+        }).State == AIActionState.Cancelled, "invalid override returns native cancellation");
+        weaponSys.SetAllowSecondHandEquipment(false);
+        weaponSys.SetWeaponsFollowQuality(false);
+        var settings = weaponSys.SaveSelection();
+        var loaded = IntelligentRecyclingSys.Create(weaponSys.S);
+        loaded.LoadSelection(settings);
+        Check(loaded.FilterWeaponDefinitions && loaded.IsWeaponDefinitionSelected(weapon.Def.Id)
+            && !loaded.WeaponsFollowQuality && !loaded.AllowSecondHandEquipment && loaded.AllowDeadMansEquipment,
+            "stable definition selection and independent filters persist");
+        Check(!loaded.IsWeaponDefinitionSelected(weapon.Def.Id.ToUpperInvariant()), "definition keys are exact");
+
+        var (gearSys, gear) = SetupSelection(false);
+        gear.Item.SlotId = "Torso";
+        gear.Origin = ItemOriginBucket.SecondHand;
+        gear.Quality = .3f;
+        var nativeGearGoal = gearSys.QueueSelection(gear);
+        gearSys.SetAllowSecondHandEquipment(false);
+        gearSys.CheckSelectionTick();
+        Check(nativeGearGoal.Cancelled, "known IR worn gear is rechecked after exclusion");
+        gear.Obj.Goal = null;
+        gear.Origin = ItemOriginBucket.DeadMans;
+        Check(gearSys.QueueSelection(gear) != null, "dead-person bucket remains independently allowed");
+        gear.Obj.Goal = null;
+        gear.Obj.Disposable.TryOrderDispose(true, out _);
+        var manual = gear.Obj.Goal;
+        gearSys.SetAllowDeadMansEquipment(false);
+        gearSys.CheckSelectionTick();
+        Check(!manual.Cancelled, "replacement manual goal never adopted or cancelled");
+    }
+
     public static void Main() {
         Admission(); Lifecycle(); PersistenceAndFailure();
-        Console.WriteLine($"PASS: {checks} production-code corpse policy/ownership/guard checks. Controlled Core models; no gameplay validation.");
+        SelectionSettings();
+        Console.WriteLine($"PASS: {checks} production-code disposal policy/ownership/guard checks. Controlled Core models; no gameplay validation.");
     }
 }

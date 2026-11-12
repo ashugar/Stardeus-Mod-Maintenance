@@ -35,7 +35,8 @@ namespace Game.Systems.IntelligentRecycling {
         SafeBox = 11,
         LostShuttle = 12,
         BiologicalCorpse = 13,
-        RoboticCorpse = 14
+        RoboticCorpse = 14,
+        AlienEgg = 15
     }
 
     public enum IntelligentRecyclingProcessorFamily {
@@ -81,7 +82,10 @@ namespace Game.Systems.IntelligentRecycling {
         NotActiveLoose = 12,
         InvalidObject = 13,
         SpecialConditionNotReady = 14,
-        WholeBeingNotSupported = 15
+        WholeBeingNotSupported = 15,
+        OwnedWithoutQualityCutoff = 16,
+        EquipmentOriginExcluded = 17,
+        WeaponDefinitionExcluded = 18
     }
 
     [Flags]
@@ -104,7 +108,9 @@ namespace Game.Systems.IntelligentRecycling {
         Invalid = 1L << 14,
         NotStorable = 1L << 15,
         InDevice = 1L << 16,
-        Reserved = 1L << 17
+        Reserved = 1L << 17,
+        EquipmentOriginExcluded = 1L << 18,
+        WeaponDefinitionExcluded = 1L << 19
     }
 
     public enum IntelligentRecyclingTrackedTargetKind {
@@ -146,6 +152,8 @@ namespace Game.Systems.IntelligentRecycling {
                     return "biological-corpse";
                 case IntelligentRecyclingTargetType.RoboticCorpse:
                     return "robotic-corpse";
+                case IntelligentRecyclingTargetType.AlienEgg:
+                    return "alien-egg";
                 default:
                     return "unsupported";
             }
@@ -227,6 +235,12 @@ namespace Game.Systems.IntelligentRecycling {
                     return "special-condition-not-ready";
                 case IntelligentRecyclingDecisionReason.WholeBeingNotSupported:
                     return "whole-being-not-supported";
+                case IntelligentRecyclingDecisionReason.OwnedWithoutQualityCutoff:
+                    return "owned-without-quality-cutoff";
+                case IntelligentRecyclingDecisionReason.EquipmentOriginExcluded:
+                    return "equipment-origin-excluded";
+                case IntelligentRecyclingDecisionReason.WeaponDefinitionExcluded:
+                    return "weapon-definition-excluded";
                 default:
                     return "unknown";
             }
@@ -274,6 +288,10 @@ namespace Game.Systems.IntelligentRecycling {
                 "in-device");
             AddBlocker(result, blockers, IntelligentRecyclingBlockers.Reserved,
                 "reserved");
+            AddBlocker(result, blockers, IntelligentRecyclingBlockers.EquipmentOriginExcluded,
+                "equipment-origin-excluded");
+            AddBlocker(result, blockers, IntelligentRecyclingBlockers.WeaponDefinitionExcluded,
+                "weapon-definition-excluded");
             return new ReadOnlyCollection<string>(result);
         }
 
@@ -564,7 +582,7 @@ namespace Game.Systems.IntelligentRecycling {
                 int activeObjects, int activeBeings, int activeStasisPods,
                 int activeBreachCapsulePorts,
                 int activeLostShuttleReplacements, int biologicalCorpses = 0,
-                int roboticCorpses = 0) {
+                int roboticCorpses = 0, int alienEggs = 0) {
             BiologicalTasksQueued = biological;
             RoboticTasksQueued = robotic;
             EquipmentTasksQueued = equipment;
@@ -587,6 +605,7 @@ namespace Game.Systems.IntelligentRecycling {
             ActiveLostShuttleReplacements = activeLostShuttleReplacements;
             BiologicalCorpseTasksQueued = biologicalCorpses;
             RoboticCorpseTasksQueued = roboticCorpses;
+            AlienEggTasksQueued = alienEggs;
         }
 
         public int BiologicalTasksQueued { get; }
@@ -611,6 +630,7 @@ namespace Game.Systems.IntelligentRecycling {
         public int ActiveLostShuttleReplacements { get; }
         public int BiologicalCorpseTasksQueued { get; }
         public int RoboticCorpseTasksQueued { get; }
+        public int AlienEggTasksQueued { get; }
     }
 
     public sealed class IntelligentRecyclingTrackedTaskSnapshot {
@@ -717,6 +737,12 @@ namespace Game.Systems.IntelligentRecycling {
         internal bool TrackedByIntelligentRecycling;
         internal bool SpecialTarget;
         internal bool SpecialReadyForProcessing;
+        internal IntelligentRecyclingEquipmentOrigin EquipmentOrigin;
+        internal bool EquipmentOriginAllowed = true;
+        internal bool IsWeapon;
+        internal bool WeaponDefinitionSelected;
+        internal bool WeaponDefinitionAllowed = true;
+        internal bool QualityCutoffBypassed;
     }
 
     public sealed class IntelligentRecyclingObjectSnapshot {
@@ -778,6 +804,12 @@ namespace Game.Systems.IntelligentRecycling {
             TrackedByIntelligentRecycling = data.TrackedByIntelligentRecycling;
             SpecialTarget = data.SpecialTarget;
             SpecialReadyForProcessing = data.SpecialReadyForProcessing;
+            EquipmentOrigin = data.EquipmentOrigin;
+            EquipmentOriginAllowed = data.EquipmentOriginAllowed;
+            IsWeapon = data.IsWeapon;
+            WeaponDefinitionSelected = data.WeaponDefinitionSelected;
+            WeaponDefinitionAllowed = data.WeaponDefinitionAllowed;
+            QualityCutoffBypassed = data.QualityCutoffBypassed;
         }
 
         public bool ObjectFound { get; }
@@ -831,6 +863,12 @@ namespace Game.Systems.IntelligentRecycling {
         public bool TrackedByIntelligentRecycling { get; }
         public bool SpecialTarget { get; }
         public bool SpecialReadyForProcessing { get; }
+        public IntelligentRecyclingEquipmentOrigin EquipmentOrigin { get; }
+        public bool EquipmentOriginAllowed { get; }
+        public bool IsWeapon { get; }
+        public bool WeaponDefinitionSelected { get; }
+        public bool WeaponDefinitionAllowed { get; }
+        public bool QualityCutoffBypassed { get; }
     }
 
     public sealed class IntelligentRecyclingSpecialTargetSnapshot {

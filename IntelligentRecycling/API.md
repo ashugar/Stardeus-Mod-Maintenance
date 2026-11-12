@@ -1,6 +1,6 @@
 # Intelligent Recycling read-only API
 
-Intelligent Recycling 1.4.0 exposes contract version 1 at:
+Intelligent Recycling 1.5.0 exposes contract version 1 at:
 
 ```csharp
 Game.Systems.IntelligentRecycling.IntelligentRecyclingApi
@@ -25,6 +25,16 @@ and collection values are read-only copies.
   unload boundaries.
 - Snapshots do not update in place. Query again when `DataRevision` changes or
   when the consumer needs current object state.
+
+Version 1.5.0 adds Alien Egg, equipment origin, and weapon selection controls
+without changing the contract version. Object snapshots expose equipment origin,
+whether the origin and definition are allowed, whether a weapon is selected,
+and whether its cutoff is bypassed. Excluded equipment is not automatically
+released to Auto Hauling. A selected weapon with the cutoff bypassed remains
+IR-owned and still has to pass the native safety and processor checks. The
+Alien Egg target is separate from the equipment filters and excludes shells
+and goo. Save schema 15 stores the settings, selected definition IDs, and
+egg research reminder state.
 
 Version 1.4.0 adds independent `biological-corpses` and `robotic-corpses`
 settings, both disabled by default, and additive whole-corpse target/task

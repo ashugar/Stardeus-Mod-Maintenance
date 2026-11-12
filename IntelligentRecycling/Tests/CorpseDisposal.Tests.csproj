@@ -5,10 +5,15 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <!-- The harness links snapshot models without the full production snapshot builder. -->
+    <NoWarn>$(NoWarn);CS0649</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../.vscode/Code/CorpseDisposalRules.cs" Link="Production/CorpseDisposalRules.cs" />
     <Compile Include="../.vscode/Code/IntelligentRecyclingSys.Corpses.cs" Link="Production/IntelligentRecyclingSys.Corpses.cs" />
+    <Compile Include="../.vscode/Code/RecyclingSelectionRules.cs" Link="Production/RecyclingSelectionRules.cs" />
+    <Compile Include="../.vscode/Code/IntelligentRecyclingSys.Selection.cs" Link="Production/IntelligentRecyclingSys.Selection.cs" />
+    <Compile Include="../.vscode/Code/IntelligentRecyclingApiModels.cs" Link="Production/IntelligentRecyclingApiModels.cs" />
     <Compile Include="CoreStubs.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
