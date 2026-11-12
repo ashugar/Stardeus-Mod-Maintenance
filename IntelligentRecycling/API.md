@@ -1,6 +1,6 @@
 # Intelligent Recycling read-only API
 
-Intelligent Recycling 1.5.0 exposes contract version 1 at:
+Intelligent Recycling 1.5.1 exposes contract version 1 at:
 
 ```csharp
 Game.Systems.IntelligentRecycling.IntelligentRecyclingApi
