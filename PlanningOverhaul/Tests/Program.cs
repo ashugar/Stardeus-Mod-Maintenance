@@ -24,6 +24,7 @@ internal static class Program
     private static void Main(string[] args)
     {
         CodecTests();
+        ClipboardImportTests();
         PlanningOverhaulSys.StateTests();
         PlanningOverhaulSys.CandidateTests();
         StagingPolicyTests();
@@ -42,6 +43,41 @@ internal static class Program
             Console.WriteLine($"Read-only blueprint check: {snapshot.Entries.Count} entries, {snapshot.Rooms.Count} rooms");
         }
         Console.WriteLine("PASS: " + assertions + " assertions. Core/gameplay acceptance remains in-game.");
+    }
+
+    private static void ClipboardImportTests()
+    {
+        int reads = 0;
+        int imports = 0;
+        string code = "PO5:" + new string('x', 344457);
+        string imported = null;
+        long reportedReadMs = -1;
+        PlanningOverhaulClipboardImport.Run(() =>
+        {
+            reads++;
+            return code;
+        }, (value, readMs) =>
+        {
+            imports++;
+            imported = value;
+            reportedReadMs = readMs;
+        });
+        Check(reads == 1, "Clipboard import reads exactly once");
+        Check(imports == 1, "Clipboard import invokes exactly one import");
+        Check(ReferenceEquals(code, imported),
+            "Clipboard import forwards the exact string without copying");
+        Check(imported.Length == 344461,
+            "Clipboard import preserves the representative large-code length");
+        Check(reportedReadMs >= 0, "Clipboard read timing is reported");
+        Check(typeof(PlanningOverhaulClipboardImport).GetFields(
+            BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).Length == 0,
+            "Clipboard import retains no static clipboard state");
+
+        string second = "PO5:second";
+        PlanningOverhaulClipboardImport.Run(() => second,
+            (value, _) => imported = value);
+        Check(ReferenceEquals(second, imported),
+            "Clipboard import does not retain a prior code");
     }
 
     private static PlanningBlueprintSnapshot Fixture(int count)

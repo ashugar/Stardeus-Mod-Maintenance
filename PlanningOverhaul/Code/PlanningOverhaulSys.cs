@@ -2151,42 +2151,100 @@ public sealed partial class PlanningOverhaulSys : GameSystem, ISaveable
 
     internal void ImportBlueprintCode(string code)
     {
-        if (!BlueprintCodec.TryDecode(code, out PlanningBlueprintSnapshot snapshot, out string error))
+        ImportBlueprintCode(code, null);
+    }
+
+    internal void ImportBlueprintCode(string code,
+        long clipboardReadMilliseconds)
+    {
+        ImportBlueprintCode(code, (long?)clipboardReadMilliseconds);
+    }
+
+    private void ImportBlueprintCode(string code,
+        long? clipboardReadMilliseconds)
+    {
+        Stopwatch perf = Stopwatch.StartNew();
+        long decodeMs = 0;
+        long adaptMs = 0;
+        long orderMs = 0;
+        long applyMs = 0;
+        long refreshMs = 0;
+        string outcome = "decode-failed";
+        try
         {
-            lastStatus = "Blueprint import failed: " + error;
+            long phaseStart = perf.ElapsedMilliseconds;
+            bool decoded = BlueprintCodec.TryDecode(code,
+                out PlanningBlueprintSnapshot snapshot, out string error);
+            decodeMs = perf.ElapsedMilliseconds - phaseStart;
+            if (!decoded)
+            {
+                lastStatus = "Blueprint import failed: " + error;
+                phaseStart = perf.ElapsedMilliseconds;
+                ui?.Refresh();
+                refreshMs = perf.ElapsedMilliseconds - phaseStart;
+                return;
+            }
+            var sizes = new Dictionary<(string DefId, int Rotation), (int Width, int Height)>();
+            (int Width, int Height) FootprintSize(PlanEntry entry)
+            {
+                var key = (entry.DefId, entry.Rotation);
+                if (sizes.TryGetValue(key, out var size)) return size;
+                Def def = The.Defs.TryGet(entry.DefId);
+                Tile prototype = def == null ? null : EntityUtils.CreatePrototype<Tile>(def);
+                if (prototype != null) prototype.Transform.Rotation = (Facing.Type)entry.Rotation;
+                size = (Math.Max(1, prototype?.Transform.RotatedWidth ?? 1),
+                    Math.Max(1, prototype?.Transform.RotatedHeight ?? 1));
+                sizes[key] = size;
+                return size;
+            }
+            phaseStart = perf.ElapsedMilliseconds;
+            bool adaptedToMap = BlueprintGeometry.TryAdapt(snapshot,
+                S.GridWidth, S.GridHeight, FootprintSize,
+                out PlanningBlueprintSnapshot adapted, out error,
+                Game.Constants.Consts.CornerMargin);
+            adaptMs = perf.ElapsedMilliseconds - phaseStart;
+            if (!adaptedToMap)
+            {
+                outcome = "map-fit-failed";
+                lastStatus = "Blueprint import failed: " + error;
+                phaseStart = perf.ElapsedMilliseconds;
+                ui?.Refresh();
+                refreshMs = perf.ElapsedMilliseconds - phaseStart;
+                return;
+            }
+            phaseStart = perf.ElapsedMilliseconds;
+            OrderBlueprintRoomsCenterOut(adapted, S.GridHeight);
+            orderMs = perf.ElapsedMilliseconds - phaseStart;
+            phaseStart = perf.ElapsedMilliseconds;
+            ApplySnapshot(adapted, false);
+            applyMs = perf.ElapsedMilliseconds - phaseStart;
+            int missing = entries.Count(entry => The.Defs.TryGet(entry.DefId) == null);
+            lastStatus = "Imported “" + blueprintName + "”: " + rooms.Count + " rooms and "
+                + entries.Count + " building entries"
+                + (missing > 0 ? ". " + missing + " entries need missing mod definitions" : string.Empty)
+                + ". Layout preserved on the " + CurrentMapSize + " map. "
+                + "Rooms ordered from the plan center outward, with Exterior last.";
+            outcome = "imported";
+            phaseStart = perf.ElapsedMilliseconds;
             ui?.Refresh();
-            return;
+            refreshMs = perf.ElapsedMilliseconds - phaseStart;
         }
-        var sizes = new Dictionary<(string DefId, int Rotation), (int Width, int Height)>();
-        (int Width, int Height) FootprintSize(PlanEntry entry)
+        finally
         {
-            var key = (entry.DefId, entry.Rotation);
-            if (sizes.TryGetValue(key, out var size)) return size;
-            Def def = The.Defs.TryGet(entry.DefId);
-            Tile prototype = def == null ? null : EntityUtils.CreatePrototype<Tile>(def);
-            if (prototype != null) prototype.Transform.Rotation = (Facing.Type)entry.Rotation;
-            size = (Math.Max(1, prototype?.Transform.RotatedWidth ?? 1),
-                Math.Max(1, prototype?.Transform.RotatedHeight ?? 1));
-            sizes[key] = size;
-            return size;
+            if (clipboardReadMilliseconds.HasValue)
+                PlanningOverhaulLog.Performance("ImportBlueprintFromClipboard",
+                    clipboardReadMilliseconds.Value + perf.ElapsedMilliseconds,
+                    "clipboardRead=" + clipboardReadMilliseconds.Value
+                    + "; import=" + perf.ElapsedMilliseconds
+                    + "; decode=" + decodeMs
+                    + "; adapt=" + adaptMs
+                    + "; order=" + orderMs
+                    + "; apply=" + applyMs
+                    + "; refresh=" + refreshMs
+                    + "; outcome=" + outcome
+                    + "; entries=" + entries.Count
+                    + "; rooms=" + rooms.Count);
         }
-        if (!BlueprintGeometry.TryAdapt(snapshot, S.GridWidth, S.GridHeight,
-                FootprintSize, out PlanningBlueprintSnapshot adapted, out error,
-                Game.Constants.Consts.CornerMargin))
-        {
-            lastStatus = "Blueprint import failed: " + error;
-            ui?.Refresh();
-            return;
-        }
-        OrderBlueprintRoomsCenterOut(adapted, S.GridHeight);
-        ApplySnapshot(adapted, false);
-        int missing = entries.Count(entry => The.Defs.TryGet(entry.DefId) == null);
-        lastStatus = "Imported “" + blueprintName + "”: " + rooms.Count + " rooms and "
-            + entries.Count + " building entries"
-            + (missing > 0 ? ". " + missing + " entries need missing mod definitions" : string.Empty)
-            + ". Layout preserved on the " + CurrentMapSize + " map. "
-            + "Rooms ordered from the plan center outward, with Exterior last.";
-        ui?.Refresh();
     }
 
     private PlanningBlueprintSnapshot CreateSnapshot(bool preserveRuntime)
