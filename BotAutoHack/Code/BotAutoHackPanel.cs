@@ -215,14 +215,24 @@ namespace Game.Systems.BotAutoHack {
             context.AddHeader("Compatibility boundary");
             context.AddInfo(
                 IconId.CRobotEye,
-                "Core Hack consequences",
-                "Core native per-bot roll",
-                "Each dispatch calls Core's ordinary single-target Hack. The "
-                + "existing condition duration, 50% chance, faction change, "
-                + "and failure damage remain unchanged. Current Core hashes "
-                + "the bot's persistent ID with the Hack start tick. Bot Auto "
-                + "Hack does not patch or track the outcome roll. "
-                + "Working Firewall Chips make the Hack action unavailable.");
+                "Hostile-bot conversion policy",
+                "30% to 54.5% conversion",
+                "Bot Auto Hack promotes Core's harmless 30% failure branch "
+                + "to conversion. Core's remaining 70% still uses its global "
+                + "time-since-last-conversion curve: 30% at 0 days, 33.5% at "
+                + "1 day, 44% at 3 days, and 54.5% at 7+ days or before the "
+                + "first conversion. Burnout remains 70% down to 45.5%. Any "
+                + "Core contract change disables the override instead of "
+                + "silently changing these rates.");
+            context.AddInfo(
+                IconId.CCheck,
+                "Core Hack mechanics",
+                "Cooldown and consequences preserved",
+                "Each dispatch still calls Core's ordinary single-target "
+                + "Hack. Core retains the per-bot seed, condition duration, "
+                + "global conversion timestamp, secondary curve roll, faction "
+                + "change, and irreparable failure damage. Working Firewall "
+                + "Chips keep the Hack action unavailable.");
             context.AddInfo(
                 IconId.CCheck,
                 "Multi-selection Hack button",

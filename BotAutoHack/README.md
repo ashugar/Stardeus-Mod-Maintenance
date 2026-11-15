@@ -2,13 +2,14 @@
 
 Bot Auto Hack queues eligible hostile robotic Beings and starts one ordinary
 Stardeus `Hack` per simulation tick. Current Core hashes each robot's
-persistent Being ID with its `Hacked.StartTick` before the existing 50% roll.
-The mod leaves that outcome formula untouched and limits its work to target
-selection, individual dispatch, and optional Firewall removal.
+persistent Being ID with its `Hacked.StartTick`, then applies a global
+time-since-last-conversion policy. Bot Auto Hack preserves that seed, cooldown,
+condition lifecycle, and failure damage while converting Core's harmless 30%
+failure result into a transparent 30% conversion floor.
 
 ## Requirements
 
-- Stardeus 0.15.0, validated against v0.15.0-rc313.3190
+- Stardeus 0.15.0, validated against v0.15.19.3268
 - Auto Utilities Mod Framework 1.4.0
 - The existing Rogue AI **Signal Intrusion** research in the current save
 
@@ -61,23 +62,43 @@ scheduling, removal success or failure, and resulting extracted part. Turning
 either automation off stops new orders. An operation already accepted by Core
 remains visible and cancelable through the vanilla Surgeries interface.
 
-## Core-owned per-bot outcomes
+## Conversion policy and Core-owned consequences
 
 Every dispatched target goes back through Core's current single-target Hack
-eligibility and action. As of rc313, Core creates the outcome seed with a
-full-width hash of `Hacked.StartTick` and the persistent Being ID. Bots started
-on the same or nearby ticks therefore receive separate hashed seeds before
-Core performs its 50% roll. Bot Auto Hack no longer patches the Hacked
-condition or records roll outcomes.
+eligibility and action. Core creates the outcome seed with a full-width hash of
+`Hacked.StartTick` and the persistent Being ID. Bots started on the same or
+nearby ticks therefore receive separate hashed seeds.
+
+Current Core first gives a hostile bot a 30% harmless failure result. The
+remaining 70% reaches a global curve based on days since any hostile bot last
+converted: 0% at 0 days, 5% at 1 day, 20% at 3 days, and 35% at 7+ days or
+before the first conversion. Bot Auto Hack promotes only that harmless 30%
+branch to conversion and leaves the other 70% in Core.
+
+The resulting effective outcomes are:
+
+| Time since last conversion | Conversion | Core burnout |
+| --- | ---: | ---: |
+| 0 days | 30% | 70% |
+| 1 day | 33.5% | 66.5% |
+| 3 days | 44% | 56% |
+| 7+ days or never | 54.5% | 45.5% |
+
+Every conversion still updates Core's global timestamp. This keeps Core's
+reduced-conversion pressure while removing the guaranteed zero-conversion
+window during sustained raids. The override validates the exact audited Core
+method, 30% tunable, and curve anchors on startup. If Core changes any of those
+contracts, Bot Auto Hack remains inactive rather than silently advertising an
+unconfirmed rate.
 
 Bot Auto Hack does not change:
 
-- the 50% faction-conversion roll;
-- critical-to-irreparable failure damage;
+- Core's secondary conversion curve or global conversion timestamp;
+- irreparable failure damage on the remaining Core burnout branch;
 - Hacked-condition duration or progression;
 - Firewall Chip protection;
 - the requirement for a present mind slot/core; or
-- Core's log and entity-action refresh behavior.
+- the separate Virus outcome applied to player-owned robots.
 
 ## Scope and guardrails
 
@@ -95,6 +116,19 @@ the next time the mod saves. Turning automation off removes only pending
 automatic entries; explicit manual or multi-selection requests remain queued.
 
 ## Version history
+
+### 1.1.0
+
+- Adapted to Core's global time-since-last-hack-conversion policy in Stardeus
+  v0.15.19.3268.
+- Reassigned Core's harmless 30% failure branch to conversion while preserving
+  the remaining 70% Core curve, burnout, condition, and save-owned timestamp.
+- Published the confirmed effective conversion range: 30% at 0 days, 33.5% at
+  1 day, 44% at 3 days, and 54.5% at 7+ days or before the first conversion.
+- Added a fail-closed contract check for the audited Core method, first-roll
+  branch, 30% tunable, and curve anchors.
+- Added focused formula tests and updated the controls panel and Workshop text
+  to distinguish the mod's conversion floor from Core-owned consequences.
 
 ### 1.0.7
 
