@@ -9,7 +9,7 @@ failure result into a transparent 30% conversion floor.
 
 ## Requirements
 
-- Stardeus 0.15.0, validated against v0.15.19.3268
+- Stardeus 0.15.0, validated against v0.15.20.3269
 - Auto Utilities Mod Framework 1.4.0
 - The existing Rogue AI **Signal Intrusion** research in the current save
 
@@ -86,10 +86,11 @@ The resulting effective outcomes are:
 
 Every conversion still updates Core's global timestamp. This keeps Core's
 reduced-conversion pressure while removing the guaranteed zero-conversion
-window during sustained raids. The override validates the exact audited Core
-method, 30% tunable, and curve anchors on startup. If Core changes any of those
-contracts, Bot Auto Hack remains inactive rather than silently advertising an
-unconfirmed rate.
+window during sustained raids. The override validates the audited outcome
+seam, both Core RNG paths and consequences, 30% tunable, and curve anchors on
+startup. Harmless compiler metadata and instruction offsets are ignored. If
+Core changes a relied-upon behavior, Bot Auto Hack remains inactive rather
+than silently advertising an unconfirmed rate.
 
 Bot Auto Hack does not change:
 
@@ -116,6 +117,19 @@ the next time the mod saves. Turning automation off removes only pending
 automatic entries; explicit manual or multi-selection requests remain queued.
 
 ## Version history
+
+### 1.1.1
+
+- Restored compatibility with Stardeus v0.15.20.3269 after an unrelated
+  `Game.dll` rebuild changed raw method bytes without changing the hacking
+  calculation.
+- Replaced the whole-method byte fingerprint with a semantic contract guard
+  for the exact harmless-failure seam and the native curve, timestamp,
+  conversion, burnout, and death paths.
+- Kept the guard fail-closed for meaningful Core changes while tolerating
+  metadata tokens, instruction offsets, equivalent local forms, and safe
+  no-ops.
+- Kept the published conversion odds and save schema unchanged.
 
 ### 1.1.0
 
