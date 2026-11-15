@@ -981,10 +981,17 @@ internal sealed class PlanningOverhaulUi : IDisposable
             context.AddInfo("Icons/Color/Info", "Current map size",
                 system.CurrentMapSize,
                 "Imported blueprints keep their tile layout relative to the map center. A blueprint saved on a larger map can load when every building footprint, Transporter target, and staging cell fits the centered current map without entering its corner no-build zones. Blueprints are never scaled or clipped.");
-            AddIsolatedInput(context, IconId.WArrowUp, "Paste blueprint code",
+            context.AddButton(IconId.WArrowUp, "Import from Clipboard",
+                "Read clipboard directly", () =>
+                    PlanningOverhaulClipboardImport.Run(
+                        () => GUIUtility.systemCopyBuffer,
+                        system.ImportBlueprintCode),
+                "Reads the clipboard once when clicked and imports the code directly without placing it in a text field. The current unexecuted construction plan is replaced only after all saved content passes the existing validation and centered-map fit checks.");
+            AddIsolatedInput(context, IconId.WArrowUp,
+                "Paste short blueprint code manually",
                 importCode, value => importCode = value ?? string.Empty,
-                tooltip: "Paste a complete dimensioned Planning Overhaul blueprint code, then choose Import.");
-            context.AddButton(IconId.WArrowUp, "Import pasted blueprint",
+                tooltip: "Manual fallback for short codes or editing. For large blueprint codes, copy the complete code and use Import from Clipboard above to avoid loading it into this text field.");
+            context.AddButton(IconId.WArrowUp, "Import manually pasted code",
                 string.Empty, () => system.ImportBlueprintCode(importCode),
                 "Replaces the current unexecuted construction plan only after verifying that all saved content fits the centered current construction area.");
         }
