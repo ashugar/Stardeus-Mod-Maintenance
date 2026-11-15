@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net481</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="TranspilerContractProgram.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony" HintPath="$(StardeusManagedPath)/0Harmony.dll" Private="True" />
+    <Reference Include="Game" HintPath="$(StardeusManagedPath)/Game.dll" Private="True" />
+    <Reference Include="Game.Constants" HintPath="$(StardeusManagedPath)/Game.Constants.dll" Private="True" />
+    <Reference Include="KLUnityUtils" HintPath="$(StardeusManagedPath)/KLUnityUtils.dll" Private="True" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(StardeusManagedPath)/UnityEngine.CoreModule.dll" Private="True" />
+  </ItemGroup>
+</Project>

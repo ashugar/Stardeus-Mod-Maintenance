@@ -19,12 +19,13 @@ namespace Game.Systems.BotAutoHack {
     /// <summary>
     /// Queues hostile robotic beings and starts at most one vanilla Hack per
     /// simulation tick. Core owns the Hacked condition, per-bot outcome hash,
-    /// conversion chance, faction change, and failure damage.
+    /// cooldown curve, faction change, and failure damage. Bot Auto Hack
+    /// promotes Core's harmless first branch to conversion.
     /// </summary>
     public sealed class BotAutoHackSys : GameSystem, ISaveable {
         public const string SysId = "BotAutoHackSys";
         public const string ConsumerId = "BotAutoHack";
-        public const string ModVersion = "1.0.7";
+        public const string ModVersion = "1.1.0";
         public const string RequiredUtilitiesVersion = "1.4.0";
         internal const int FirewallChipIdH = -922567253;
         internal const int HackedConditionIdH = -908119600;
@@ -109,6 +110,7 @@ namespace Game.Systems.BotAutoHack {
 
             try {
                 Instance = this;
+                HackOutcomePolicyContract.Validate();
                 harmony = new Harmony(HarmonyId);
                 harmony.PatchAll(typeof(BotAutoHackSys).Assembly);
                 frameworkReady = true;
@@ -126,8 +128,9 @@ namespace Game.Systems.BotAutoHack {
             }
 
             S.Sig.AfterLoadState.AddListener(OnAfterLoadState);
-            D.Warn("[Bot Auto Hack] {0} initialized. Automation defaults to "
-                + "off for new saves.", consumerVersion);
+            D.Warn("[Bot Auto Hack] {0} initialized. Conversion override "
+                + "active at 30%-54.5%. Automation defaults to off for new "
+                + "saves.", consumerVersion);
         }
 
         private void OnAfterLoadState(GameState state) {
