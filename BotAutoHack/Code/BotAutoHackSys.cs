@@ -25,7 +25,7 @@ namespace Game.Systems.BotAutoHack {
     public sealed class BotAutoHackSys : GameSystem, ISaveable {
         public const string SysId = "BotAutoHackSys";
         public const string ConsumerId = "BotAutoHack";
-        public const string ModVersion = "1.1.0";
+        public const string ModVersion = "1.1.1";
         public const string RequiredUtilitiesVersion = "1.4.0";
         internal const int FirewallChipIdH = -922567253;
         internal const int HackedConditionIdH = -908119600;
@@ -109,17 +109,28 @@ namespace Game.Systems.BotAutoHack {
             }
 
             try {
-                Instance = this;
                 HackOutcomePolicyContract.Validate();
                 harmony = new Harmony(HarmonyId);
                 harmony.PatchAll(typeof(BotAutoHackSys).Assembly);
+                ConditionHackedResolveIntrusionPatch.VerifyOwnedPatch(HarmonyId);
+                Instance = this;
                 frameworkReady = true;
                 panel = new BotAutoHackPanel(this);
             } catch (Exception ex) {
                 frameworkReady = false;
-                panel?.Dispose();
+                try {
+                    panel?.Dispose();
+                } catch (Exception cleanupEx) {
+                    D.LogEx(cleanupEx, "[Bot Auto Hack] Failed to dispose "
+                        + "the inactive panel during initialization cleanup.");
+                }
                 panel = null;
-                harmony?.UnpatchAll(HarmonyId);
+                try {
+                    harmony?.UnpatchAll(HarmonyId);
+                } catch (Exception cleanupEx) {
+                    D.LogEx(cleanupEx, "[Bot Auto Hack] Failed to remove "
+                        + "owned patches during initialization cleanup.");
+                }
                 harmony = null;
                 Instance = null;
                 D.LogEx(ex, "[Bot Auto Hack] Initialization failed. The mod "
