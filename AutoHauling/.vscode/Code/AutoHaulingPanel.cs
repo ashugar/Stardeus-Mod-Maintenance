@@ -200,6 +200,28 @@ namespace Game.Systems.AutoHauling {
                 + "retired. Core manages worker bidding regardless of Auto "
                 + "Hauling's master switch. The old saved preference is "
                 + "retained for compatibility and has no gameplay effect.");
+            const string hiveRefillLabel = "Prioritize Nanobot Hive refills";
+            if (system.HiveRefillRankingAvailable) {
+                context.AddToggle(
+                    IconId.CHaul,
+                    hiveRefillLabel,
+                    system.PrioritizeHiveRefills ? "On" : "Off",
+                    system.PrioritizeHiveRefills,
+                    system.SetPrioritizeHiveRefills,
+                    "A working Hive prefers an eligible refill for itself or "
+                    + "another Hive when choosing its next job. It keeps "
+                    + "Stardeus's nearest-eligible ordering among refills and "
+                    + "chooses normal work if no refill qualifies. Does not "
+                    + "cancel jobs or change refill priorities. An empty "
+                    + "Hive needs another working Hive or a crew hauler. "
+                    + "Saved separately from loose-cargo automation.");
+            } else {
+                context.AddInfo(IconId.CWarning, hiveRefillLabel,
+                    AlertText("Unavailable"),
+                    "Stardeus's native Hive selection is unchanged because "
+                    + "the optional ranking hook could not be applied. "
+                    + "Loose-cargo automation is unaffected.");
+            }
             context.AddInfo(
                 IconId.CInfo,
                 "Stale refresh threshold",

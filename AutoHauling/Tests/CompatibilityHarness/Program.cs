@@ -2,13 +2,15 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Text;
+using System.Text.RegularExpressions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-// Metadata and isolated real persistence only. Never initializes Core,
-// executes an order, starts the game, or reads player save files.
-if (args.Length != 4 || args.Any(p => !Path.IsPathFullyQualified(p)))
-    throw new ArgumentException("Expected absolute candidate DLL, baseline 1.1.5 DLL, Managed directory, and AUMF directory.");
+// Metadata, hook instruction replay and isolated real persistence. Never
+// patches or initializes the game, runs an order, or reads player saves.
+if (args.Length is < 4 or > 6 || args.Length == 5
+        || args.Take(args.Length == 6 ? 5 : 4).Any(p => !Path.IsPathFullyQualified(p)))
+    throw new ArgumentException("Expected absolute candidate DLL, baseline 1.1.6 DLL, Managed directory, and AUMF directory; optionally a companion DLL and its transpiler type.");
 string candidatePath = args[0], baselinePath = args[1], managed = args[2], aumf = args[3];
 int checks = 0;
 void Check(bool ok, string message) {
@@ -21,14 +23,15 @@ resolver.AddSearchDirectory(managed);
 resolver.AddSearchDirectory(aumf);
 using var current = ModuleDefinition.ReadModule(candidatePath, new ReaderParameters { AssemblyResolver = resolver });
 using var baseline = ModuleDefinition.ReadModule(baselinePath);
-Check(current.Assembly.Name.Version == new Version(1, 1, 6, 0), "candidate assembly is 1.1.6.0");
-Check(baseline.Assembly.Name.Version == new Version(1, 1, 5, 0), "comparison baseline is 1.1.5.0");
+Check(current.Assembly.Name.Version == new Version(1, 2, 0, 0), "candidate assembly is 1.2.0.0");
+Check(baseline.Assembly.Name.Version == new Version(1, 1, 6, 0), "comparison baseline is 1.1.6.0");
 var refs = current.GetMemberReferences().ToArray();
 Check(!refs.Any(r => r.Name.Contains("IsHaulingForbidden")), "removed Forbidden members absent");
 int resolved = 0;
 foreach (var member in refs) {
     string scope = member.DeclaringType.Scope?.Name ?? "";
-    if (!(scope == "Game" || scope.StartsWith("Game.") || scope.StartsWith("KL") || scope == "AutoUtilitiesModFramework")) continue;
+    if (!(scope == "Game" || scope.StartsWith("Game.") || scope.StartsWith("KL")
+            || scope == "AutoUtilitiesModFramework" || scope == "0Harmony" || scope.StartsWith("Unity"))) continue;
     object? result = member switch { MethodReference m => m.Resolve(), FieldReference f => f.Resolve(), _ => member };
     if (result == null) throw new Exception("Unresolved: " + member.FullName);
     resolved++;
@@ -46,7 +49,7 @@ Check(calls.Count(m => m.Name.Contains("Unreachable")) == 2
     "only two unreachable reads; no marker-clearing calls");
 var manual = sys.Methods.Single(m => m.Name == "ProcessForbiddenLooseCargo");
 Check(Body(manual) == Body(oldSys.Methods.Single(m => m.Name == manual.Name)),
-    "manual preview/clear IL unchanged except native accessor rename");
+    "manual preview/clear IL unchanged");
 Check(!manual.Body.Instructions.Any(i => i.Operand is MethodReference m &&
     (m.Name.Contains("Unreachable") || m.Name.Contains("OrderStor") || m.Name == "Cancel")),
     "manual pass cannot clear unreachable state or create/cancel tasks");
@@ -55,14 +58,17 @@ var stale = sys.Methods.Single(m => m.Name == "TryResolveStaleStoreTask");
 Guard(scan, "TryOrderStore");
 Guard(stale, "HasCompatibleStorage");
 foreach (var type in current.Types.Where(t => t.Namespace == sys.Namespace)) {
+    if (type.Name == "HiveRefillRankingPatch") continue;
     var oldType = baseline.GetType(type.FullName);
     Check(oldType != null, "baseline type exists: " + type.Name);
     foreach (var method in type.Methods.Where(m => m.HasBody)) {
-        // Only these gates and Controls warnings intentionally change behavior.
-        // Everything else includes bridges, persistence and owned cancellation.
-        if ((type == sys && (method == scan || method == stale)) ||
-            (type.Name == "AutoHaulingPanel" && method.Name == "BuildControls")) continue;
-        var old = oldType!.Methods.SingleOrDefault(m => m.FullName == method.FullName);
+        // Hive settings/lifecycle and the TMP compatibility line changed.
+        // Both existing cargo selection routines must now match 1.1.6.
+        if (type == sys && (method.Name is "OnInitialize" or "Unload" or "Load" or "Save" or "ResetToDefaults"
+                    || method.Name.Contains("PrioritizeHiveRefills") || method.Name.Contains("HiveRefillRanking"))
+                || type.Name == "AutoHaulingPanel" && method.Name == "BuildControls"
+                || type.Name == "FailureTextLinkHandler" && method.Name == "Initialize") continue;
+        var old = oldType!.Methods.SingleOrDefault(m => GeneratedName(m.FullName) == GeneratedName(method.FullName));
         Check(old != null && Body(old) == Body(method), "unchanged IL: " + type.Name + "." + method.Name);
     }
 }
@@ -132,6 +138,7 @@ var fresh = Save(SystemInstance());
 Check(Get(fresh, "GetInt", "SaveSchemaVersion", -1) == 3 && !Get(fresh, "GetBool", "Enabled", true)
     && Get(fresh, "GetBool", "StaleStoreRefreshEnabled", false) && !Get(fresh, "GetBool", "IdleHaulingBidAssistEnabled", true),
     "real defaults: schema3, master off, stale refresh on, retired assist off");
+Check(!Get(fresh, "GetBool", "PrioritizeHiveRefills", true), "new save Hive preference defaults off");
 for (int schema = 0; schema <= 3; schema++) {
     foreach (bool legacyEnabled in new[] { false, true }) {
         var instance = SystemInstance();
@@ -157,6 +164,7 @@ for (int schema = 0; schema <= 3; schema++) {
         Load(instance, data);
         var saved = Save(instance);
         string label = $"schema{schema}/legacy{legacyEnabled}";
+        Check(!Get(saved, "GetBool", "PrioritizeHiveRefills", true), label + ": missing Hive preference defaults off");
         Check(ReferenceEquals(saved, data), label + ": original container retained");
         Check(Get(saved, "GetBool", "IdleHaulingBidAssistEnabled", false) == (schema >= 3 && legacyEnabled), label + ": retired preference migration");
         // Stale refresh was introduced in schema 2; older saves opt out.
@@ -180,15 +188,42 @@ for (int schema = 0; schema <= 3; schema++) {
             label + ": reset clears previous save");
     }
 }
+var hiveSys = SystemInstance();
+var hiveData = Data();
+Set(hiveData, "SetInt", "SaveSchemaVersion", 3);
+Set(hiveData, "SetBool", "PrioritizeHiveRefills", true);
+Load(hiveSys, hiveData);
+Check(Get(Save(hiveSys), "GetBool", "PrioritizeHiveRefills", false)
+    && !Get(Save(hiveSys), "GetBool", "Enabled", true), "Hive preference persists independently of cargo switch");
+var systemFields = BindingFlags.NonPublic | BindingFlags.Instance;
+var boundState = systemType.GetField("S")!.GetValue(hiveSys);
+var useRanking = systemType.GetMethod("UsesHiveRefillRanking", systemFields)!;
+bool Uses(object? state) => (bool)useRanking.Invoke(hiveSys, new[] { state })!;
+HiveRankingChecks.SetInstanceField(systemType.GetField("loadedState", systemFields)!, hiveSys, boundState);
+Check(!Uses(boundState), "no ranking before AUMF is ready");
+HiveRankingChecks.SetInstanceField(systemType.GetField("frameworkReady", systemFields)!, hiveSys, true);
+Check(Uses(boundState) && !Uses(null) && !Uses(RuntimeHelpers.GetUninitializedObject(stateType)),
+    "ranking honors the opt-in only for the bound world, with cargo off");
+Set(hiveData, "SetBool", "PrioritizeHiveRefills", false);
+Load(hiveSys, hiveData);
+Check(!Get(Save(hiveSys), "GetBool", "PrioritizeHiveRefills", true) && !Uses(boundState), "explicit off survives reload");
+Set(hiveData, "SetBool", "PrioritizeHiveRefills", true);
+Load(hiveSys, hiveData);
+Load(hiveSys, null);
+Check(!Get(Save(hiveSys), "GetBool", "PrioritizeHiveRefills", true) && !Uses(boundState), "reset clears a previously enabled Hive preference");
+HiveRankingChecks.Run(core, mod, args.Skip(4).ToArray(), Check);
 Console.WriteLine($"PASS_COUNT={checks}; FAIL_COUNT=0");
+
+static string GeneratedName(string value) =>
+    Regex.Replace(value, @"(b__|<>9__|<>c__DisplayClass)\d+_", "$1#_");
 
 static string Body(MethodDefinition method) {
     var code = method.Body.Instructions;
     string Operand(object? value) => value switch {
         null => "", Instruction i => "@" + code.IndexOf(i),
         Instruction[] targets => string.Join(",", targets.Select(i => code.IndexOf(i))),
-        MemberReference member => member.FullName.Replace("IsHaulingForbidden", "IsForbidden"),
-        _ => value.ToString()?.Replace("1.1.5", "1.1.6") ?? ""
+        MemberReference member => GeneratedName(member.FullName),
+        _ => value.ToString()?.Replace("1.1.6", "1.2.0") ?? ""
     };
     return string.Join("|", code.Select(i => i.OpCode.Code + ":" + Operand(i.Operand)));
 }

@@ -8,8 +8,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Cecil" HintPath="$(CecilPath)" />
+    <Reference Include="0Harmony" HintPath="$(ManagedDir)/0Harmony.dll" Aliases="Harmony" />
   </ItemGroup>
   <Target Name="RequireCecil" BeforeTargets="ResolveReferences" Condition="!Exists('$(CecilPath)')">
     <Error Text="Supply -p:CecilPath pointing to a local Mono.Cecil.dll." />
+  </Target>
+  <Target Name="RequireHarmony" BeforeTargets="ResolveReferences" Condition="!Exists('$(ManagedDir)/0Harmony.dll')">
+    <Error Text="Supply -p:ManagedDir pointing to the installed Stardeus Managed directory." />
   </Target>
 </Project>

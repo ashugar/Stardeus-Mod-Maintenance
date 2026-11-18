@@ -39,7 +39,9 @@ namespace Game.Systems.AutoHauling {
                 return;
             }
             text.raycastTarget = true;
-            text.SetText(AddPositionLinks(rawText ?? string.Empty));
+            // Use TMP's string property: newer TMP exposes Span overloads
+            // that the game's .NET Framework reference surface cannot bind.
+            text.text = AddPositionLinks(rawText ?? string.Empty);
         }
 
         private void LateUpdate() {

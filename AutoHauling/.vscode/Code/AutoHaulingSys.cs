@@ -21,7 +21,7 @@ namespace Game.Systems.AutoHauling {
     public sealed class AutoHaulingSys : GameSystem, ISaveable {
         public const string SysId = "AutoHaulingSys";
         public const string ConsumerId = "AutoHauling";
-        public const string ModVersion = "1.1.6";
+        public const string ModVersion = "1.2.0";
         public const string RequiredUtilitiesVersion = "1.4.0";
 
         private const int SaveSchemaVersion = 3;
@@ -86,6 +86,8 @@ namespace Game.Systems.AutoHauling {
 
         public bool Enabled { get; private set; }
         public bool StaleStoreRefreshEnabled { get; private set; } = true;
+        public bool PrioritizeHiveRefills { get; private set; }
+        internal bool HiveRefillRankingAvailable => HiveRefillRankingPatch.IsAvailable;
         public bool FrameworkReady => frameworkReady;
         public int ActiveTrackedTasks => trackedGoals.Count;
         internal IReadOnlyList<HaulFailureRecord> FailureHistory => failureHistory;
@@ -161,7 +163,20 @@ namespace Game.Systems.AutoHauling {
                 return;
             }
 
+            HiveRefillRankingPatch.Install();
             S.Sig.AfterLoadState.AddListener(OnAfterLoadState);
+        }
+
+        internal bool UsesHiveRefillRanking(GameState state) =>
+            frameworkReady && !IsDeactivated && PrioritizeHiveRefills
+                && state != null && ReferenceEquals(loadedState, state);
+
+        internal void SetPrioritizeHiveRefills(bool value) {
+            if (loadedState == null || !HiveRefillRankingAvailable) {
+                return;
+            }
+            PrioritizeHiveRefills = value;
+            panel?.RefreshAll();
         }
 
         private void OnAfterLoadState(GameState state) {
@@ -1104,6 +1119,8 @@ namespace Game.Systems.AutoHauling {
             saveData.SetBool("Enabled", Enabled);
             saveData.SetBool("StaleStoreRefreshEnabled",
                 StaleStoreRefreshEnabled);
+            // Additive setting: older saves without the key default off.
+            saveData.SetBool("PrioritizeHiveRefills", PrioritizeHiveRefills);
             // Preserve the old preference without activating a private auction.
             saveData.SetBool("IdleHaulingBidAssistEnabled",
                 legacyIdleHaulingBidAssistEnabled);
@@ -1168,6 +1185,7 @@ namespace Game.Systems.AutoHauling {
             saveData = data;
             loadedSettingsGameId = S.GameId;
             Enabled = data.GetBool("Enabled", false);
+            PrioritizeHiveRefills = data.GetBool("PrioritizeHiveRefills", false);
             int loadedSchemaVersion = data.GetInt("SaveSchemaVersion", 0);
             StaleStoreRefreshEnabled = loadedSchemaVersion >= 2
                 && data.GetBool("StaleStoreRefreshEnabled", true);
@@ -1287,6 +1305,7 @@ namespace Game.Systems.AutoHauling {
             saveData = null;
             loadedSettingsGameId = -1;
             Enabled = false;
+            PrioritizeHiveRefills = false;
             StaleStoreRefreshEnabled = true;
             legacyIdleHaulingBidAssistEnabled = false;
             disabledCategoryIds.Clear();
@@ -1308,6 +1327,9 @@ namespace Game.Systems.AutoHauling {
         public override void Unload() {
             S?.Sig?.AfterLoadState.RemoveListener(OnAfterLoadState);
             DetachLoadedState();
+            if (frameworkReady) {
+                HiveRefillRankingPatch.Remove();
+            }
             panel?.Dispose();
             panel = null;
             allowForbiddenShortcut?.Dispose();
