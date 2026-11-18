@@ -77,6 +77,26 @@ assist counters in the loaded save container are preserved as historical data
 for rollback and are no longer displayed as current activity. Existing cargo
 settings, tracked Store tasks, and failure history retain their usual formats.
 
+## Nanobot Hive refill priority
+
+**Prioritize Nanobot Hive refills** in Controls is off by default, saved per
+game, and independent of the loose-cargo automation switch. When enabled, a
+working Hive prefers the nearest eligible fuel refill for itself or another
+Hive. If none qualifies, it chooses work normally. With the setting off,
+Stardeus uses its usual ordering.
+
+The option only changes the ranking at Core's existing work selection step.
+It does not create, assign, cancel or restart jobs; take reservations; or
+change any refill's player-set priority. Core still validates power, fuel,
+reachability, material availability, claims, safety, and disabled jobs. An
+empty Hive can request a refill but cannot dispatch its own bots; it needs
+another working Hive or a crew hauler.
+
+Existing hauling operations continue. Core chooses which direct construction
+or repair job gets each tick of effort rather than assigning a Hive to that
+job until completion; any work already done is preserved. If the ranking hook
+is unavailable, Controls reports it and the native ordering stays in effect.
+
 ## Intelligent Recycling cooperation
 
 Auto Hauling can optionally discover Intelligent Recycling's read-only
@@ -167,6 +187,14 @@ coordinate or linked being name, that exact portion can be clicked to focus the
 reported location or being.
 
 ## Release history
+
+### 1.2.0
+
+- Added the opt-in **Prioritize Nanobot Hive refills** setting for Core's next
+  Hive job selection. It is saved independently of automatic loose-cargo hauling.
+- Preserved native refill priorities, eligibility, execution, and nearest
+  ordering within the refill group. No work or reservation is reassigned.
+- Built against Stardeus v0.15.22.3271. Gameplay validation remains separate.
 
 ### 1.1.6
 

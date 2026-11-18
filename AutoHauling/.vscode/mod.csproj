@@ -10,7 +10,7 @@
     <RootNamespace>Game.Systems.AutoHauling</RootNamespace>
     <AssemblyName>AutoHauling</AssemblyName>
     <OutputPath>../Libraries</OutputPath>
-    <VersionPrefix>1.1.6.0</VersionPrefix>
+    <VersionPrefix>1.2.0.0</VersionPrefix>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <GenerateDependencyFile>false</GenerateDependencyFile>
@@ -27,6 +27,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoUtilitiesModFramework" HintPath="$(AumfDll)" Private="False" />
+    <Reference Include="0Harmony" HintPath="$(StardeusManagedPath)/0Harmony.dll" Private="False" />
     <Reference Include="Game" HintPath="$(StardeusManagedPath)/Game.dll" Private="False" />
     <Reference Include="Game.Constants" HintPath="$(StardeusManagedPath)/Game.Constants.dll" Private="False" />
     <Reference Include="Game.Utils" HintPath="$(StardeusManagedPath)/Game.Utils.dll" Private="False" />
