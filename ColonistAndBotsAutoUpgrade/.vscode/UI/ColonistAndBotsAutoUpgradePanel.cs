@@ -38,6 +38,8 @@ namespace ColonistAndBotsAutoUpgrade.UI
           batchPlanBadPartOperations = new();
         private readonly Dictionary<Being, RemoveAllPartsEligibility>
           batchPlanRemoveAllParts = new();
+        private readonly Dictionary<Being, EnemyConversionPlan>
+          batchPlanConversions = new();
         private float mainBeingListScrollPosition = 1f;
         private int contentGeneration;
         private const double BatchPlanFrameBudgetMs = 4d;
@@ -56,6 +58,7 @@ namespace ColonistAndBotsAutoUpgrade.UI
         private int batchPlanTotalMissing;
         private int batchPlanTotalBadParts;
         private int batchPlanTotalRemoveAllParts;
+        private int batchPlanTotalConversions;
         private int batchPlanLastDisplayedProgress;
         private bool batchPlanInProgress;
         private long batchPlanStartedAt;
@@ -63,6 +66,7 @@ namespace ColonistAndBotsAutoUpgrade.UI
         private HashSet<uint> batchPlanAllocatedPartIds;
         private HashSet<uint> batchPlanMissingAllocatedPartIds;
         private HashSet<uint> batchPlanBadPartAllocatedPartIds;
+        private HashSet<uint> batchPlanConversionAllocatedPartIds;
         private System.IDisposable batchPlanLookupScope;
 
         public bool IsOpen => frameworkPanel.IsOpen;
@@ -154,6 +158,7 @@ namespace ColonistAndBotsAutoUpgrade.UI
             batchPlanMissingOperations.Clear();
             batchPlanBadPartOperations.Clear();
             batchPlanRemoveAllParts.Clear();
+            batchPlanConversions.Clear();
             currentBeing = null;
             currentSnapshot = null;
             selectedType = "None";
@@ -336,6 +341,10 @@ namespace ColonistAndBotsAutoUpgrade.UI
               currentSnapshot != null &&
               !currentSnapshot.IsUnsupportedDeadBiological &&
               currentSnapshot.QueueableUpgrades > 0;
+            var isHostile = EnemyConversionService.IsHostileTarget(
+                S,
+                currentBeing?.Data
+            );
 
             var missingTargetCount = 0;
             var missingQueueableCount = 0;
@@ -343,7 +352,8 @@ namespace ColonistAndBotsAutoUpgrade.UI
             var badPartQueueableCount = 0;
             RemoveAllPartsEligibility removeAllPartsEligibility = null;
             if (currentSnapshot != null &&
-                !currentSnapshot.IsUnsupportedDeadBiological)
+                !currentSnapshot.IsUnsupportedDeadBiological &&
+                !isHostile)
             {
                 missingTargetCount = SurgeryQueue.CountActionTargets(
                     currentBeing,
@@ -380,12 +390,31 @@ namespace ColonistAndBotsAutoUpgrade.UI
 
             if (currentSnapshot != null)
             {
-                DrawMainActionRow(
-                  context,
-                  container,
-                  row++,
-                  hasQueueableUpgrades
-                );
+                if (isHostile)
+                {
+                    if (CARAUSettings.AllowEnemyConversion)
+                    {
+                        batchPlanConversions.TryGetValue(
+                            currentBeing,
+                            out var conversion
+                        );
+                        DrawEnemyConversionActionRow(
+                            context,
+                            container,
+                            row++,
+                            conversion
+                        );
+                    }
+                }
+                else
+                {
+                    DrawMainActionRow(
+                      context,
+                      container,
+                      row++,
+                      hasQueueableUpgrades
+                    );
+                }
 
                 if (missingTargetCount > 0 || badPartTargetCount > 0)
                 {
@@ -475,8 +504,9 @@ namespace ColonistAndBotsAutoUpgrade.UI
                         card.Slot
                     );
                 var canDestroyWeldedPart =
-                    destructiveEligibility.CanRemove;
+                    !isHostile && destructiveEligibility.CanRemove;
                 var canQueueCard =
+                    !isHostile &&
                     !card.IsWeldedDisplayOnly &&
                     SurgeryQueue.IsQueueable(S, card.Decision);
                 SlotCardView.Create(
@@ -661,6 +691,23 @@ namespace ColonistAndBotsAutoUpgrade.UI
                     totalQueueable > 0
                 )
             );
+            if (CARAUSettings.AllowEnemyConversion)
+            {
+                CreateMainBatchButton(
+                    parent,
+                    "CARAU_ConvertAll",
+                    "Convert All",
+                    batchPlanTotalConversions,
+                    batchPlanTotalConversions > 0,
+                    QueueAllSelectedConversions,
+                    () => batchPlanTotalConversions > 0
+                        ? "Review and confirm exact Enemy Conversion plans " +
+                          $"for {batchPlanTotalConversions} eligible hostile " +
+                          "incapacitated Being(s)."
+                        : "No selected hostile incapacitated Being currently " +
+                          "has an enabled conversion route."
+                );
+            }
             CreateMainBatchButton(
                 parent,
                 "CARAU_QueueAllMissing",
@@ -1411,6 +1458,119 @@ namespace ColonistAndBotsAutoUpgrade.UI
             UIUtils.AddTooltipDynamic(
               buttonObject,
               () => BuildSingleQueueTooltip(hasQueueableUpgrades)
+            );
+        }
+
+        private void DrawEnemyConversionActionRow(
+          PanelContentContext context,
+          RectTransform parent,
+          int siblingIndex,
+          EnemyConversionPlan plan
+        )
+        {
+            var rowObject = context.CreateOwned(
+                "CARAU_EnemyConversionActionRow"
+            );
+            rowObject.transform.SetParent(parent, false);
+            rowObject.transform.SetSiblingIndex(siblingIndex);
+
+            var rowRect = rowObject.AddComponent<RectTransform>();
+            rowRect.localScale = Vector3.one;
+            var background = rowObject.AddComponent<Image>();
+            background.raycastTarget = false;
+            FrameworkTheme.ApplyImage(background, "PanelHeader");
+
+            var rowSize = rowObject.AddComponent<LayoutElement>();
+            rowSize.minHeight = 48f;
+            rowSize.preferredHeight = 48f;
+
+            var layout = rowObject.AddComponent<HorizontalLayoutGroup>();
+            layout.padding = new RectOffset(14, 8, 6, 6);
+            layout.spacing = 10f;
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = true;
+            layout.childControlHeight = true;
+            layout.childForceExpandWidth = false;
+            layout.childForceExpandHeight = true;
+
+            var summaryObject = new GameObject("Summary");
+            summaryObject.transform.SetParent(rowRect, false);
+            var summaryRect = summaryObject.AddComponent<RectTransform>();
+            summaryRect.localScale = Vector3.one;
+            var summarySize = summaryObject.AddComponent<LayoutElement>();
+            summarySize.minWidth = 120f;
+            summarySize.flexibleWidth = 1f;
+            var summary = summaryObject.AddComponent<TMPro.TextMeshProUGUI>();
+            summary.text =
+                $"Species: {currentSnapshot.Species}    |    " +
+                $"Status: {currentSnapshot.Status}";
+            summary.alignment = TMPro.TextAlignmentOptions.MidlineLeft;
+            summary.fontSize = 16f;
+            summary.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
+            summary.overflowMode = TMPro.TextOverflowModes.Ellipsis;
+            summary.raycastTarget = false;
+            FrameworkTheme.ApplyText(summary, "Unsized");
+
+            var available = plan?.IsQueueable == true;
+            var buttonObject = new GameObject("Convert");
+            buttonObject.transform.SetParent(rowRect, false);
+            var buttonRect = buttonObject.AddComponent<RectTransform>();
+            buttonRect.localScale = Vector3.one;
+            var buttonSize = buttonObject.AddComponent<LayoutElement>();
+            buttonSize.minWidth = 150f;
+            buttonSize.preferredWidth = 210f;
+            var image = buttonObject.AddComponent<Image>();
+            var button = buttonObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.interactable = available;
+            button.onClick.AddListener(() =>
+                EnemyConversionConfirmation.Request(
+                    S,
+                    new[] { currentBeing },
+                    () => {
+                        RefreshCurrentSnapshot();
+                        RebuildContents();
+                    }
+                )
+            );
+
+            var iconObject = new GameObject("ConvertIcon");
+            iconObject.transform.SetParent(buttonRect, false);
+            var iconRect = iconObject.AddComponent<RectTransform>();
+            iconRect.anchorMin = new Vector2(0f, 0.18f);
+            iconRect.anchorMax = new Vector2(0f, 0.82f);
+            iconRect.pivot = new Vector2(0.5f, 0.5f);
+            iconRect.anchoredPosition = new Vector2(24f, 0f);
+            iconRect.sizeDelta = new Vector2(24f, 0f);
+            var icon = iconObject.AddComponent<Image>();
+            icon.sprite = Images.Sprite(IconId.CRobotEyeGreen);
+            icon.preserveAspect = true;
+            icon.raycastTarget = false;
+
+            var textObject = new GameObject("Text");
+            textObject.transform.SetParent(buttonRect, false);
+            var textRect = textObject.AddComponent<RectTransform>();
+            textRect.anchorMin = new Vector2(0.20f, 0f);
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            var text = textObject.AddComponent<TMPro.TextMeshProUGUI>();
+            text.text = available
+                ? $"Convert — {plan.RouteName}"
+                : "Convert";
+            text.alignment = TMPro.TextAlignmentOptions.Center;
+            text.fontSize = 15f;
+            text.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
+            text.raycastTarget = false;
+            FrameworkTheme.ApplyButton(button, "Panel", text);
+
+            UIUtils.AddTooltipDynamic(
+                buttonObject,
+                () => available
+                    ? "Review the exact route, part, and mind mapping before " +
+                      "queueing this Enemy Conversion."
+                    : plan?.Reason ??
+                      "This hostile Being has no eligible conversion route."
             );
         }
 
@@ -2214,6 +2374,111 @@ namespace ColonistAndBotsAutoUpgrade.UI
               container,
               row++
             ).Load(
+              IconId.CRobotEyeGreen,
+              "Enemy Conversion"
+            );
+
+            var conversionMasterContainer = CreateSlotToggleContainer(
+                context,
+                container,
+                row++
+            );
+            var allowConversion = CARAUSettings.AllowEnemyConversion;
+            SlotToggleCardView.Create(
+                conversionMasterContainer,
+                "Allow Enemy Conversion",
+                allowConversion,
+                () => {
+                    CARAUSettings.AllowEnemyConversion = !allowConversion;
+                    OnEnemyConversionSettingsChanged();
+                },
+                "Expose Convert controls for living hostile incapacitated " +
+                "Beings. Off by default. Ordinary CARAU upgrades and " +
+                "maintenance remain unavailable to hostile targets."
+            );
+
+            if (allowConversion)
+            {
+                var conversionRouteContainer = CreateSlotToggleContainer(
+                    context,
+                    container,
+                    row++
+                );
+                var allowObey =
+                    CARAUSettings.AllowEnemyConversionObeyChip;
+                var allowCore =
+                    CARAUSettings.AllowEnemyConversionCoreSwap;
+                SlotToggleCardView.Create(
+                    conversionRouteContainer,
+                    "Implant Obey Chip",
+                    allowObey,
+                    () => {
+                        CARAUSettings.AllowEnemyConversionObeyChip =
+                            !allowObey;
+                        OnEnemyConversionSettingsChanged();
+                    },
+                    "Use an exact available Obey Chip only when the target's " +
+                    "Implant slot is empty and usable. Existing implants are " +
+                    "never replaced."
+                );
+                SlotToggleCardView.Create(
+                    conversionRouteContainer,
+                    "Core Swap",
+                    allowCore,
+                    () => {
+                        CARAUSettings.AllowEnemyConversionCoreSwap =
+                            !allowCore;
+                        OnEnemyConversionSettingsChanged();
+                    },
+                    "Swap a removable robotic Core for an exact Player Core, " +
+                    "Blank Core, or mindless Core. The outgoing hostile mind " +
+                    "moves into the extracted Core."
+                );
+
+                if (allowObey && allowCore)
+                {
+                    var priorityOptions = new List<string>
+                    {
+                        "Obey Chip before Core Swap",
+                        "Core Swap before Obey Chip"
+                    };
+                    var priorityDropdown =
+                        UISpawn.Widget<WDropdownWithLabel>(
+                            context.Lifetime,
+                            UIPrefabId.WTabPanelItem_Dropdown,
+                            container,
+                            row++
+                        );
+                    priorityDropdown.Label.Load("Order of Operations");
+                    priorityDropdown.Dropdown.Load(
+                        priorityOptions,
+                        CARAUSettings.ConversionPriority ==
+                            EnemyConversionPriority.CoreSwapThenObeyChip
+                                ? 1
+                                : 0,
+                        selected => {
+                            CARAUSettings.ConversionPriority = selected == 1
+                                ? EnemyConversionPriority.CoreSwapThenObeyChip
+                                : EnemyConversionPriority.ObeyChipThenCoreSwap;
+                            OnEnemyConversionSettingsChanged();
+                        }
+                    );
+                    UIUtils.AddTip(
+                        context.Lifetime,
+                        priorityDropdown,
+                        "The first route is preferred only while CARAU builds " +
+                        "the confirmation plan. After confirmation CARAU does " +
+                        "not switch routes or substitute another part."
+                    );
+                }
+            }
+
+            UISpawn.Widget<WIconText>(
+              context.Lifetime,
+              UIPrefabId.WContent2Text,
+              container,
+              row++
+            ).Load(
               IconId.CCog,
               "Optional UI Shortcut"
             );
@@ -2240,6 +2505,13 @@ namespace ColonistAndBotsAutoUpgrade.UI
               IconId.CInfo,
               "CARAU checks Stardeus keyboard bindings before accepting a key. Other mods that listen for keys outside the Stardeus binding system cannot be detected."
             );
+        }
+
+        private void OnEnemyConversionSettingsChanged()
+        {
+            S.UIQuery.RebuildEntityActions.Ask();
+            StartBatchPlan();
+            RebuildContents();
         }
 
         private void CreateRetryPolicyCard(
@@ -2856,6 +3128,23 @@ namespace ColonistAndBotsAutoUpgrade.UI
             QueueSelectedRemoveAllParts(currentBeingOnly: false);
         }
 
+        private void QueueAllSelectedConversions()
+        {
+            if (BlockQueueWhilePlanning())
+            {
+                return;
+            }
+
+            EnemyConversionConfirmation.Request(
+                S,
+                new List<Being>(selectedBeings),
+                () => {
+                    RefreshCurrentSnapshot();
+                    RebuildContents();
+                }
+            );
+        }
+
         private void QueueSelectedRemoveAllParts(bool currentBeingOnly)
         {
             if (BlockQueueWhilePlanning())
@@ -3464,10 +3753,12 @@ namespace ColonistAndBotsAutoUpgrade.UI
             batchPlanTotalMissing = 0;
             batchPlanTotalBadParts = 0;
             batchPlanTotalRemoveAllParts = 0;
+            batchPlanTotalConversions = 0;
             batchPlanLastDisplayedProgress = 0;
             batchPlanAllocatedPartIds = new HashSet<uint>();
             batchPlanMissingAllocatedPartIds = new HashSet<uint>();
             batchPlanBadPartAllocatedPartIds = new HashSet<uint>();
+            batchPlanConversionAllocatedPartIds = new HashSet<uint>();
             batchPlanInProgress = true;
             batchPlanStartedAt = PerformanceTimestamp();
             batchPlanMaximumFrameMs = 0d;
@@ -3476,6 +3767,7 @@ namespace ColonistAndBotsAutoUpgrade.UI
             batchPlanMissingOperations.Clear();
             batchPlanBadPartOperations.Clear();
             batchPlanRemoveAllParts.Clear();
+            batchPlanConversions.Clear();
 
             if (currentBeing == null ||
                 !selectedBeings.Contains(currentBeing))
@@ -3619,6 +3911,11 @@ namespace ColonistAndBotsAutoUpgrade.UI
                 return;
             }
 
+            var isHostile = EnemyConversionService.IsHostileTarget(
+                S,
+                being.Data
+            );
+
             if (batchPlanActionPhase == 0)
             {
                 var snapshot = BeingScanner.Scan(
@@ -3628,22 +3925,32 @@ namespace ColonistAndBotsAutoUpgrade.UI
                 );
                 var operations = new List<UpgradeDecision>();
 
-                for (var cardIndex = 0;
-                    cardIndex < snapshot.SlotCards.Count;
-                    cardIndex++)
+                if (!isHostile)
                 {
-                    var card = snapshot.SlotCards[cardIndex];
-
-                    if (card?.IsWeldedDisplayOnly == true)
+                    for (var cardIndex = 0;
+                        cardIndex < snapshot.SlotCards.Count;
+                        cardIndex++)
                     {
-                        continue;
-                    }
+                        var card = snapshot.SlotCards[cardIndex];
 
-                    var decision = card?.Decision;
-                    if (SurgeryQueue.IsQueueable(S, decision))
-                    {
-                        operations.Add(decision);
+                        if (card?.IsWeldedDisplayOnly == true)
+                        {
+                            continue;
+                        }
+
+                        var decision = card?.Decision;
+                        if (SurgeryQueue.IsQueueable(S, decision))
+                        {
+                            operations.Add(decision);
+                        }
                     }
+                }
+                else
+                {
+                    // Hostile bodies are read-only in CARAU's ordinary
+                    // upgrade/maintenance paths. Conversion is evaluated in
+                    // its own final phase with its own inventory allocation.
+                    snapshot.QueueableUpgrades = 0;
                 }
 
                 batchPlanSnapshots[being] = snapshot;
@@ -3661,12 +3968,14 @@ namespace ColonistAndBotsAutoUpgrade.UI
 
             if (batchPlanActionPhase == 1)
             {
-                var missingOperations = SurgeryQueue.BuildActionQueue(
-                    S,
-                    being,
-                    UpgradeActionKind.InstallMissing,
-                    batchPlanMissingAllocatedPartIds
-                );
+                var missingOperations = isHostile
+                    ? new List<UpgradeDecision>()
+                    : SurgeryQueue.BuildActionQueue(
+                        S,
+                        being,
+                        UpgradeActionKind.InstallMissing,
+                        batchPlanMissingAllocatedPartIds
+                      );
                 batchPlanMissingOperations[being] = missingOperations;
                 batchPlanTotalMissing += missingOperations.Count;
                 LogBatchPlanAllocations(
@@ -3681,12 +3990,14 @@ namespace ColonistAndBotsAutoUpgrade.UI
 
             if (batchPlanActionPhase == 2)
             {
-                var badPartOperations = SurgeryQueue.BuildActionQueue(
-                    S,
-                    being,
-                    UpgradeActionKind.ReplaceBadParts,
-                    batchPlanBadPartAllocatedPartIds
-                );
+                var badPartOperations = isHostile
+                    ? new List<UpgradeDecision>()
+                    : SurgeryQueue.BuildActionQueue(
+                        S,
+                        being,
+                        UpgradeActionKind.ReplaceBadParts,
+                        batchPlanBadPartAllocatedPartIds
+                      );
                 batchPlanBadPartOperations[being] = badPartOperations;
                 batchPlanTotalBadParts += badPartOperations.Count;
                 LogBatchPlanAllocations(
@@ -3699,32 +4010,69 @@ namespace ColonistAndBotsAutoUpgrade.UI
                 return;
             }
 
-            var removeAllPartsEligibility =
-                RemoveAllPartsService.Evaluate(S, being);
-            batchPlanRemoveAllParts[being] =
-                removeAllPartsEligibility;
-            if (removeAllPartsEligibility.CanQueue)
+            if (batchPlanActionPhase == 3)
             {
-                batchPlanTotalRemoveAllParts++;
+                var removeAllPartsEligibility = isHostile
+                    ? null
+                    : RemoveAllPartsService.Evaluate(S, being);
+                batchPlanRemoveAllParts[being] =
+                    removeAllPartsEligibility;
+                if (removeAllPartsEligibility?.CanQueue == true)
+                {
+                    batchPlanTotalRemoveAllParts++;
+                }
+
+                if (removeAllPartsEligibility?.IsTriggered == true &&
+                    CARAUSettings.IsDebugCategoryEnabled(
+                        CARAUDebugCategory.Decision
+                    ))
+                {
+                    CARAUDebugLog.Add(
+                        CARAUDebugCategory.Decision,
+                        $"Remove All Parts evaluation | " +
+                        $"BeingPosition={beingIndex + 1}/" +
+                        $"{selectedBeings.Count} | " +
+                        $"Being={being.Data?.Name ?? being.ToString()} | " +
+                        $"TerminalGroups=" +
+                        $"{removeAllPartsEligibility.TerminalGroupSummary} | " +
+                        $"RemovableParts=" +
+                        $"{removeAllPartsEligibility.RemovablePartCount} | " +
+                        $"Queueable={removeAllPartsEligibility.CanQueue} | " +
+                        $"Reason={removeAllPartsEligibility.Message}"
+                    );
+                }
+                batchPlanActionPhase = 4;
+                return;
             }
 
-            if (removeAllPartsEligibility.IsTriggered &&
-                CARAUSettings.IsDebugCategoryEnabled(
+            var conversion = EnemyConversionService.Evaluate(
+                S,
+                being,
+                batchPlanConversionAllocatedPartIds
+            );
+            batchPlanConversions[being] = conversion;
+            if (conversion.IsQueueable)
+            {
+                batchPlanConversionAllocatedPartIds.Add(
+                    conversion.ReservedPartId
+                );
+                batchPlanTotalConversions++;
+            }
+
+            if (isHostile && CARAUSettings.IsDebugCategoryEnabled(
                     CARAUDebugCategory.Decision
                 ))
             {
                 CARAUDebugLog.Add(
                     CARAUDebugCategory.Decision,
-                    $"Remove All Parts evaluation | " +
+                    $"Enemy Conversion evaluation | " +
                     $"BeingPosition={beingIndex + 1}/" +
                     $"{selectedBeings.Count} | " +
                     $"Being={being.Data?.Name ?? being.ToString()} | " +
-                    $"TerminalGroups=" +
-                    $"{removeAllPartsEligibility.TerminalGroupSummary} | " +
-                    $"RemovableParts=" +
-                    $"{removeAllPartsEligibility.RemovablePartCount} | " +
-                    $"Queueable={removeAllPartsEligibility.CanQueue} | " +
-                    $"Reason={removeAllPartsEligibility.Message}"
+                    $"Route={conversion.Route} | " +
+                    $"Queueable={conversion.IsQueueable} | " +
+                    $"ObjId={conversion.ReservedPartId} | " +
+                    $"Reason={conversion.Reason ?? "Available"}"
                 );
             }
             batchPlanActionPhase = 0;
@@ -3781,12 +4129,14 @@ namespace ColonistAndBotsAutoUpgrade.UI
             var allocatedParts =
                 (batchPlanAllocatedPartIds?.Count ?? 0) +
                 (batchPlanMissingAllocatedPartIds?.Count ?? 0) +
-                (batchPlanBadPartAllocatedPartIds?.Count ?? 0);
+                (batchPlanBadPartAllocatedPartIds?.Count ?? 0) +
+                (batchPlanConversionAllocatedPartIds?.Count ?? 0);
             var totalPlannedOperations =
                 batchPlanTotalPlanned +
                 batchPlanTotalMissing +
                 batchPlanTotalBadParts +
-                batchPlanTotalRemoveAllParts;
+                batchPlanTotalRemoveAllParts +
+                batchPlanTotalConversions;
             LogBatchPlanPerformanceAnomaly(
                 generation,
                 selectedBeings.Count,
@@ -3818,6 +4168,7 @@ namespace ColonistAndBotsAutoUpgrade.UI
                     $"Missing={batchPlanTotalMissing} | " +
                     $"BadParts={batchPlanTotalBadParts} | " +
                     $"RemoveAllParts={batchPlanTotalRemoveAllParts} | " +
+                    $"Conversions={batchPlanTotalConversions} | " +
                     $"AllocatedParts={allocatedParts}"
                 );
             }
@@ -3844,12 +4195,14 @@ namespace ColonistAndBotsAutoUpgrade.UI
             batchPlanTotalMissing = 0;
             batchPlanTotalBadParts = 0;
             batchPlanTotalRemoveAllParts = 0;
+            batchPlanTotalConversions = 0;
             batchPlanLastDisplayedProgress = 0;
             batchPlanStartedAt = 0L;
             batchPlanMaximumFrameMs = 0d;
             batchPlanAllocatedPartIds = null;
             batchPlanMissingAllocatedPartIds = null;
             batchPlanBadPartAllocatedPartIds = null;
+            batchPlanConversionAllocatedPartIds = null;
 
             if (clearPlanData)
             {
@@ -3858,6 +4211,7 @@ namespace ColonistAndBotsAutoUpgrade.UI
                 batchPlanMissingOperations.Clear();
                 batchPlanBadPartOperations.Clear();
                 batchPlanRemoveAllParts.Clear();
+                batchPlanConversions.Clear();
                 currentSnapshot = null;
             }
         }

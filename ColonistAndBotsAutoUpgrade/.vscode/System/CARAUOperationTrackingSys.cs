@@ -13,6 +13,7 @@ using Game.Systems.BodyParts;
 using Game.Systems.Creatures;
 using Game.Systems.Creatures.Surgeries;
 using Game.Systems.Items;
+using Game.Systems.Mental;
 using Game.Utils;
 using HarmonyLib;
 using KL.Utils;
@@ -266,6 +267,8 @@ namespace ColonistAndBotsAutoUpgrade.Systems
             S.Sig.SurgicalOperationRegistered.AddListener(
                 OnSurgicalOperationRegistered
             );
+            S.Sig.MindInstalled.AddListener(OnMindInstalled);
+            S.Sig.MindRemoved.AddListener(OnMindRemoved);
 
             // Operation classification must continue independently of the
             // optional top-bar widget. AUMF owns widget presentation and can
@@ -303,6 +306,23 @@ namespace ColonistAndBotsAutoUpgrade.Systems
                 operation,
                 eligibility
             );
+        }
+
+        public static void TrackQueuedEnemyConversion(
+          EnemyConversionPlan plan,
+          SurgicalOperation operation
+        )
+        {
+            Instance?.TrackQueuedEnemyConversionInternal(plan, operation);
+        }
+
+        public static bool IsEnemyConversionPending(uint beingId)
+        {
+            return Instance?.operations.Any(operation =>
+                operation?.IsPending == true &&
+                operation.Purpose == CARAUOperationPurpose.EnemyConversion &&
+                operation.BeingId == beingId
+            ) == true;
         }
 
         public static IDisposable BeginBulkQueueTracking()
@@ -558,6 +578,72 @@ namespace ColonistAndBotsAutoUpgrade.Systems
             RequestQueueTrackingWidgetRefresh();
         }
 
+        private void TrackQueuedEnemyConversionInternal(
+          EnemyConversionPlan plan,
+          SurgicalOperation operation
+        )
+        {
+            var being = plan?.Being?.Data;
+            var slot = plan?.Slot;
+            var part = plan?.ReservedPart;
+            if (being == null || slot == null || part == null ||
+                operation == null || !plan.IsQueueable)
+            {
+                CARAUDebugLog.Add(
+                    CARAUDebugCategory.Warning,
+                    "Enemy Conversion tracking was not created because its " +
+                    "exact target, slot, part, or native operation was unavailable"
+                );
+                return;
+            }
+
+            operations.RemoveAll(tracked =>
+                tracked?.BeingId == being.Id &&
+                tracked.Purpose == CARAUOperationPurpose.EnemyConversion
+            );
+
+            var trackedOperation = new CARAUTrackedOperation
+            {
+                BeingId = being.Id,
+                BeingName = being.Name ?? "Unknown being",
+                SlotName = slot.NameT ?? "Unknown slot",
+                SlotId = slot.Id ?? string.Empty,
+                TargetPartId = part.BodyPart?.Id ?? string.Empty,
+                TargetPartName = part.BodyPart?.NameT ?? "Unknown part",
+                ReservedPartId = part.Id,
+                QueuedAtTick = G.Ticks,
+                Outcome = CARAUOperationOutcome.Pending,
+                OutcomeReason = string.Empty,
+                HasOutcomeEvidence = true,
+                FailureKind = CARAUFailureKind.None,
+                NativeOperationId = operation.Id,
+                Purpose = CARAUOperationPurpose.EnemyConversion,
+                ConversionRoute = plan.Route,
+                ConversionOriginalMindId = plan.OriginalMindId,
+                ConversionIncomingMindId = plan.IncomingMindId,
+                ConversionExpectedGeneratedMind =
+                    plan.Route == EnemyConversionRoute.CoreSwap &&
+                    plan.IncomingMindId == 0,
+                RuntimeBeing = plan.Being,
+                RuntimeSlot = slot,
+                RuntimeOperation = operation
+            };
+            operations.Add(trackedOperation);
+            AddBulkTrackedOperation(trackedOperation);
+
+            CARAUDebugLog.Add(
+                CARAUDebugCategory.Intent,
+                $"Enemy Conversion tracking started | " +
+                $"Being={trackedOperation.BeingName} | " +
+                $"BeingId={trackedOperation.BeingId} | " +
+                $"Route={trackedOperation.ConversionRoute} | " +
+                $"Part={trackedOperation.TargetPartName} | " +
+                $"ObjId={trackedOperation.ReservedPartId} | " +
+                $"NativeOperationId={trackedOperation.NativeOperationId}"
+            );
+            RequestQueueTrackingWidgetRefresh();
+        }
+
         private void BeginBulkQueueTrackingInternal()
         {
             bulkQueueTrackingDepth++;
@@ -742,6 +828,18 @@ namespace ColonistAndBotsAutoUpgrade.Systems
                 if (RefreshRuntimeTarget(tracked))
                 {
                     changed = true;
+                }
+
+                // Conversion has stricter identity proof and deliberately no
+                // generic retry, route switching, or fallback after queueing.
+                if (tracked.Purpose ==
+                    CARAUOperationPurpose.EnemyConversion)
+                {
+                    if (RefreshEnemyConversionOperation(tracked))
+                    {
+                        changed = true;
+                    }
+                    continue;
                 }
 
                 // Remove All Parts is a slotless native mass operation and
@@ -1052,6 +1150,204 @@ namespace ColonistAndBotsAutoUpgrade.Systems
 
             operations.Remove(tracked);
             successfulOperations++;
+        }
+
+        private bool RefreshEnemyConversionOperation(
+          CARAUTrackedOperation tracked
+        )
+        {
+            if (tracked == null || !tracked.IsPending)
+            {
+                return false;
+            }
+
+            if (tracked.RuntimeCoreTransitionAwaitingValidation &&
+                Time.realtimeSinceStartup <
+                    tracked.RuntimeCoreTransitionValidateAfterRealtime)
+            {
+                return false;
+            }
+
+            if (EnemyConversionService.IsExactSuccessfulResult(
+                    S,
+                    tracked,
+                    out var successDetail
+                ))
+            {
+                CARAUDebugLog.Add(
+                    CARAUDebugCategory.Intent,
+                    $"Enemy Conversion completed | " +
+                    $"Being={tracked.BeingName} | " +
+                    $"Route={tracked.ConversionRoute} | " +
+                    $"Detail={successDetail}"
+                );
+                CompleteSuccessfully(tracked);
+                return true;
+            }
+
+            var being = S.Query.FindBeingData.Ask(tracked.BeingId);
+            if (being?.Body == null || !being.Body.IsAlive)
+            {
+                RetainFailure(
+                    tracked,
+                    CARAUOperationOutcome.Failed,
+                    "Enemy Conversion ended because the target chassis died.",
+                    CARAUFailureKind.BeingDied
+                );
+                return true;
+            }
+
+            var operation = tracked.RuntimeOperation;
+            if (!IsTrackedOperationMatch(tracked, operation))
+            {
+                operation = tracked.RuntimeSlot == null
+                    ? null
+                    : S.Query.FindSurgicalOperation.Ask(
+                        tracked.RuntimeSlot,
+                        true
+                      );
+                if (IsTrackedOperationMatch(tracked, operation))
+                {
+                    tracked.RuntimeOperation = operation;
+                }
+                else
+                {
+                    operation = null;
+                }
+            }
+
+            if (IsRecoveredConversionTarget(being))
+            {
+                CancelRecoveredEnemyConversion(tracked, operation);
+                RetainFailure(
+                    tracked,
+                    CARAUOperationOutcome.CancelledExternally,
+                    "Canceled — target recovered. Start Convert again if " +
+                    "the hostile target later becomes incapacitated.",
+                    CARAUFailureKind.TargetRecovered
+                );
+                return true;
+            }
+
+            if (!EnemyConversionService.IsHostileTarget(S, being))
+            {
+                CancelEnemyConversionOperation(tracked, operation);
+                RetainFailure(
+                    tracked,
+                    CARAUOperationOutcome.CancelledExternally,
+                    "Enemy Conversion was canceled because the target is no " +
+                    "longer hostile. No alternate route was selected.",
+                    CARAUFailureKind.ConversionTargetChanged
+                );
+                return true;
+            }
+
+            if (operation == null)
+            {
+                RetainFailure(
+                    tracked,
+                    CARAUOperationOutcome.CancelledExternally,
+                    "The confirmed Enemy Conversion operation is no longer " +
+                    "registered and its exact postconditions were not met.",
+                    CARAUFailureKind.ExternalCancellation
+                );
+                return true;
+            }
+
+            switch (operation.State.Value)
+            {
+                case SurgicalOpState.Completed:
+                    if (tracked.ConversionRoute ==
+                            EnemyConversionRoute.CoreSwap &&
+                        !tracked.RuntimeCoreTransitionAwaitingValidation)
+                    {
+                        BeginCoreTransitionValidation(
+                            tracked,
+                            "Enemy Conversion Core swap completed"
+                        );
+                        return true;
+                    }
+                    RetainFailure(
+                        tracked,
+                        CARAUOperationOutcome.Failed,
+                        "Stardeus completed the confirmed conversion, but " +
+                        "CARAU could not prove the exact expected result.",
+                        CARAUFailureKind.ConversionOutcomeMismatch
+                    );
+                    return true;
+
+                case SurgicalOpState.Failed:
+                    RetainFailure(
+                        tracked,
+                        CARAUOperationOutcome.Failed,
+                        BuildNativeOperationFailureReason(
+                            tracked,
+                            operation,
+                            "The confirmed Enemy Conversion procedure failed."
+                        ),
+                        GetCapturedSurgicalFailureKind(tracked)
+                    );
+                    return true;
+
+                case SurgicalOpState.Canceled:
+                    RetainFailure(
+                        tracked,
+                        CARAUOperationOutcome.CancelledExternally,
+                        "The confirmed Enemy Conversion procedure was " +
+                        "canceled. CARAU did not retry or switch routes.",
+                        CARAUFailureKind.ExternalCancellation
+                    );
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        private static bool IsRecoveredConversionTarget(BeingData being)
+        {
+            return being?.Body?.IsAlive == true &&
+                !being.Body.IsIncapacitated &&
+                !being.HasStateFlag(BeingState.InDevice);
+        }
+
+        private void CancelRecoveredEnemyConversion(
+          CARAUTrackedOperation tracked,
+          SurgicalOperation operation
+        )
+        {
+            CancelEnemyConversionOperation(tracked, operation);
+            CARAUDebugLog.Add(
+                CARAUDebugCategory.Cleanup,
+                $"Enemy Conversion canceled after recovery | " +
+                $"Being={tracked?.BeingName ?? "unknown"} | " +
+                $"Route={tracked?.ConversionRoute}"
+            );
+        }
+
+        private void CancelEnemyConversionOperation(
+          CARAUTrackedOperation tracked,
+          SurgicalOperation operation
+        )
+        {
+            if (operation == null ||
+                operation.State.Value == SurgicalOpState.Completed ||
+                operation.State.Value == SurgicalOpState.Failed ||
+                operation.State.Value == SurgicalOpState.Canceled)
+            {
+                return;
+            }
+
+            try
+            {
+                tracked.RuntimeCancellationRequestedByCARAU = true;
+                operation.State.Set(SurgicalOpState.Canceled);
+                S.Query.RegisterSurgicalOperation.Ask(operation, false);
+            }
+            finally
+            {
+                tracked.RuntimeCancellationRequestedByCARAU = false;
+            }
         }
 
         private void RetainFailure(
@@ -3706,6 +4002,15 @@ namespace ColonistAndBotsAutoUpgrade.Systems
                 return false;
             }
 
+            if (tracked.Purpose == CARAUOperationPurpose.EnemyConversion)
+            {
+                unavailableReason =
+                    "Retry unavailable: Enemy Conversion retains the exact " +
+                    "confirmed route and body part. Re-evaluate with Convert " +
+                    "to create a fresh plan.";
+                return false;
+            }
+
             if (tracked.IsRemoveAllParts)
             {
                 unavailableReason =
@@ -5363,6 +5668,32 @@ namespace ColonistAndBotsAutoUpgrade.Systems
 
             RefreshRuntimeTarget(tracked);
 
+            if (tracked.Purpose == CARAUOperationPurpose.EnemyConversion)
+            {
+                tracked.RuntimeOperation = operation;
+                if (!tracked.RuntimeCancellationRequestedByCARAU)
+                {
+                    if (tracked.ConversionRoute ==
+                            EnemyConversionRoute.CoreSwap &&
+                        operation.State.Value == SurgicalOpState.Completed)
+                    {
+                        BeginCoreTransitionValidation(
+                            tracked,
+                            "Enemy Conversion Core operation unregistered"
+                        );
+                    }
+                    else
+                    {
+                        RefreshEnemyConversionOperation(tracked);
+                    }
+                }
+
+                RefreshWidget();
+                ColonistAndBotsAutoUpgradeSys.Instance?
+                    .RefreshTrackedOperationState();
+                return;
+            }
+
             if (tracked.IsRemoveAllParts)
             {
                 tracked.RuntimeOperation = operation;
@@ -5459,6 +5790,72 @@ namespace ColonistAndBotsAutoUpgrade.Systems
             RefreshWidget();
             ColonistAndBotsAutoUpgradeSys.Instance?
                 .RefreshTrackedOperationState();
+        }
+
+        private void OnMindRemoved(
+          Mind mind,
+          BeingData beingFrom,
+          ObjData toPart
+        )
+        {
+            if (mind == null || beingFrom == null || toPart == null)
+            {
+                return;
+            }
+
+            var tracked = operations.FirstOrDefault(candidate =>
+                candidate?.IsPending == true &&
+                candidate.Purpose ==
+                    CARAUOperationPurpose.EnemyConversion &&
+                candidate.ConversionRoute ==
+                    EnemyConversionRoute.CoreSwap &&
+                candidate.BeingId == beingFrom.Id &&
+                candidate.ConversionOriginalMindId == mind.Id
+            );
+            if (tracked == null)
+            {
+                return;
+            }
+
+            tracked.ConversionObservedRemovedMindId = mind.Id;
+            tracked.ConversionOutgoingCorePartId = toPart.Id;
+            BeginCoreTransitionValidation(
+                tracked,
+                "hostile mind moved to extracted Core"
+            );
+        }
+
+        private void OnMindInstalled(
+          Mind mind,
+          ObjData partFrom,
+          BeingData newOwner
+        )
+        {
+            if (mind == null || partFrom == null || newOwner == null)
+            {
+                return;
+            }
+
+            var tracked = operations.FirstOrDefault(candidate =>
+                candidate?.IsPending == true &&
+                candidate.Purpose ==
+                    CARAUOperationPurpose.EnemyConversion &&
+                candidate.ConversionRoute ==
+                    EnemyConversionRoute.CoreSwap &&
+                candidate.BeingId == newOwner.Id &&
+                candidate.ReservedPartId == partFrom.Id
+            );
+            if (tracked == null)
+            {
+                return;
+            }
+
+            tracked.ConversionObservedIncomingMindId = mind.Id;
+            tracked.ConversionInstallObservedPartId = partFrom.Id;
+            BeginCoreTransitionValidation(
+                tracked,
+                "confirmed incoming Core mind installed"
+            );
         }
 
         private void OnAfterLoadState(GameState state)
@@ -5634,6 +6031,60 @@ namespace ColonistAndBotsAutoUpgrade.Systems
                 }
 
                 tracked.RuntimeSlot = slot;
+
+                if (tracked.Purpose ==
+                    CARAUOperationPurpose.EnemyConversion)
+                {
+                    if (!tracked.IsPending)
+                    {
+                        restored++;
+                        continue;
+                    }
+
+                    var conversionOperation =
+                        S.Query.FindSurgicalOperation.Ask(slot, true);
+                    if (IsTrackedOperationMatch(
+                            tracked,
+                            conversionOperation
+                        ))
+                    {
+                        tracked.RuntimeOperation = conversionOperation;
+                        restored++;
+                        continue;
+                    }
+
+                    if (EnemyConversionService.IsExactSuccessfulResult(
+                            S,
+                            tracked,
+                            out _
+                        ))
+                    {
+                        CompleteSuccessfully(tracked);
+                    }
+                    else if (IsRecoveredConversionTarget(beingData))
+                    {
+                        RetainFailure(
+                            tracked,
+                            CARAUOperationOutcome.CancelledExternally,
+                            "Canceled — target recovered. Start Convert " +
+                            "again for a fresh plan.",
+                            CARAUFailureKind.TargetRecovered
+                        );
+                    }
+                    else
+                    {
+                        RetainFailure(
+                            tracked,
+                            CARAUOperationOutcome.CancelledExternally,
+                            "The saved Enemy Conversion operation is no " +
+                            "longer registered and its exact result was not " +
+                            "proven.",
+                            CARAUFailureKind.ExternalCancellation
+                        );
+                    }
+                    classified++;
+                    continue;
+                }
 
                 if (TryReconcileRetainedCoreSuccess(tracked, slot))
                 {
@@ -6234,6 +6685,8 @@ namespace ColonistAndBotsAutoUpgrade.Systems
             S.Sig.SurgicalOperationRegistered.RemoveListener(
                 OnSurgicalOperationRegistered
             );
+            S.Sig.MindInstalled.RemoveListener(OnMindInstalled);
+            S.Sig.MindRemoved.RemoveListener(OnMindRemoved);
             harmony?.UnpatchAll(HarmonyId);
             harmony = null;
             trackingPanel?.Dispose();

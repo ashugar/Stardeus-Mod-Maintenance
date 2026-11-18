@@ -641,6 +641,8 @@ namespace ColonistAndBotsAutoUpgrade.UI
                         .IsRetryableFailure(trackedOperation) == true;
                 var offerReplacementRetry =
                     trackedOperation?.IsFailure == true &&
+                    trackedOperation.Purpose !=
+                        CARAUOperationPurpose.EnemyConversion &&
                     (canRetry ||
                      CARAUOperationTrackingSys
                          .HasInstalledUnusableReplacement(
@@ -873,6 +875,8 @@ namespace ColonistAndBotsAutoUpgrade.UI
                     .IsRetryableFailure(operation) == true;
                 var offerReplacementRetry =
                     !operation.IsRemoveAllParts &&
+                    operation.Purpose !=
+                        CARAUOperationPurpose.EnemyConversion &&
                     (canRetry ||
                     CARAUOperationTrackingSys
                         .HasInstalledUnusableReplacement(operation));
@@ -922,6 +926,11 @@ namespace ColonistAndBotsAutoUpgrade.UI
           CARAUTrackedOperation operation
         )
         {
+            if (operation?.FailureKind == CARAUFailureKind.TargetRecovered)
+            {
+                return "Queue: Canceled — Target Recovered";
+            }
+
             if (operation?.FailureKind ==
                 CARAUFailureKind.CompletedWithoutPlannedReplacement)
             {
@@ -938,6 +947,11 @@ namespace ColonistAndBotsAutoUpgrade.UI
           CARAUTrackedOperation operation
         )
         {
+            if (operation?.FailureKind == CARAUFailureKind.TargetRecovered)
+            {
+                return "Canceled — Recovered";
+            }
+
             if (operation?.FailureKind ==
                 CARAUFailureKind.CompletedWithoutPlannedReplacement)
             {
@@ -1004,6 +1018,22 @@ namespace ColonistAndBotsAutoUpgrade.UI
           string retryExplanation
         )
         {
+            if (operation.Purpose == CARAUOperationPurpose.EnemyConversion)
+            {
+                return
+                    "Enemy Conversion Ended\n\n" +
+                    $"Being: {operation.BeingName}\n" +
+                    $"Route: {operation.ConversionRoute}\n" +
+                    $"Slot: {operation.SlotName}\n" +
+                    $"Exact part: {operation.TargetPartName} " +
+                    $"#{operation.ReservedPartId}\n" +
+                    $"Classification: {FormatOutcome(operation.Outcome)}\n" +
+                    $"Failure kind: {operation.FailureKind}\n" +
+                    $"Reason: {operation.OutcomeReason}\n\n" +
+                    "CARAU will not retry, switch routes, or substitute " +
+                    "another body part. Use Convert to build a fresh plan.";
+            }
+
             if (operation.IsRemoveAllParts)
             {
                 return

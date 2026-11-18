@@ -34,7 +34,10 @@ namespace ColonistAndBotsAutoUpgrade.Models
         IdentityCoreDestroyed = 14,
         InconsistentNativeReservation = 15,
         CompletedWithoutPlannedReplacement = 16,
-        RemoveAllPartsFailed = 17
+        RemoveAllPartsFailed = 17,
+        TargetRecovered = 18,
+        ConversionOutcomeMismatch = 19,
+        ConversionTargetChanged = 20
     }
 
     [MessagePackObject]
@@ -151,6 +154,36 @@ namespace ColonistAndBotsAutoUpgrade.Models
 
         [Key(28)]
         public int NativeOperationId { get; set; }
+
+        // Enemy Conversion is intentionally isolated from CARAU's generic
+        // upgrade and retry paths. Appended keys preserve compatibility with
+        // existing saves while retaining the exact confirmed route and minds.
+        [Key(29)]
+        public CARAUOperationPurpose Purpose { get; set; }
+
+        [Key(30)]
+        public EnemyConversionRoute ConversionRoute { get; set; }
+
+        [Key(31)]
+        public uint ConversionOriginalMindId { get; set; }
+
+        [Key(32)]
+        public uint ConversionIncomingMindId { get; set; }
+
+        [Key(33)]
+        public bool ConversionExpectedGeneratedMind { get; set; }
+
+        [Key(34)]
+        public uint ConversionObservedRemovedMindId { get; set; }
+
+        [Key(35)]
+        public uint ConversionOutgoingCorePartId { get; set; }
+
+        [Key(36)]
+        public uint ConversionObservedIncomingMindId { get; set; }
+
+        [Key(37)]
+        public uint ConversionInstallObservedPartId { get; set; }
 
         [IgnoreMember]
         public bool IsPending =>

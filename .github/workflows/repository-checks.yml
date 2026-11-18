@@ -139,6 +139,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $projects = @(
+            'ColonistAndBotsAutoUpgrade/Tests/EnemyConversionSettings.Tests.csproj'
             'PlanningOverhaul/Tests/HardeningTests.csproj'
             'OrbotronUpgrade(v0.15Update)/Tests/BatchRecoveryTests.csproj'
           )
