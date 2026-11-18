@@ -1,4 +1,4 @@
-﻿using ColonistAndBotsAutoUpgrade.Models;
+using ColonistAndBotsAutoUpgrade.Models;
 using MessagePack;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,12 @@ namespace ColonistAndBotsAutoUpgrade.Models
         Manual = 0,
         TransientOnly = 1,
         TransientAndSurgical = 2
+    }
+
+    public enum EnemyConversionPriority
+    {
+        ObeyChipThenCoreSwap = 0,
+        CoreSwapThenObeyChip = 1
     }
 
     public static class CARAUSettings
@@ -52,6 +58,18 @@ namespace ColonistAndBotsAutoUpgrade.Models
         // response to Core's active Hacked condition.
         public static bool AutoInstallFirewallChipWhenHacked { get; set; }
 
+        // Enemy conversion is deliberately opt-in. The subordinate defaults
+        // describe the safe first-time configuration but remain inert until
+        // the master switch is enabled.
+        public static bool AllowEnemyConversion { get; set; }
+
+        public static bool AllowEnemyConversionObeyChip { get; set; } = true;
+
+        public static bool AllowEnemyConversionCoreSwap { get; set; }
+
+        public static EnemyConversionPriority ConversionPriority { get; set; } =
+            EnemyConversionPriority.ObeyChipThenCoreSwap;
+
         public static float AutomaticRetryChanceThreshold =>
             AutomaticRetryChanceThresholdPercent / 100f;
 
@@ -68,6 +86,11 @@ namespace ColonistAndBotsAutoUpgrade.Models
                 DefaultAutomaticRetryChanceThresholdPercent;
             AutoInstallMoodRegulatorAfterMentalBreakdown = false;
             AutoInstallFirewallChipWhenHacked = false;
+            AllowEnemyConversion = false;
+            AllowEnemyConversionObeyChip = true;
+            AllowEnemyConversionCoreSwap = false;
+            ConversionPriority =
+                EnemyConversionPriority.ObeyChipThenCoreSwap;
         }
 
         public static CARAUSettingsData CreateSaveData()
@@ -97,7 +120,17 @@ namespace ColonistAndBotsAutoUpgrade.Models
                 AutoInstallFirewallChipWhenHacked =
                     AutoInstallFirewallChipWhenHacked,
                 AllowTierUpgrades = AllowTierUpgrades,
-                AllowQualityUpgrades = AllowQualityUpgrades
+                AllowQualityUpgrades = AllowQualityUpgrades,
+                AllowEnemyConversion = AllowEnemyConversion,
+                AllowEnemyConversionObeyChip =
+                    AllowEnemyConversionObeyChip,
+                AllowEnemyConversionCoreSwap =
+                    AllowEnemyConversionCoreSwap,
+                ConversionPriority = IsKnownConversionPriority(
+                    ConversionPriority
+                )
+                    ? ConversionPriority
+                    : EnemyConversionPriority.ObeyChipThenCoreSwap
             };
         }
 
@@ -163,6 +196,22 @@ namespace ColonistAndBotsAutoUpgrade.Models
 
             AutoInstallFirewallChipWhenHacked =
                 data.AutoInstallFirewallChipWhenHacked;
+
+            if (data.SchemaVersion < 6)
+            {
+                return;
+            }
+
+            AllowEnemyConversion = data.AllowEnemyConversion;
+            AllowEnemyConversionObeyChip =
+                data.AllowEnemyConversionObeyChip;
+            AllowEnemyConversionCoreSwap =
+                data.AllowEnemyConversionCoreSwap;
+            ConversionPriority = IsKnownConversionPriority(
+                data.ConversionPriority
+            )
+                ? data.ConversionPriority
+                : EnemyConversionPriority.ObeyChipThenCoreSwap;
         }
 
         public static void DeselectAllSlots(IEnumerable<int> slotIds)
@@ -196,6 +245,16 @@ namespace ColonistAndBotsAutoUpgrade.Models
             return policy == CARAURetryPolicy.Manual ||
                    policy == CARAURetryPolicy.TransientOnly ||
                    policy == CARAURetryPolicy.TransientAndSurgical;
+        }
+
+        public static bool IsKnownConversionPriority(
+          EnemyConversionPriority priority
+        )
+        {
+            return priority ==
+                       EnemyConversionPriority.ObeyChipThenCoreSwap ||
+                   priority ==
+                       EnemyConversionPriority.CoreSwapThenObeyChip;
         }
 
         public static bool IsSlotEnabled(int slotTypeId)
@@ -245,7 +304,7 @@ namespace ColonistAndBotsAutoUpgrade.Models
     [MessagePackObject]
     public sealed class CARAUSettingsData
     {
-        public const int CurrentSchemaVersion = 5;
+        public const int CurrentSchemaVersion = 6;
 
         [Key(0)]
         public int SchemaVersion { get; set; } = CurrentSchemaVersion;
@@ -284,5 +343,18 @@ namespace ColonistAndBotsAutoUpgrade.Models
 
         [Key(10)]
         public bool AutoInstallFirewallChipWhenHacked { get; set; }
+
+        [Key(11)]
+        public bool AllowEnemyConversion { get; set; }
+
+        [Key(12)]
+        public bool AllowEnemyConversionObeyChip { get; set; } = true;
+
+        [Key(13)]
+        public bool AllowEnemyConversionCoreSwap { get; set; }
+
+        [Key(14)]
+        public EnemyConversionPriority ConversionPriority { get; set; } =
+            EnemyConversionPriority.ObeyChipThenCoreSwap;
     }
 }
