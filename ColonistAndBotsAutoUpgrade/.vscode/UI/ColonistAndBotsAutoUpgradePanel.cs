@@ -2389,12 +2389,17 @@ namespace ColonistAndBotsAutoUpgrade.UI
                 "Allow Enemy Conversion",
                 allowConversion,
                 () => {
-                    CARAUSettings.AllowEnemyConversion = !allowConversion;
+                    CARAUSettings.SetEnemyConversionEnabled(
+                        !allowConversion
+                    );
                     OnEnemyConversionSettingsChanged();
                 },
                 "Expose Convert controls for living hostile incapacitated " +
-                "Beings. Off by default. Ordinary CARAU upgrades and " +
-                "maintenance remain unavailable to hostile targets."
+                "Beings. Off by default. Disabling both routes also turns " +
+                "Enemy Conversion off. Enabling it again with neither route " +
+                "selected restores Implant Obey Chip as the safe default. " +
+                "Ordinary CARAU upgrades and maintenance remain unavailable " +
+                "to hostile targets."
             );
 
             if (allowConversion)
@@ -2413,8 +2418,9 @@ namespace ColonistAndBotsAutoUpgrade.UI
                     "Implant Obey Chip",
                     allowObey,
                     () => {
-                        CARAUSettings.AllowEnemyConversionObeyChip =
-                            !allowObey;
+                        CARAUSettings.SetEnemyConversionObeyChipEnabled(
+                            !allowObey
+                        );
                         OnEnemyConversionSettingsChanged();
                     },
                     "Use an exact available Obey Chip only when the target's " +
@@ -2426,8 +2432,9 @@ namespace ColonistAndBotsAutoUpgrade.UI
                     "Core Swap",
                     allowCore,
                     () => {
-                        CARAUSettings.AllowEnemyConversionCoreSwap =
-                            !allowCore;
+                        CARAUSettings.SetEnemyConversionCoreSwapEnabled(
+                            !allowCore
+                        );
                         OnEnemyConversionSettingsChanged();
                     },
                     "Swap a removable robotic Core for an exact Player Core, " +
