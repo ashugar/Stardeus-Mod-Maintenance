@@ -2,6 +2,8 @@
 
 CARAU evaluates installed body parts, selects compatible replacements from
 available inventory, and queues ordinary Stardeus surgery and assembly work.
+Its optional Enemy Conversion workflow can also prepare exact, confirmed
+procedures for incapacitated hostile Beings.
 
 ## Requirements
 
@@ -27,7 +29,55 @@ CARAU does not currently use AUMF's optional Collapsible Sections feature.
 The former Stardeus Overlays-menu launcher was retired after the two-widget
 model completed live validation.
 
+## Enemy Conversion
+
+Enemy Conversion is disabled by default. When enabled, CARAU offers `Convert`
+for one eligible Being and `Convert All` for a mixed selection while excluding
+non-hostile, dead, non-incapacitated, stored, expedition, in-device, hacked,
+missing-body, already-tracked, and already-in-surgery targets. The same
+eligibility and
+inventory planner serves the Main tab and single- or multi-selection entity
+actions.
+
+- `Implant Obey Chip` requires an empty, usable Implant slot and one exact
+  available compatible chip. CARAU never replaces an installed Implant.
+- `Core Swap` is an explicit opt-in fallback for robotic bodies with a
+  removable, non-welded installed Core. It prefers an available Player-faction
+  Core, then a Blank Core, then a mindless Core; a mindless Core requires a
+  Player-faction surgical operator. The original hostile mind moves into the
+  extracted Core.
+- When both routes are enabled, the selected order controls which viable route
+  CARAU proposes first. Disabling the final route turns Enemy Conversion off;
+  re-enabling it with no selected route restores Obey Chip only, leaving Core
+  Swap opt-in.
+- Confirmation shows the exact target, route, slot, part, and mind mapping.
+  CARAU revalidates that mapping before queueing and does not substitute a
+  different part, switch routes, or automatically retry afterward.
+- CARAU tracks conversion procedures separately. If the target recovers or is
+  no longer hostile before completion, CARAU cancels its retained conversion
+  record and leaves further action to the player.
+
 ## Release history
+
+### 1.2.0
+
+- Adds optional Enemy Conversion for active, living, hostile, incapacitated
+  Beings through selected-Being, selection-wide, and single- or
+  multi-selection entity actions.
+- Adds an Obey Chip route that preserves the original mind and never replaces
+  an occupied Implant, plus an opt-in robotic Core Swap route that accepts an
+  exact available Player, Blank, or guarded mindless Core.
+- Shares one order-aware planner across every action surface, reserves each
+  exact part once, and presents the complete route, slot, part, and mind
+  mapping for confirmation before native surgery is registered.
+- Revalidates the confirmed mapping at queue time without substituting parts,
+  changing routes, or adding automatic retries. Conversion tracking retains
+  distinct postconditions and cancels when the target recovers or ceases to be
+  hostile.
+- Adds save-specific route controls and route priority. Disabling the final
+  route also disables Enemy Conversion; explicitly re-enabling from the
+  no-route state restores Obey Chip only so Core Swap remains opt-in.
+- Preserves settings schema 6 and the AUMF 1.4.0 requirement.
 
 ### 1.1.3
 
