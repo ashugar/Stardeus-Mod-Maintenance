@@ -2454,8 +2454,8 @@ namespace ColonistAndBotsAutoUpgrade.UI
                             .GetComponent<LayoutElement>() ??
                         priorityDropdown.gameObject
                             .AddComponent<LayoutElement>();
-                    priorityDropdownLayout.minHeight = 54f;
-                    priorityDropdownLayout.preferredHeight = 54f;
+                    priorityDropdownLayout.minHeight = 58f;
+                    priorityDropdownLayout.preferredHeight = 58f;
                     priorityDropdownLayout.flexibleHeight = 0f;
                     priorityDropdown.Label.Load("Order of Operations");
                     priorityDropdown.Dropdown.Load(
