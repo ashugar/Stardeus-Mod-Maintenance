@@ -121,7 +121,8 @@ namespace ColonistAndBotsAutoUpgrade.Models
                     AutoInstallFirewallChipWhenHacked,
                 AllowTierUpgrades = AllowTierUpgrades,
                 AllowQualityUpgrades = AllowQualityUpgrades,
-                AllowEnemyConversion = AllowEnemyConversion,
+                AllowEnemyConversion =
+                    AllowEnemyConversion && HasEnemyConversionRoute(),
                 AllowEnemyConversionObeyChip =
                     AllowEnemyConversionObeyChip,
                 AllowEnemyConversionCoreSwap =
@@ -212,6 +213,31 @@ namespace ColonistAndBotsAutoUpgrade.Models
             )
                 ? data.ConversionPriority
                 : EnemyConversionPriority.ObeyChipThenCoreSwap;
+            DisableEnemyConversionWithoutRoute();
+        }
+
+        public static void SetEnemyConversionEnabled(bool enabled)
+        {
+            if (enabled && !HasEnemyConversionRoute())
+            {
+                // Obey Chip is the safe default. Core Swap remains an
+                // explicitly selected fallback.
+                AllowEnemyConversionObeyChip = true;
+            }
+
+            AllowEnemyConversion = enabled;
+        }
+
+        public static void SetEnemyConversionObeyChipEnabled(bool enabled)
+        {
+            AllowEnemyConversionObeyChip = enabled;
+            DisableEnemyConversionWithoutRoute();
+        }
+
+        public static void SetEnemyConversionCoreSwapEnabled(bool enabled)
+        {
+            AllowEnemyConversionCoreSwap = enabled;
+            DisableEnemyConversionWithoutRoute();
         }
 
         public static void DeselectAllSlots(IEnumerable<int> slotIds)
@@ -255,6 +281,20 @@ namespace ColonistAndBotsAutoUpgrade.Models
                        EnemyConversionPriority.ObeyChipThenCoreSwap ||
                    priority ==
                        EnemyConversionPriority.CoreSwapThenObeyChip;
+        }
+
+        private static bool HasEnemyConversionRoute()
+        {
+            return AllowEnemyConversionObeyChip ||
+                   AllowEnemyConversionCoreSwap;
+        }
+
+        private static void DisableEnemyConversionWithoutRoute()
+        {
+            if (!HasEnemyConversionRoute())
+            {
+                AllowEnemyConversion = false;
+            }
         }
 
         public static bool IsSlotEnabled(int slotTypeId)

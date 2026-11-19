@@ -12,6 +12,70 @@ Check.Equal(
     "default order"
 );
 
+CARAUSettings.SetEnemyConversionEnabled(true);
+CARAUSettings.SetEnemyConversionEnabled(false);
+CARAUSettings.SetEnemyConversionEnabled(true);
+Check.ConversionState(
+    true,
+    true,
+    false,
+    "master re-enable preserves Obey-only"
+);
+
+CARAUSettings.SetEnemyConversionCoreSwapEnabled(true);
+CARAUSettings.SetEnemyConversionObeyChipEnabled(false);
+Check.ConversionState(
+    true,
+    false,
+    true,
+    "one enabled route keeps master enabled"
+);
+
+CARAUSettings.SetEnemyConversionEnabled(false);
+CARAUSettings.SetEnemyConversionEnabled(true);
+Check.ConversionState(
+    true,
+    false,
+    true,
+    "master re-enable preserves Core-only"
+);
+
+CARAUSettings.SetEnemyConversionCoreSwapEnabled(false);
+Check.ConversionState(
+    false,
+    false,
+    false,
+    "last route disables master"
+);
+
+CARAUSettings.SetEnemyConversionEnabled(true);
+Check.ConversionState(
+    true,
+    true,
+    false,
+    "explicit master re-enable restores Obey only"
+);
+
+CARAUSettings.ResetSaveSpecificDefaults();
+CARAUSettings.SetEnemyConversionEnabled(true);
+CARAUSettings.SetEnemyConversionObeyChipEnabled(false);
+Check.ConversionState(
+    false,
+    false,
+    false,
+    "last Obey route disables master"
+);
+
+CARAUSettings.ResetSaveSpecificDefaults();
+CARAUSettings.SetEnemyConversionObeyChipEnabled(false);
+CARAUSettings.SetEnemyConversionCoreSwapEnabled(true);
+Check.ConversionState(
+    false,
+    false,
+    true,
+    "route enable does not enable master"
+);
+
 for (var legacySchema = 0; legacySchema <= 5; legacySchema++)
 {
     CARAUSettings.ApplySaveData(new CARAUSettingsData
@@ -42,6 +106,33 @@ for (var legacySchema = 0; legacySchema <= 5; legacySchema++)
         $"schema-{legacySchema} order"
     );
 }
+
+CARAUSettings.ApplySaveData(new CARAUSettingsData
+{
+    SchemaVersion = 6,
+    QualityThresholdPercent = 80,
+    AllowTierUpgrades = true,
+    AllowQualityUpgrades = true,
+    AllowEnemyConversion = true,
+    AllowEnemyConversionObeyChip = false,
+    AllowEnemyConversionCoreSwap = false
+});
+Check.ConversionState(
+    false,
+    false,
+    false,
+    "schema-6 no-route normalization"
+);
+
+CARAUSettings.AllowEnemyConversion = true;
+var inconsistentSaved = CARAUSettings.CreateSaveData();
+Check.ConversionData(
+    inconsistentSaved,
+    false,
+    false,
+    false,
+    "saved master requires an enabled route"
+);
 
 CARAUSettings.ApplySaveData(new CARAUSettingsData
 {
@@ -136,6 +227,47 @@ Console.WriteLine("Enemy Conversion persistence checks passed.");
 
 static class Check
 {
+    public static void ConversionState(
+      bool master,
+      bool obeyChip,
+      bool coreSwap,
+      string name
+    )
+    {
+        Equal(master, CARAUSettings.AllowEnemyConversion, $"{name} master");
+        Equal(
+            obeyChip,
+            CARAUSettings.AllowEnemyConversionObeyChip,
+            $"{name} Obey"
+        );
+        Equal(
+            coreSwap,
+            CARAUSettings.AllowEnemyConversionCoreSwap,
+            $"{name} Core"
+        );
+    }
+
+    public static void ConversionData(
+      CARAUSettingsData data,
+      bool master,
+      bool obeyChip,
+      bool coreSwap,
+      string name
+    )
+    {
+        Equal(master, data.AllowEnemyConversion, $"{name} master");
+        Equal(
+            obeyChip,
+            data.AllowEnemyConversionObeyChip,
+            $"{name} Obey"
+        );
+        Equal(
+            coreSwap,
+            data.AllowEnemyConversionCoreSwap,
+            $"{name} Core"
+        );
+    }
+
     public static void Equal<T>(T expected, T actual, string name)
     {
         if (!EqualityComparer<T>.Default.Equals(expected, actual))
