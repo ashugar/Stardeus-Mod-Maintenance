@@ -2442,12 +2442,33 @@ namespace ColonistAndBotsAutoUpgrade.UI
                         "Obey Chip before Core Swap",
                         "Core Swap before Obey Chip"
                     };
+                    var priorityRow = context.CreateOwned(
+                        "CARAU_EnemyConversionPriorityRow"
+                    );
+                    priorityRow.transform.SetParent(container, false);
+                    priorityRow.transform.SetSiblingIndex(row++);
+
+                    var priorityRowRect =
+                        priorityRow.AddComponent<RectTransform>();
+                    priorityRowRect.localScale = Vector3.one;
+                    var priorityRowSize =
+                        priorityRow.AddComponent<LayoutElement>();
+                    priorityRowSize.minHeight = 58f;
+                    priorityRowSize.preferredHeight = 58f;
+                    priorityRowSize.flexibleHeight = 0f;
+                    var priorityRowLayout =
+                        priorityRow.AddComponent<HorizontalLayoutGroup>();
+                    priorityRowLayout.childControlWidth = true;
+                    priorityRowLayout.childControlHeight = true;
+                    priorityRowLayout.childForceExpandWidth = true;
+                    priorityRowLayout.childForceExpandHeight = true;
+
                     var priorityDropdown =
                         UISpawn.Widget<WDropdownWithLabel>(
                             context.Lifetime,
                             UIPrefabId.WTabPanelItem_Dropdown,
-                            container,
-                            row++
+                            priorityRowRect,
+                            0
                         );
                     priorityDropdown.Label.Load("Order of Operations");
                     priorityDropdown.Dropdown.Load(
