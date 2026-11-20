@@ -215,10 +215,12 @@
         "ModInfo.json",
         "ModCover.jpg",
         "SteamWorkshopItemId",
-        "Untitled.png"
+        "Untitled.png",
+        "README.md"
       ],
       "IncludeDirectories": [
         "Definitions",
+        "Patches",
         "Graphics",
         "Translations"
       ],

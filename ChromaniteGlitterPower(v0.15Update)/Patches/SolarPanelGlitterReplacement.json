@@ -1,0 +1,13 @@
+{
+  "target": "Definitions/Objects/Devices/SolarPanel.json",
+  "operations": [
+    {
+      "op": "add",
+      "path": "/Components[Component=Constructable]/Properties/-",
+      "value": {
+        "Key": "CanReplaceGroup",
+        "String": "ChromaniteGlitterPower.SolarReplacement1x1"
+      }
+    }
+  ]
+}

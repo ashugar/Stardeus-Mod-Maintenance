@@ -89,6 +89,7 @@
             "Properties" : [
                 { "Key" : "Placement", "String" : "InSpaceAttachedChained" },
                 { "Key" : "PlacementGroup", "String" : "SolarPanel" },
+                { "Key" : "CanReplaceGroup", "String" : "ChromaniteGlitterPower.SolarReplacement1x1" },
                 { "Key" : "WorkAmount", "Int" : 1000 },
                 {
                     "Key" : "Contents",
