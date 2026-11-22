@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Stopwatch = System.Diagnostics.Stopwatch;
 using AutoUtilitiesModFramework;
@@ -26,7 +27,7 @@ public sealed partial class PlanningOverhaulSys : GameSystem, ISaveable
     public const string ConsumerId = "PlanningOverhaul";
     public const string RequiredUtilitiesVersion = "1.4.0";
     private const string HarmonyId = "jleas.stardeus.planningoverhaul";
-    private const int SaveSchemaVersion = 3;
+    private const int SaveSchemaVersion = 4;
     private const long AutomationIntervalTicks = 24;
     private const long MaterialWaitRecheckIntervalTicks =
         AutomationIntervalTicks * 10;
@@ -2184,6 +2185,16 @@ public sealed partial class PlanningOverhaulSys : GameSystem, ISaveable
                 refreshMs = perf.ElapsedMilliseconds - phaseStart;
                 return;
             }
+            if (!PlanningOverhaulRoomIdMigration.TryNormalize(snapshot,
+                    out error))
+            {
+                outcome = "invalid-room-ids";
+                lastStatus = "Blueprint import failed: " + error;
+                phaseStart = perf.ElapsedMilliseconds;
+                ui?.Refresh();
+                refreshMs = perf.ElapsedMilliseconds - phaseStart;
+                return;
+            }
             var sizes = new Dictionary<(string DefId, int Rotation), (int Width, int Height)>();
             (int Width, int Height) FootprintSize(PlanEntry entry)
             {
@@ -2216,7 +2227,7 @@ public sealed partial class PlanningOverhaulSys : GameSystem, ISaveable
             OrderBlueprintRoomsCenterOut(adapted, S.GridHeight);
             orderMs = perf.ElapsedMilliseconds - phaseStart;
             phaseStart = perf.ElapsedMilliseconds;
-            ApplySnapshot(adapted, false);
+            ApplyNormalizedSnapshot(adapted, false);
             applyMs = perf.ElapsedMilliseconds - phaseStart;
             int missing = entries.Count(entry => The.Defs.TryGet(entry.DefId) == null);
             lastStatus = "Imported “" + blueprintName + "”: " + rooms.Count + " rooms and "
@@ -2270,7 +2281,17 @@ public sealed partial class PlanningOverhaulSys : GameSystem, ISaveable
         return snapshot;
     }
 
-    private void ApplySnapshot(PlanningBlueprintSnapshot snapshot, bool preserveRuntime)
+    private Dictionary<int, int> ApplySnapshot(PlanningBlueprintSnapshot snapshot,
+        bool preserveRuntime)
+    {
+        Dictionary<int, int> roomIdMigration =
+            PlanningOverhaulRoomIdMigration.Normalize(snapshot);
+        ApplyNormalizedSnapshot(snapshot, preserveRuntime);
+        return roomIdMigration;
+    }
+
+    private void ApplyNormalizedSnapshot(PlanningBlueprintSnapshot snapshot,
+        bool preserveRuntime)
     {
         if (!preserveRuntime) ReleaseConstructionSupportOwnership();
         else InvalidateConstructionSupportPlan();
@@ -2579,20 +2600,42 @@ public sealed partial class PlanningOverhaulSys : GameSystem, ISaveable
         if (data == null) return;
         planColorKey = data.GetInt("PlanColorKey", 0) == (int)PlanColorKey.BuildingType
             ? PlanColorKey.BuildingType : PlanColorKey.Room;
+        var roomIdMigration = new Dictionary<int, int>();
         string encoded = data.GetString("Blueprint", null);
         if (!string.IsNullOrWhiteSpace(encoded)
                 && BlueprintCodec.TryDecode(encoded, out PlanningBlueprintSnapshot snapshot, out _))
-            ApplySnapshot(snapshot, true);
+        {
+            try
+            {
+                roomIdMigration = ApplySnapshot(snapshot, true);
+            }
+            catch (InvalidDataException exception)
+            {
+                PlanningOverhaulLog.Info("Saved Construction Plan was not loaded: "
+                    + exception.Message);
+                return;
+            }
+        }
         Continuous = data.GetBool("Continuous", false);
         continuousRoomId = 0;
         continuousRoomCursorId = 0;
         ResetPostRotationConfigurationPass();
         ResetActiveWorkRotation(clearWarning: true);
-        manualPulseRoomId = data.GetInt("ManualPulseRoomId", 0);
-        activePulseRoomId = data.GetInt("ActivePulseRoomId", 0);
-        activePulseIsManual = data.GetBool("ActivePulseIsManual", false);
-        LoadRelocationState(data);
-        LoadConstructionSupportState(data);
+        manualPulseRoomId = PlanningOverhaulRoomIdMigration.Remap(
+            data.GetInt("ManualPulseRoomId", 0), roomIdMigration,
+            preserveZeroSentinel: true);
+        activePulseRoomId = PlanningOverhaulRoomIdMigration.Remap(
+            data.GetInt("ActivePulseRoomId", 0), roomIdMigration,
+            preserveZeroSentinel: true);
+        activePulseIsManual = activePulseRoomId != 0
+            && data.GetBool("ActivePulseIsManual", false);
+        LoadRelocationState(data, roomIdMigration);
+        LoadConstructionSupportState(data, roomIdMigration);
+        if (roomIdMigration.Count > 0)
+            PlanningOverhaulLog.Info("Migrated " + roomIdMigration.Count
+                + " legacy nonpositive Construction Plan room ID"
+                + (roomIdMigration.Count == 1 ? string.Empty : "s")
+                + " to stable positive IDs.");
     }
 
     private void DetachLoadedState()

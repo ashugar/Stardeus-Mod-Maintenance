@@ -848,7 +848,8 @@ internal sealed class PlanningOverhaulUi : IDisposable
                 ? system.ContinuousConstructionPreview : null;
         IReadOnlyList<MaterialRequirement> shownMaterials = construction != null
             ? construction.Materials : preview.Materials;
-        string roomTitle = (pausedInspection ? "Selected room · "
+        string roomTitle = (pausedInspection || system.Continuous
+                    && !showingContinuousRoom ? "Selected room · "
                 : system.Continuous ? "Active room · " : "Next wave · ")
             + (preview.Room?.Name ?? "No room");
         return new PulseUiState
