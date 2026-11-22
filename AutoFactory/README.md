@@ -902,6 +902,16 @@ without preventing Auto Factory from automating the native facility role.
 
 ## Release history
 
+### 1.5.5
+
+- Corrected Nano Cloning Pod animation configuration to consume the inherited
+  single offset instead of supplying four identical directional offsets.
+  This prevents the unused `TileAnimation.Offset` construction warning on
+  Stardeus 0.15.25.3275.
+- Preserved the (0, 0.68) position, directional sprites, animation settings,
+  production behavior, research corrections, and quiet diagnostic defaults.
+- Synchronized the manifest, project, and compiled DLL at version 1.5.5.
+
 ### 1.5.4
 
 - Disabled recurring planner, cache, and phase-timing diagnostics in standard

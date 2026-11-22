@@ -21,12 +21,7 @@
         {
             "Component": "TileAnimation",
             "Properties": [
-                { "Key": "Offsets", "Vector2Set": [
-                    { "x": 0.0, "y": 0.68 },
-                    { "x": 0.0, "y": 0.68 },
-                    { "x": 0.0, "y": 0.68 },
-                    { "x": 0.0, "y": 0.68 }
-                ] },
+                { "Key": "Offset", "Vector2": { "x": 0.0, "y": 0.68 } },
                 { "Key": "Size", "Vector2": { "x": 1.47, "y": 1.47 } },
                 { "Key": "Rotations", "StringSet": [ "D", "L", "U", "R" ] },
                 { "Key": "Direction", "Int": 1 },
