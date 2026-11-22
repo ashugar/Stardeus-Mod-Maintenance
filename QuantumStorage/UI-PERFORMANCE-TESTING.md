@@ -1,8 +1,30 @@
-# Material panel performance
+# Quantum Storage performance and diagnostic closeout
 
-## Release status — 1.3.11
+## Release 1.3.12 — Nanobot planning optimization
 
-Version 1.3.11 promotes the user-validated research data revision under a new release version. The panel guard, row cache, native controls and default-off diagnostic policy retain the existing implementation; only version metadata and the fixed diagnostic build label change. The historical performance evidence below remains attached to its stated test build and Core version. Fresh startup of the rebuilt 1.3.11 DLL is pending; no new panel benchmark or broader gameplay validation is claimed.
+The performance fix retains the original tick/event-refreshed Relay topology read view only inside recognized native Nanobot candidate planning and matching MatClaimGate material checks. Experimental per-query whole-registry validation had added two global scans to each Relay-dependent query. The final planning path avoids those repeated scans while executing both native material queries and preserving current provider availability, positive-count/Forbidden guards, eligibility, source identities and fresh reservations. Normal queries and active-operation revalidation retain the stricter path; unknown native method content/signatures retain its safe fallback.
+
+The shared query facade enumerates native non-pile storages and piles of the requested type. It restores Core's Forbidden-pile handling and positive-availability rule, which were omitted by the former replacement. Optional native source indexing exposes only the physical types owned by each Relay; hook refusal retains native indexing. These changes are distinct from the measured removal of repeated global validation.
+
+Planning has the original temporal policy: a remote bridge changed directly without a native invalidation event during the same tick or while paused may remain in the advisory view until the next tick/event. Normal native invalidation events refresh immediately. A mapped local endpoint that becomes inactive forces refresh/refusal. Generation, readiness, tick and context checks reject inconsistent reads. Pooled stock actions keep their existing forced topology checks; local Nanobot withdrawals retain actual physical stock, fresh pinned amounts and Core's bounds. No quantity/result/claim cache, stock migration or active-job change is introduced.
+
+## Observed local results and limits
+
+On inspected Core `v0.15.25.3275`, the initial optimized original-save capture completed its 120-second window with the intended Nanobot path active and no sampled query failures. Relative to the preceding local candidate, full topology checks per sampled query fell from 2.00 to 0.119 (about 94%), mean query time from 0.480 to 0.167 ms (about 65%) and mean topology time from 0.333 to 0.022 ms (about 93%). The player reported early FPS improving from the low teens to the upper 70s, then exceeding 100 FPS later. Automatic Raider slowdowns and evolving workload prevent a controlled FPS multiplier or a 150 FPS promise at 3x.
+
+Later focused and pool-resolution captures confirmed active diagnostics and planning optimization, without sampled query failures or invalid scopes. The final capture recorded 145 pool-key probes, including 134 resolved Relay probes, with no sampled forced refreshes, refetches or local fallbacks. Duplicate bookkeeping, first map lookups and direct endpoint-active timings were small; no clear worthwhile safe follow-up was established, so the narrow tuning round stopped. This does not prove that further gains are impossible elsewhere. Sparse ordinal witnesses are biased, stage clocks overlap, and different categories observe different witnesses; their aggregate ratios are not exclusive whole-query CPU shares. A few early admitted-key samples dominated that category, so they are not a typical-cost or confirmed JIT finding.
+
+The runtime allocation counter was unresponsive and engine CPU/GPU timing disabled. Allocation bytes, GC pause attribution and exclusive whole-frame CPU causes therefore remain unmeasured. Update intervals are not renderer FPS. Capture observations and external substitute-Core fixtures are separate from comprehensive game/save/UI acceptance. Historical regression checklists remain coverage limits, not new bug reports.
+
+## Diagnostic retirement and release evidence
+
+The normal 1.3.12 release is built without `RelayQueryBaseline=true`: temporary Relay recorder types, detail timing, caller tracing and observer branches are excluded. The unbundled local `RelayQueryBaseline.enabled` marker is retired for normal play. Source/fixtures for explicitly opted-in future investigations remain available; no profiler setting or forced GC is introduced. Panel diagnostics remain off, with native panel behavior and its complete fallback unchanged.
+
+Version metadata is synchronized to 1.3.12. This rebuilt release binary still needs a fresh startup observation; previous runtime evidence applies to its tested local 1.3.11 diagnostic candidates. No further performance test is automatically required by unexercised historical scenarios, and no unreported gameplay acceptance or Workshop publication is asserted. The local diagnostic iteration journal and raw incident evidence stay private; the supported release behavior and measurement limits are recorded here.
+
+## Historical release status — 1.3.11
+
+Version 1.3.11 promotes the user-validated research data revision under a new release version. The panel guard, row cache, native controls and default-off diagnostic policy retain the existing implementation; only version metadata and the fixed diagnostic build label change. The historical performance evidence below remains attached to its stated test build and Core version. At preparation of that metadata-only binary, fresh startup was pending; later local 1.3.11 optimization captures are described above. No new panel benchmark or broader gameplay validation was claimed for the metadata change.
 
 ## Accepted local repair observation — 2026-10-22
 

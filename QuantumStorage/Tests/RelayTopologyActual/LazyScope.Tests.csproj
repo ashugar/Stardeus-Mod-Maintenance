@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><EnableDefaultCompileItems>false</EnableDefaultCompileItems><DefineConstants>QUANTUM_RELAY_QUERY_BASELINE;LAZY_ADAPTER_FIXTURE</DefineConstants></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="LazyScopeProgram.cs"/><Compile Include="LazyAdapterStubs.cs"/><Compile Include="Stubs.cs"/>
+    <Compile Include="../../Code/Relays/StorageRelayQueries.cs"/><Compile Include="../../Code/Relays/StorageRelayTopology.cs"/><Compile Include="../../Code/Relays/RelayPolicy.cs"/>
+    <Compile Include="../../Code/MaterialQueryAdapter.cs"/><Compile Include="../../Code/MaterialQueryEngine.cs"/>
+  <Compile Include="../../Code/RelayQueryFocus.cs"/></ItemGroup>
+</Project>

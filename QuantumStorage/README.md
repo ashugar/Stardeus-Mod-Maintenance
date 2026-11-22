@@ -4,13 +4,31 @@ Quantum Storage provides ten compact late-game storage endpoints. Matching endpo
 
 The first endpoint supplies a fixed initial capacity. Each additional endpoint of the same type doubles the network total.
 
-## Current release — 1.3.11 validated research progression
+## Current release — 1.3.12 Nanobot material-query optimization
+
+Version 1.3.12 reduces repeated Relay network-validation work while Nanobot Hives plan construction, refill and crafting-material jobs. Recognized native candidate planning and its matching MatClaimGate checks reuse the original tick/event-refreshed topology read view. Both native material queries still execute; material quantities, positive availability, Forbidden policy, provider order, endpoint eligibility and fresh reservations remain authoritative. Other query contexts, active-operation revalidation and uncertain native contracts retain the stricter validation path.
+
+The shared material-query path uses Core's non-pile storages plus piles of the requested material type, and deduplicates a pool only after an endpoint passes the caller's checks. It also restores Core's Forbidden-pile policy and requires positive availability, including for non-positive requested amounts; these are native-policy corrections to the older replacement. Core's material-source index sees only each Relay's local material types, without promoting remote stock into that endpoint.
+
+Each Relay retains its own physical inventory and native reservations. Pooled stock actions keep their existing topology checks; Nanobot withdrawals still check local physical stock, fresh pinned amounts and native bounds. No stock/result/claim cache, inventory migration, research rebalance or change to active jobs is introduced. Current Core method content and signatures guard the optional planning optimization, rather than a game-version whitelist. The material panel and its complete native fallback remain intact.
+
+On inspected Core `v0.15.25.3275`, the local optimized save-load capture reduced full topology checks per sampled query by about 94%, mean query time from 0.480 to 0.167 ms and mean topology time from 0.333 to 0.022 ms. The player reported early FPS rising from the low teens to the upper 70s, then exceeding 100 FPS later in the capture. Raider-triggered speed changes and evolving simulation work prevent a controlled FPS multiplier or a promise of 150 FPS at 3x. Later focused captures did not establish another worthwhile safe pool-lookup fix, so that tuning round stopped.
+
+Temporary Relay profiling is excluded from the normal release build and its local opt-in marker is retired. Diagnostic source and fixtures remain available for future explicitly enabled investigations. Panel diagnostics remain off. These captures establish the tested local optimization's activation and observed performance, not exhaustive inventory/save/UI acceptance. Fresh startup of the rebuilt 1.3.12 release binary and Workshop publication remain separate pending steps. See [performance evidence](UI-PERFORMANCE-TESTING.md) and [compatibility coverage](COMPATIBILITY-TESTING.md).
+
+## Included source
+
+The installed mod and prepared release include all 39 C# source files in their original `Code/` folder structure, together with `mod.csproj`. These files match the reviewed release source. Game assemblies and build caches are not bundled. The retained diagnostic source is compile-gated; it does not enable profiling in the normal release DLL.
+
+To rebuild, use the .NET SDK and pass `-p:StardeusManagedPath="<Stardeus>/Stardeus_Data/Managed"` to `dotnet build mod.csproj -c Release`. Leave `RelayQueryBaseline` unset or false for the normal build. Tests remain available in the repository rather than the installed mod payload.
+
+## Previous release — 1.3.11 validated research progression
 
 Version 1.3.11 assigns a new release version to the research fix the user validated in the 1.3.10 data revision. It preserves that exact research definition: Tier 5, Quantum Computing as the sole prerequisite, and 21 High-Tech, 16 Quantum and 10 Nuclear Datoids (weighted cost 340). Quasi-Quantum research and the ten existing unlock bindings are unchanged.
 
-The DLL is rebuilt for synchronized release metadata and the diagnostic build label; this is not another research or gameplay change. User acceptance of F11 remains recorded against the preceding data revision. Fresh startup of the rebuilt 1.3.11 DLL and Workshop publication of 1.3.11 remain pending; no additional individual gameplay scenarios are inferred from the user's validation statement. Diagnostics remain default-off.
+The DLL is rebuilt for synchronized release metadata and the diagnostic build label; this is not another research or gameplay change. User acceptance of F11 remains recorded against the preceding data revision. At preparation of that metadata-only revision, fresh startup and Workshop publication were unconfirmed. Later local optimization captures used 1.3.11 test builds as described above; they do not imply additional research-test scenarios or Workshop publication. Diagnostics were default-off.
 
-With the inspected TACC 1.1.6, the rebuilt DLL's new module identity can produce four unreviewed Quantum equipment-effect patch diagnostics until TACC's recognition is reviewed. The inspected TACC path records/logs these findings and refreshes its diagnostic UI; it does not disable gameplay. No TACC update or recognition waiver is included in this release.
+Historical compatibility note: with the then-inspected TACC 1.1.6, the rebuilt DLL's new module identity can produce four unreviewed Quantum equipment-effect patch diagnostics until TACC's recognition is reviewed. The inspected TACC path records/logs these findings and refreshes its diagnostic UI; it does not disable gameplay. No TACC update or recognition waiver is included in this release.
 
 ## Accepted data revision — 1.3.10 research progression (2026-11-08)
 

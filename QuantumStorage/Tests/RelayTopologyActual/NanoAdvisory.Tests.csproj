@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><EnableDefaultCompileItems>false</EnableDefaultCompileItems><DefineConstants>QUANTUM_RELAY_QUERY_BASELINE;LAZY_ADAPTER_FIXTURE;NANO_ADVISORY_FIXTURE</DefineConstants></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="NanoAdvisoryProgram.cs"/><Compile Include="PoolDiagnosticTests.cs"/><Compile Include="NanoContextStubs.cs"/><Compile Include="LazyAdapterStubs.cs"/><Compile Include="Stubs.cs"/>
+    <Compile Include="../../Code/Relays/NanobotCandidateQueries.cs"/>
+    <Compile Include="../../Code/Relays/StorageRelayQueries.cs"/><Compile Include="../../Code/Relays/StorageRelayTopology.cs"/><Compile Include="../../Code/Relays/RelayPolicy.cs"/>
+    <Compile Include="../../Code/MaterialQueryAdapter.cs"/><Compile Include="../../Code/MaterialQueryEngine.cs"/>
+  <Compile Include="../../Code/RelayQueryFocus.cs"/></ItemGroup>
+</Project>

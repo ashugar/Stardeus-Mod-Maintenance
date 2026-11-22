@@ -617,7 +617,7 @@ namespace Game.Systems.QuantumStorage
         }
     }
 
-    [HarmonyPatch(typeof(InventorySys), nameof(InventorySys.HasEnough))]
+    [HarmonyPatch(typeof(InventorySys), nameof(InventorySys.HasEnough), new Type[] { typeof(MatType), typeof(int), typeof(int), typeof(Being) })]
     internal static class InventoryHasEnoughPatch
     {
         private static bool Prefix(InventorySys __instance, MatType type, int amount, int islandId, Being being, ref bool __result)

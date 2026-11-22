@@ -146,6 +146,7 @@ namespace Game.Systems.QuantumStorage.Relays
 
         private static void Contents(MatStorageComp __instance, ref Dictionary<MatType, int> __result)
         {
+            if (ReferenceEquals(EndpointReadScope<MatStorageComp>.Current, __instance)) { return; }
             if (!Is(__instance) || LocalDepth > 0 || ownedDepth > 0) { return; }
             var n = Network(__instance);
             if (n != null) { __result = n.Contents; }
@@ -354,18 +355,8 @@ namespace Game.Systems.QuantumStorage.Relays
         private static bool HasEnough(InventorySys __instance, MatType type, int amount, int islandId, Being being, ref bool __result)
         {
             if (StorageRelaySys.Get(__instance.S)?.HasNodes != true) { return true; }
-            long count = 0; var seen = new HashSet<object>();
-            BeingSafety safety = being?.Data.Safety;
-            bool ignoreDanger = safety == null || safety.IgnoreDanger;
-            foreach (var s in __instance.Storages)
-            {
-                if (s.StorageType == StorageType.StoreOnly ||
-                    (islandId != -1 && !__instance.S.Sys.Areas.CanReachGroundedIslandToPos(islandId, s.OutPort)) ||
-                    (!ignoreDanger && !safety.IsActuallySafeAt(s.OutPort)) || !seen.Add(Key(__instance.S, s))) { continue; }
-                count += s.Available(type);
-                if (count >= amount) { __result = true; return false; }
-            }
-            __result = false; return false;
+            __result = RelayMaterialQuery.HasEnough(__instance, type, amount, islandId, being);
+            return false;
         }
         private static bool CountGroup(InventorySys __instance, int group, ref int __result)
         {
