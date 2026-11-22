@@ -4353,21 +4353,25 @@ public sealed partial class PlanningOverhaulSys
             planConstructionRooms.Select(item => item.Key + "," + item.Value)));
     }
 
-    private void LoadRelocationState(ComponentData data)
+    private void LoadRelocationState(ComponentData data,
+        IReadOnlyDictionary<int, int> roomIdMigration)
     {
         relocationTargets.Clear();
         stagedBuildings.Clear();
         planConstructionRooms.Clear();
         planDeconstructionRooms.Clear();
-        ParseRelocationMap(data.GetString("RelocationTargets", string.Empty), relocationTargets);
-        ParseRelocationMap(data.GetString("StagedBuildings", string.Empty), stagedBuildings);
+        ParseRelocationMap(data.GetString("RelocationTargets", string.Empty),
+            relocationTargets, roomIdMigration);
+        ParseRelocationMap(data.GetString("StagedBuildings", string.Empty),
+            stagedBuildings, roomIdMigration);
         ParseIntMap(data.GetString("PlanDeconstructionRooms", string.Empty),
-            planDeconstructionRooms);
+            planDeconstructionRooms, roomIdMigration);
         ParseIntMap(data.GetString("PlanConstructionRooms", string.Empty),
-            planConstructionRooms);
+            planConstructionRooms, roomIdMigration);
     }
 
-    private static void ParseIntMap(string value, Dictionary<int, int> result)
+    private static void ParseIntMap(string value, Dictionary<int, int> result,
+        IReadOnlyDictionary<int, int> roomIdMigration)
     {
         if (string.IsNullOrWhiteSpace(value)) return;
         foreach (string item in value.Split(new[] { ';' },
@@ -4376,12 +4380,14 @@ public sealed partial class PlanningOverhaulSys
             string[] fields = item.Split(',');
             if (fields.Length == 2 && int.TryParse(fields[0], out int key)
                     && int.TryParse(fields[1], out int mappedValue))
-                result[key] = mappedValue;
+                result[key] = PlanningOverhaulRoomIdMigration.Remap(mappedValue,
+                    roomIdMigration);
         }
     }
 
     private static void ParseRelocationMap(string value,
-        Dictionary<int, RelocationWorkState> target)
+        Dictionary<int, RelocationWorkState> target,
+        IReadOnlyDictionary<int, int> roomIdMigration)
     {
         foreach (string pair in value.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
         {
@@ -4390,7 +4396,8 @@ public sealed partial class PlanningOverhaulSys
                     && int.TryParse(fields[1], out int roomId))
                 target[targetId] = new RelocationWorkState
                 {
-                    RoomId = roomId,
+                    RoomId = PlanningOverhaulRoomIdMigration.Remap(roomId,
+                        roomIdMigration),
                     ManualAuthorized = fields.Length >= 3 && fields[2] == "1"
                 };
         }

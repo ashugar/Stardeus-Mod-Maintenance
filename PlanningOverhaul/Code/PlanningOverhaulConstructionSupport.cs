@@ -752,7 +752,8 @@ public sealed partial class PlanningOverhaulSys
             constructionSupportEvaluatedRooms.OrderBy(id => id)));
     }
 
-    private void LoadConstructionSupportState(ComponentData data)
+    private void LoadConstructionSupportState(ComponentData data,
+        IReadOnlyDictionary<int, int> roomIdMigration)
     {
         constructionSupportAdditions.Clear();
         constructionSupportEvaluatedRooms.Clear();
@@ -772,7 +773,8 @@ public sealed partial class PlanningOverhaulSys
             constructionSupportAdditions[entityId] =
                 new ConstructionSupportAddition
                 {
-                    RoomId = roomId,
+                    RoomId = PlanningOverhaulRoomIdMigration.Remap(roomId,
+                        roomIdMigration),
                     Position = position,
                     DefId = fields[3]
                 };
@@ -782,7 +784,9 @@ public sealed partial class PlanningOverhaulSys
         foreach (string item in evaluated.Split(new[] { ',' },
                      StringSplitOptions.RemoveEmptyEntries))
             if (int.TryParse(item, out int roomId))
-                constructionSupportEvaluatedRooms.Add(roomId);
+                constructionSupportEvaluatedRooms.Add(
+                    PlanningOverhaulRoomIdMigration.Remap(roomId,
+                        roomIdMigration));
     }
 
     private sealed class ConstructionSupportAddition

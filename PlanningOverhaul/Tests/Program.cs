@@ -24,6 +24,7 @@ internal static class Program
     private static void Main(string[] args)
     {
         CodecTests();
+        RoomIdMigrationTests();
         ClipboardImportTests();
         PlanningOverhaulSys.StateTests();
         PlanningOverhaulSys.CandidateTests();
@@ -40,9 +41,78 @@ internal static class Program
             Check(BaselineBlueprintCodec.TryDecode(code, out var oldSnapshot, out error), error);
             Check(BlueprintCodec.Encode(snapshot) == BaselineBlueprintCodec.Encode(oldSnapshot), "Real blueprint baseline parity");
 #endif
+            int entryCount = snapshot.Entries.Count;
+            Dictionary<int, int> migration =
+                PlanningOverhaulRoomIdMigration.Normalize(snapshot);
+            Check(snapshot.Rooms.All(room => room.Id > 0),
+                "Real blueprint room IDs normalize positive");
+            Check(snapshot.Entries.All(entry => entry.RoomId > 0),
+                "Real blueprint entry room IDs normalize positive");
+            Check(snapshot.Entries.Count == entryCount,
+                "Real blueprint room-ID migration preserves entries");
+            Check(PlanningOverhaulRoomIdMigration.Normalize(snapshot).Count == 0,
+                "Real blueprint room-ID migration is idempotent");
             Console.WriteLine($"Read-only blueprint check: {snapshot.Entries.Count} entries, {snapshot.Rooms.Count} rooms");
         }
         Console.WriteLine("PASS: " + assertions + " assertions. Core/gameplay acceptance remains in-game.");
+    }
+
+    private static void RoomIdMigrationTests()
+    {
+        var legacy = new PlanningBlueprintSnapshot
+        {
+            Name = "Legacy IDs", CurrentRoomId = 0,
+            MapWidth = 320, MapHeight = 320
+        };
+        legacy.Rooms.Add(new PlanRoom { Id = 0, Order = 0, Name = "Central" });
+        legacy.Rooms.Add(new PlanRoom { Id = 2, Order = 1, Name = "Positive" });
+        legacy.Rooms.Add(new PlanRoom { Id = -7, Order = 2, Name = "Negative" });
+        legacy.Entries.Add(new PlanEntry { RoomId = 0, Position = 1, DefId = "A" });
+        legacy.Entries.Add(new PlanEntry { RoomId = -7, Position = 2, DefId = "B" });
+        legacy.Entries.Add(new PlanEntry { RoomId = -99, Position = 3, DefId = "Orphan" });
+        legacy.Entries.Add(new PlanEntry { RoomId = 50, Position = 4, DefId = "PositiveOrphan" });
+
+        Dictionary<int, int> migration =
+            PlanningOverhaulRoomIdMigration.Normalize(legacy);
+        Check(migration[0] == 51 && migration[-7] == 52
+                && migration[-99] == 53,
+            "Nonpositive room IDs migrate deterministically above positive IDs");
+        Check(legacy.CurrentRoomId == 51
+                && legacy.Rooms.Select(room => room.Id)
+                    .SequenceEqual(new[] { 51, 2, 52 }),
+            "Room records and current room migrate consistently");
+        Check(legacy.Entries.Select(entry => entry.RoomId)
+                .SequenceEqual(new[] { 51, 52, 53, 50 }),
+            "Entry and orphan room references migrate consistently");
+        Check(PlanningOverhaulRoomIdMigration.Remap(0, migration,
+                preserveZeroSentinel: true) == 0,
+            "Ambiguous legacy active-pulse zero remains idle");
+        Check(PlanningOverhaulRoomIdMigration.Remap(-7, migration,
+                preserveZeroSentinel: true) == 52,
+            "Unambiguous saved runtime room reference migrates");
+        Check(PlanningOverhaulRoomIdMigration.Normalize(legacy).Count == 0,
+            "Room-ID migration is idempotent");
+
+        PlanningBlueprintSnapshot positive = Fixture(100);
+        string before = BlueprintCodec.Encode(positive);
+        Check(PlanningOverhaulRoomIdMigration.Normalize(positive).Count == 0
+                && BlueprintCodec.Encode(positive) == before,
+            "Positive-ID blueprint serialization remains byte-identical");
+
+        var duplicate = new PlanningBlueprintSnapshot
+        {
+            CurrentRoomId = 1, MapWidth = 320, MapHeight = 320
+        };
+        duplicate.Rooms.Add(new PlanRoom { Id = 1, Order = 0 });
+        duplicate.Rooms.Add(new PlanRoom { Id = 1, Order = 1 });
+        Check(!PlanningOverhaulRoomIdMigration.TryNormalize(duplicate,
+                    out string duplicateError)
+                && duplicateError.Contains("duplicate room ID 1"),
+            "Import-boundary normalization rejects duplicate rooms before ordering");
+        bool rejected = false;
+        try { PlanningOverhaulRoomIdMigration.Normalize(duplicate); }
+        catch (InvalidDataException) { rejected = true; }
+        Check(rejected, "Duplicate room records are rejected as ambiguous");
     }
 
     private static void ClipboardImportTests()

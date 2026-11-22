@@ -13,6 +13,7 @@
     <Compile Include="*.cs" />
     <Compile Include="../Code/PlanModels.cs" />
     <Compile Include="../Code/PlanningOverhaulBlueprintCodec.cs" />
+    <Compile Include="../Code/PlanningOverhaulRoomIdMigration.cs" />
     <Compile Include="../Code/PlanningOverhaulClipboardImport.cs" />
     <Compile Include="../Code/PlanningOverhaulPlanIndex.cs" />
     <Compile Include="../Code/PlanningOverhaulEquipmentState.cs" />

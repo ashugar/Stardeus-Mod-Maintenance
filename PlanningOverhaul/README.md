@@ -1,4 +1,4 @@
-# Planning Overhaul 1.1.0
+# Planning Overhaul 1.1.1
 
 Planning Overhaul makes layered construction plans visible and adds native building relocation through designated staging areas.
 
@@ -81,6 +81,13 @@ The Blueprints tab uses collapsible **Create from constructed ship** and **Save/
 Saved blueprints appear in a bounded scrollable list. Each saved blueprint has a delete button using Core's demolition icon on the right of its load row. This deletes only that blueprint's `.pob` file and refreshes the list. The active Construction Plan and its jobs remain unchanged. A status message reports the result or a file error.
 
 ## Release status
+
+### 1.1.1
+
+- Migrates legacy or externally generated nonpositive room IDs to stable positive IDs before applying a blueprint or saved Construction Plan. The same migration follows saved relocation, construction, deconstruction, staging, and optional-support ownership, so existing room-zero saves resume without reimporting or changing constructed buildings.
+- Keeps ambiguous legacy active/manual room zero values idle and lets normal Core-task reconciliation recover pending work instead of inventing a phantom Pulse Wave.
+- Labels the selected-room fallback accurately while Continuous construction is between rooms instead of presenting it as scheduler-active.
+- Leaves native connector construction and auto-connect ownership unchanged.
 
 ### Local hardening pass (version remains 1.1.0)
 
