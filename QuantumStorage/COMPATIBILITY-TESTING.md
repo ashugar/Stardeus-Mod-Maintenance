@@ -1,10 +1,20 @@
-# Quantum Storage 1.3.11 — validated research progression
+# Quantum Storage 1.3.12 — Nanobot material-query optimization
 
-## Current release scope — 1.3.11
+## Current release scope — 1.3.12
 
-The user confirmed validation of the selected F11 research fix in the preceding 1.3.10 data revision. Version 1.3.11 preserves that exact research definition and synchronizes the mod, project and rebuilt DLL versions plus the fixed diagnostic build label. It adds no further research, Quasi, unlock-binding or gameplay change. Fresh startup of the rebuilt 1.3.11 DLL remains pending; the user's acceptance does not claim unreported individual test scenarios or a new runtime run of this binary. Workshop publication of 1.3.11 is not confirmed.
+Retains the user-observed local Nanobot planning optimization on inspected Stardeus `v0.15.25.3275`. The original tick/event topology read policy is restored only for recognized native `TryFindCandidate(allowFailed:false)` planning and its matching MatClaimGate inventory. Normal queries, strict ancestors, `allowFailed:true` revalidation and unknown native contracts keep the strict fallback. Native eligibility, positive availability, Forbidden handling, provider order, local inventory ownership, reservation reads and stock-action checks remain authoritative. No save schema, research definition or active-job change is introduced.
 
-With the inspected TACC 1.1.6, the rebuilt DLL's new module identity can produce four unreviewed Quantum equipment-effect patch diagnostics until TACC's recognition is reviewed. The inspected TACC path records/logs these findings and refreshes its diagnostic UI; it does not disable gameplay. No TACC update or recognition waiver is included in this release.
+The material-query facade narrows native candidates to non-pile storage and requested-type piles. Forbidden piles respect the caller's native policy, and zero/negative availability cannot satisfy a query, even for a non-positive requested amount; these correct omissions in the older replacement rather than claiming pure performance equivalence. The native material-source hook indexes each Relay's local types only and falls back to original native indexing if its optional hook is unavailable.
+
+The local capture confirmed actual planning-path activation after save loading, roughly 94% fewer full topology checks per sampled query, and the player's improvement from low-teens early FPS to upper-70s and later 100+ FPS. Raider speed changes and evolving workload limit comparison. Follow-up bounded captures found no sampled query failures or invalid scopes and did not establish another worthwhile safe pool-resolution optimization. These are scenario-specific observations; no 150 FPS guarantee or comprehensive inventory/save/hauling acceptance is inferred.
+
+The normal 1.3.12 release excludes temporary Relay recorder classes and observer branches. Local diagnostic opt-in is retired; optional diagnostic source remains available for explicit future builds. Existing panel row reuse, controls and complete native fallback are retained. Build, reference, contract, source and package checks remain distinct from runtime acceptance: fresh startup of this rebuilt release binary and Workshop publication remain pending until separately observed. Detailed historical coverage limits below remain limits, not outstanding defects.
+
+## Historical release metadata — 1.3.11
+
+The user confirmed validation of the selected F11 research fix in the preceding 1.3.10 data revision. Version 1.3.11 preserves that exact research definition and synchronizes the mod, project and rebuilt DLL versions plus the fixed diagnostic build label. It adds no further research, Quasi, unlock-binding or gameplay change. Fresh startup was pending at preparation of that metadata-only binary; subsequent local 1.3.11 optimization captures are recorded above. The research acceptance does not claim unreported individual test scenarios. Workshop publication of 1.3.11 remains unconfirmed.
+
+Historical compatibility note: with the then-inspected TACC 1.1.6, the rebuilt DLL's new module identity can produce four unreviewed Quantum equipment-effect patch diagnostics until TACC's recognition is reviewed. The inspected TACC path records/logs these findings and refreshes its diagnostic UI; it does not disable gameplay. No TACC update or recognition waiver is included in this release.
 
 ## Accepted 1.3.10 research data revision — 2026-11-08
 

@@ -9,6 +9,10 @@
     <Error Condition="!Exists('$(MonoCecilPath)')" Text="Set MonoCecilPath to a locally available Mono.Cecil.dll (for example from ILSpy)." />
   </Target>
   <ItemGroup>
+    <Compile Remove="RelayQueryBaseline/**/*.cs" />
+    <Compile Remove="RelayFocusedQuery/**/*.cs" />
+    <Compile Remove="RelayMaterialQuery/**/*.cs" />
+    <Compile Remove="RelayTopologyActual/**/*.cs" />
     <Reference Include="Game" HintPath="$(StardeusManagedPath)/Game.dll" Private="False" />
     <Reference Include="Game.Constants" HintPath="$(StardeusManagedPath)/Game.Constants.dll" Private="False" />
     <Reference Include="Game.CodeGen" HintPath="$(StardeusManagedPath)/Game.CodeGen.dll" Private="False" />
@@ -19,4 +23,3 @@
     <Reference Include="Mono.Cecil" HintPath="$(MonoCecilPath)" Aliases="panelcecil" />
   </ItemGroup>
 </Project>
-

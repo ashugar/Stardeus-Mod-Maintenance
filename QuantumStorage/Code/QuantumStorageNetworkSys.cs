@@ -50,6 +50,9 @@ namespace Game.Systems.QuantumStorage
         protected override void OnInitialize()
         {
             QuantumPanelDiagnostics.Configure();
+#if QUANTUM_RELAY_QUERY_BASELINE
+            RelayQueryBaseline.Configure();
+#endif
             try
             {
                 QuantumStorageReflection.Validate();
@@ -73,6 +76,9 @@ namespace Game.Systems.QuantumStorage
         public override void Unload()
         {
             QuantumPanelDiagnostics.Unload();
+#if QUANTUM_RELAY_QUERY_BASELINE
+            RelayQueryBaseline.Unload();
+#endif
             The.SysSig.AfterLoadSaveState.RemoveListener(OnAfterLoadSaveState);
             harmony?.UnpatchAll(HarmonyId);
             harmony = null;
@@ -89,6 +95,9 @@ namespace Game.Systems.QuantumStorage
         {
             QuantumNanobotObjectHauling.AfterFullLoad(state);
             QuantumPanelDiagnostics.AfterLoad();
+#if QUANTUM_RELAY_QUERY_BASELINE
+            RelayQueryBaseline.AfterLoad();
+#endif
         }
 
         public ComponentData Save()
@@ -347,44 +356,7 @@ namespace Game.Systems.QuantumStorage
 
         public bool HasEnough(InventorySys inventory, MatType type, int amount, int islandId, Being being)
         {
-            long available = 0;
-            bool ignoreDanger = true;
-            BeingSafety safety = null;
-            if (being != null)
-            {
-                safety = being.Data.Safety;
-                ignoreDanger = safety.IgnoreDanger;
-            }
-
-            HashSet<QuantumStorageNetwork> counted = new HashSet<QuantumStorageNetwork>();
-            List<IMatStorage> storages = inventory.Storages;
-            for (int i = 0; i < storages.Count; i++)
-            {
-                IMatStorage storage = storages[i];
-                if (storage.StorageType == StorageType.StoreOnly)
-                {
-                    continue;
-                }
-
-                int outPort = storage.OutPort;
-                if ((islandId != -1 && !S.Sys.Areas.CanReachGroundedIslandToPos(islandId, outPort)) || (!ignoreDanger && !safety.IsActuallySafeAt(outPort)))
-                {
-                    continue;
-                }
-
-                if (storage is MatStorageComp matStorage && bindings.TryGetValue(matStorage, out QuantumStorageNetwork network) && !counted.Add(network))
-                {
-                    continue;
-                }
-
-                available += storage.Available(type);
-                if (available >= amount)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return RelayMaterialQuery.HasEnough(inventory, type, amount, islandId, being);
         }
 
         public int CountByGroup(InventorySys inventory, int group)

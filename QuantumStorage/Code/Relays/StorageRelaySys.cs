@@ -26,7 +26,7 @@ namespace Game.Systems.QuantumStorage.Relays
         public const string SysId = "StorageRelaySys";
         internal const string PatchId = "jleas.quantumstorage.relays";
         private readonly Dictionary<MatStorageComp, StorageRelayNodeComp> nodes = new Dictionary<MatStorageComp, StorageRelayNodeComp>();
-        private readonly Dictionary<MatStorageComp, RelayGroup> groups = new Dictionary<MatStorageComp, RelayGroup>();
+        private Dictionary<MatStorageComp, RelayGroup> groups = new Dictionary<MatStorageComp, RelayGroup>();
         private List<RelayVertex> lastVertices = new List<RelayVertex>();
         private long lastTick = long.MinValue;
         private bool ready, rebuilding;
@@ -49,11 +49,15 @@ namespace Game.Systems.QuantumStorage.Relays
                 RelayCore.Install(harmony);
                 RelayObjectCore.Install(harmony);
                 Operational = true;
+                RelayMaterialSources.Install();
+                NanobotCandidateQueries.Install();
                 S.Sig.AfterLoadState.AddListener(AfterLoad);
                 D.Log("Quantum Storage: ten Relay types initialized; shared 12-tile topology, fixed local capacity, native material and object save records.");
             }
             catch (Exception ex)
             {
+                RelayMaterialSources.Unload();
+                NanobotCandidateQueries.Unload(S);
                 harmony.UnpatchAll(PatchId);
                 Operational = false;
                 D.LogEx(ex, "Relay initialization failed. Existing Quantum networks are unchanged; do not use Relay buildings in this session.");
@@ -63,6 +67,7 @@ namespace Game.Systems.QuantumStorage.Relays
         private void AfterLoad(GameState state)
         {
             ready = true;
+            NanobotCandidateQueries.WorldLoaded(state);
             state.Clock.OnTick.AddListener(OnTick);
             // Core restores ObjData and query responders during AfterLoadState.
             // Do not depend on listener registration order or zero local counters
@@ -76,11 +81,15 @@ namespace Game.Systems.QuantumStorage.Relays
 
         public override void Unload()
         {
+            RelayMaterialSources.Unload();
+            NanobotCandidateQueries.Unload(S);
+            AdvanceQueryGeneration();
             Operational = ready = false;
             objectsReady = false;
             harmony?.UnpatchAll(PatchId);
-            nodes.Clear(); groups.Clear(); lastVertices.Clear();
-            objectNodes.Clear(); objectGroups.Clear(); objectIndex.Clear();
+            nodes.Clear(); AdvanceMembershipRevision(); groups.Clear(); lastVertices.Clear();
+            lastTopologyNodes.Clear(); ResetQueryTopology();
+            objectNodes.Clear(); AdvanceMembershipRevision(); objectGroups.Clear(); objectIndex.Clear();
             upgrades.Clear(); upgradeData = null;
         }
 
@@ -95,81 +104,23 @@ namespace Game.Systems.QuantumStorage.Relays
         internal static bool Active(StorageRelayNodeComp node) => node?.Tile != null && node.Tile.IsActive && node.Tile.IsConstructed &&
             node.Tile.Reinstallable?.IsMidRelocation != true && node.Tile.ENode?.IsPowered == true && !node.Tile.ENode.HasDeficit && node.IsUsable;
 
-        internal void InvalidateTopology() => lastTick = long.MinValue;
+        internal void InvalidateTopology() { lastTick = long.MinValue; AdvanceQueryGeneration(); }
 
         internal void Attach(StorageRelayNodeComp node)
         {
-            if (node.Entity.TryGetComponent<MatStorageComp>(out var storage)) { nodes[storage] = node; }
+            if (node.Entity.TryGetComponent<MatStorageComp>(out var storage)) { nodes[storage] = node; AdvanceMembershipRevision(); }
             else if (node.Entity.TryGetComponent<ObjStorageComp>(out var objects))
-            { objectNodes[objects.EntityId] = objects; objectIndexDirty = true; }
-            lastTick = long.MinValue;
+            { objectNodes[objects.EntityId] = objects; AdvanceMembershipRevision(); objectIndexDirty = true; }
+            InvalidateTopology();
         }
 
         internal void Detach(StorageRelayNodeComp node)
         {
             if (node.Entity.TryGetComponent<MatStorageComp>(out var storage))
-            { nodes.Remove(storage); groups.Remove(storage); }
+            { nodes.Remove(storage); AdvanceMembershipRevision(); groups.Remove(storage); }
             else
-            { objectNodes.Remove(node.EntityId); objectGroups.Remove(node.EntityId); ObjectChanged(); }
-            lastTick = long.MinValue;
-        }
-
-        internal RelayGroup Group(MatStorageComp storage, bool force = false)
-        {
-            if (!Operational || !ready || RelayCore.LocalDepth > 0) { return null; }
-            EnsureTopology(force);
-            if (!groups.TryGetValue(storage, out var group)) { return null; }
-            // Read views refresh at most once per clock tick. Every operation
-            // that touches remote stock forces a fresh topology check, including
-            // bridge changes within that same tick. Local power is always checked.
-            if (!nodes.TryGetValue(storage, out var node) || !Active(node))
-            {
-                EnsureTopology(true);
-                if (!groups.TryGetValue(storage, out group)) { return null; }
-            }
-            Refresh(group);
-            return group;
-        }
-
-        private void EnsureTopology(bool force)
-        {
-            if (!ready || rebuilding || (!force && lastTick == G.Ticks)) { return; }
-            lastTick = G.Ticks;
-            var ordered = nodes.Values.Concat(objectsReady ? objectNodes.Values.Select(s => s.Entity.GetComponent<StorageRelayNodeComp>()) : Enumerable.Empty<StorageRelayNodeComp>()).OrderBy(n => n.EntityId).ToList();
-            var vertices = ordered.Select(n => new RelayVertex { Id = n.EntityId, Kind = (n.Entity.TryGetComponent<ObjStorageComp>(out _) ? "obj:" : "mat:") + n.NetworkId,
-                X = (int)n.Tile.Position.x, Y = (int)n.Tile.Position.y, Range = n.Range, Active = Active(n) }).ToList();
-            bool changed = vertices.Count != lastVertices.Count;
-            for (int i = 0; !changed && i < vertices.Count; i++)
-            {
-                var a = vertices[i]; var b = lastVertices[i];
-                changed = a.Id != b.Id || a.X != b.X || a.Y != b.Y || a.Kind != b.Kind || a.Range != b.Range || a.Active != b.Active;
-            }
-            if (!changed) { return; }
-            rebuilding = true;
-            try
-            {
-                // Never redistribute the old group at this point: the unit that
-                // just went offline keeps precisely its last locally owned share.
-                groups.Clear(); objectGroups.Clear();
-                foreach (var component in RelayPolicy.Components(vertices))
-                {
-                    var group = new RelayGroup { IsObject = ordered[component[0]].Entity.TryGetComponent<ObjStorageComp>(out _) };
-                    foreach (int i in component)
-                    {
-                        group.Nodes.Add(ordered[i]);
-                        if (group.IsObject) { objectGroups[ordered[i].EntityId] = group; }
-                        else { groups[Storage(ordered[i])] = group; }
-                    }
-                    if (group.IsObject) { RefreshObjects(group); } else { Refresh(group); }
-                }
-                lastVertices = vertices;
-                // Core's bar.Info is a separate cache from the storage panel.
-                // Refresh every endpoint, including the offline bridge that no
-                // longer belongs to a group and will never be balanced on tick.
-                foreach (var s in nodes.Keys) { QuantumStorageReflection.RefreshDisplay(s); }
-                RefreshObjectDisplays();
-            }
-            finally { rebuilding = false; }
+            { objectNodes.Remove(node.EntityId); AdvanceMembershipRevision(); objectGroups.Remove(node.EntityId); ObjectChanged(); }
+            InvalidateTopology();
         }
 
         internal static Dictionary<MatType, int> LocalContents(MatStorageComp storage) => QuantumStorageReflection.GetContents(storage);
@@ -236,7 +187,7 @@ namespace Game.Systems.QuantumStorage.Relays
         private void OnTick(long ticks)
         {
             RecoverUpgrades();
-            EnsureTopology(false);
+            if (!EnsureTopology(false)) { return; }
             var work = groups.Values.Concat(objectGroups.Values).Distinct().Where(g => g.NeedsBalance).ToArray();
             if (work.Length == 0) { return; }
             // At most one dirty network per game tick. No all-goal / all-hauler scan.

@@ -13,7 +13,7 @@ namespace Game.Systems.QuantumStorage.Relays
     public sealed partial class StorageRelaySys
     {
         private readonly Dictionary<int, ObjStorageComp> objectNodes = new Dictionary<int, ObjStorageComp>();
-        private readonly Dictionary<int, RelayGroup> objectGroups = new Dictionary<int, RelayGroup>();
+        private Dictionary<int, RelayGroup> objectGroups = new Dictionary<int, RelayGroup>();
         private readonly Dictionary<int, List<ObjData>> objectIndex = new Dictionary<int, List<ObjData>>();
         private bool objectIndexDirty = true, objectDisplayRefresh, objectsReady;
         internal int ObjectBulkDepth;
@@ -48,23 +48,6 @@ namespace Game.Systems.QuantumStorage.Relays
         {
             objectIndexDirty = true;
             foreach (var g in objectGroups.Values.Distinct()) { g.Dirty = g.NeedsBalance = true; }
-        }
-
-        internal RelayGroup ObjectGroup(ObjStorageComp storage, bool force = false)
-        {
-            if (!Operational || !ready || !objectsReady || RelayObjectCore.LocalDepth > 0 || storage == null) { return null; }
-            EnsureTopology(force);
-            if (!Active(storage.Entity.GetComponent<StorageRelayNodeComp>())) { EnsureTopology(true); return null; }
-            if (!objectGroups.TryGetValue(storage.EntityId, out var group)) { return null; }
-            RefreshObjects(group);
-            return group;
-        }
-
-        internal bool ConnectedObjects(int ownerId, ObjStorageComp access)
-        {
-            if (!Operational || !ready || !objectsReady || access == null) { return false; }
-            EnsureTopology(true);
-            return objectGroups.TryGetValue(ownerId, out var a) && objectGroups.TryGetValue(access.EntityId, out var b) && ReferenceEquals(a, b);
         }
 
         private void RefreshObjects(RelayGroup group)
@@ -136,6 +119,13 @@ namespace Game.Systems.QuantumStorage.Relays
 
         internal bool CanUseObject(ObjData data)
         {
+            if (materialRead != null)
+            {
+                MarkMaterialReadDependency();
+                // This predicate also guards native reservation actions. A failed
+                // ambient query must not replace the predicate's own result.
+                if (CanReadDuringMaterialActivation()) { ActivateMaterialReadDependency(); }
+            }
             if (!Operational || !ready || !objectsReady || data?.State != ObjState.Stored) { return true; }
             var owner = ObjectNode(RelayObjectCore.Owner(data));
             // Availability depends on the physical owner's power, not whether it
