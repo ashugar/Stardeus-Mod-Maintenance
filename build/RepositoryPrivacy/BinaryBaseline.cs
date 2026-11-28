@@ -1,6 +1,6 @@
 internal static partial class Program
 {
-    // Existing JPEG bytes reachable from the reviewed pre-automation baseline.
+    // Reviewed JPEG bytes from the baseline and subsequent explicit cover reviews.
     // New or changed opaque images require a deliberate metadata/policy review.
     private const string BinaryBaselineCommit = "9a667ef0e6e2673bb0234ca01d5db88d9f08357f";
     private static readonly HashSet<string> BaselineJpegSha256 = new(StringComparer.Ordinal)
@@ -15,6 +15,7 @@ internal static partial class Program
         "16F056FA284D255F5A082E853A33FA5D0212F8E2E040BC9AF36D2B897F68D444",
         "1A0D6E8F88FD0AD2DF8F924E74F8ACDF6CA6EC8ACFC708DCE7791E1A37C2B73F",
         "1EF4C57F3D7265FBB632A9FD2508901F0AABCAF93BAA212823AE6FF070926166",
+        "205A10B0D895A77BE853B45E5FE1D5CBC7A04C63E263089C5E567786889F8CD1",
         "2478682BB84A8D4101C422E84F30EB21CE4603711589DA970C7524175E52269A",
         "2CCF795991A9CED9E53351B22779477C8A2B693EEDF7D49B059508913CA17DAF",
         "303D6105B2230E697E17D4E278CD171CD1082541AC9DC05C14762B7A999D7BEC",
