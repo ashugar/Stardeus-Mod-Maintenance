@@ -90,6 +90,10 @@
       "Label": "mod:RememberFacilityUpgrades"
     },
     {
+      "Folder": "ScrollableResearchCards",
+      "Label": "mod:ScrollableResearchCards"
+    },
+    {
       "Folder": "SuperCleaning",
       "Label": "mod:SuperCleaning"
     },
