@@ -1,0 +1,12 @@
+{
+  "Id": "ScrollableResearchCards",
+  "Name": "Scrollable Research Cards",
+  "Description": "See every unlock on a crowded research card. Hover over the unlock grid and turn the mouse wheel to browse one row at a time.\n\n[h2]Features[/h2]\n[list]\n[*]Cards with more than 12 unlocks show three rows of four icons in the original card footprint, with a scroll indicator.\n[*]Scroll in both the full-size cards and the cards that pop up when you hover at lower zoom. The wheel still zooms the research tree outside the unlock grid.\n[*]Keeps Core's unlock order, preview and research-effect icons, localized tooltips, and Codex links.\n[*]Cards with 12 or fewer unlocks keep their normal layout.\n[/list]\n\nWorks with vanilla Stardeus and content mods. No additional mods are required.",
+  "SteamWorkshop": true,
+  "ModVersion": "1.0.0",
+  "GameVersion": "0.15.26",
+  "Dependencies": [],
+  "DLLFiles": [
+    "ScrollableResearchCards.dll"
+  ]
+}
